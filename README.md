@@ -24,8 +24,9 @@ Ritucast is developed under a strict **18-phase governed engineering lifecycle**
 | :---: | :--- | :---: |
 | **01** | **Project Discovery and Problem Definition** | **Completed (PASS)** |
 | **02** | **Requirements and Product Strategy** | **Completed (PASS)** |
-| 03 | Dataset Research and Validation | *Pending Review* |
-| 04–18 | Agricultural Knowledge through Long-Term Expansion | *Pending* |
+| **03** | **Dataset Research and Validation** | **Completed (PASS)** |
+| 04 | Agricultural Knowledge & Scientific Validation Planning | *Pending Review* |
+| 05–18 | System Architecture through Long-Term Expansion | *Pending* |
 
 Full details and phase governance rules can be viewed in the [Master Project Roadmap](file:///Users/kazi/Projects/RITUCAST/docs/planning/roadmap.md).
 
@@ -57,15 +58,25 @@ Full details and phase governance rules can be viewed in the [Master Project Roa
 - [Product-Level Data Requirements](file:///Users/kazi/Projects/RITUCAST/docs/requirements/data-requirements.md): Specifications across 5 categories (`DR-MET`, `DR-PCP`, `DR-SMC`, `DR-SAR`, `DR-AGR`).
 - [Recommendation Quality & Scientific Safety](file:///Users/kazi/Projects/RITUCAST/docs/requirements/recommendation-quality-and-safety.md): 4-tier taxonomy, suppression conditions, and anti-overconfidence rules.
 
+### Phase 3: Dataset Research, Validation & Governance
+- [Master Candidate Dataset Inventory](file:///Users/kazi/Projects/RITUCAST/docs/data/dataset-inventory.md): Audit of 16 candidate categories; product classifications and recommendations.
+- [Dataset Comparison Matrix](file:///Users/kazi/Projects/RITUCAST/docs/data/dataset-comparison-matrix.md): Master matrix comparing 10 primary candidates across 20 parameters with stable IDs.
+- [Initial Dataset Stack](file:///Users/kazi/Projects/RITUCAST/docs/data/initial-dataset-stack.md): 8 Core initial datasets, 2 optional, and 6 deferred/rejected with full rationales.
+- [Data Access, Licensing & Governance](file:///Users/kazi/Projects/RITUCAST/docs/data/data-access-and-licensing.md): API protocols, auth mechanisms, rate limits, open licenses, and privacy.
+- [Data Quality Validation Protocols](file:///Users/kazi/Projects/RITUCAST/docs/data/data-quality-validation.md): 5-stage automated QC protocol, physical value ranges, and QA flag limits.
+- [Spatial & Temporal Aggregation Requirements](file:///Users/kazi/Projects/RITUCAST/docs/data/spatial-temporal-requirements.md): Mixed-pixel realities, zonal aggregation math, and anti-false-precision rules.
+- [Technical Source Registry](file:///Users/kazi/Projects/RITUCAST/docs/data/source-registry.md): Machine-readable technical catalog of verified endpoints, bounding boxes, and collections.
+
 ### Planning, Governance & Quality Registers
-- [Assumptions Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/assumptions-register.md): 10 tracked assumptions with verification paths (updated with ASM-09, ASM-10).
-- [Risk Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/risk-register.md): 12 prioritized risks with mitigations (updated with RSK-11, RSK-12).
-- [Decision Log](file:///Users/kazi/Projects/RITUCAST/docs/planning/decision-log.md): Architectural decisions log (updated with DEC-07 through DEC-10).
+- [Assumptions Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/assumptions-register.md): 10 tracked assumptions with verification paths (updated with ASM-03/05 Validated).
+- [Risk Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/risk-register.md): 14 prioritized risks with mitigations (updated with RSK-13, RSK-14).
+- [Decision Log](file:///Users/kazi/Projects/RITUCAST/docs/planning/decision-log.md): Architectural decisions log (updated with DEC-11 through DEC-14).
 - [Master Project Roadmap](file:///Users/kazi/Projects/RITUCAST/docs/planning/roadmap.md): 18-phase lifecycle status.
 
 ### Phase Execution Packages
 - **Phase 01 Package**: [Phase Plan](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-01/phase-plan.md) | [Research Notes](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-01/research-notes.md) | [Deliverables Checklist](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-01/deliverables-checklist.md) | [Validation Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-01/validation-report.md) | [Handoff to Phase 2](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-01/handoff-to-phase-02.md)
 - **Phase 02 Package**: [Phase Plan](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-02/phase-plan.md) | [Readiness Assessment](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-02/readiness-assessment.md) | [Deliverables Checklist](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-02/deliverables-checklist.md) | [Validation Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-02/validation-report.md) | [Handoff to Phase 3](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-02/handoff-to-phase-03.md)
+- **Phase 03 Package**: [Phase Plan](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-03/phase-plan.md) | [Readiness Assessment](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-03/readiness-assessment.md) | [Research Notes](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-03/research-notes.md) | [Verification Log](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-03/verification-log.md) | [Deliverables Checklist](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-03/deliverables-checklist.md) | [Validation Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-03/validation-report.md) | [Handoff to Phase 4](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-03/handoff-to-phase-04.md)
 
 ---
 
@@ -97,6 +108,14 @@ RITUCAST/
 │   │   ├── requirements-traceability.md
 │   │   ├── data-requirements.md
 │   │   └── recommendation-quality-and-safety.md
+│   ├── data/
+│   │   ├── dataset-inventory.md
+│   │   ├── dataset-comparison-matrix.md
+│   │   ├── initial-dataset-stack.md
+│   │   ├── data-access-and-licensing.md
+│   │   ├── data-quality-validation.md
+│   │   ├── spatial-temporal-requirements.md
+│   │   └── source-registry.md
 │   ├── planning/
 │   │   ├── assumptions-register.md
 │   │   ├── risk-register.md
@@ -109,12 +128,20 @@ RITUCAST/
 │       │   ├── deliverables-checklist.md
 │       │   ├── validation-report.md
 │       │   └── handoff-to-phase-02.md
-│       └── phase-02/
+│       ├── phase-02/
+│       │   ├── phase-plan.md
+│       │   ├── readiness-assessment.md
+│       │   ├── deliverables-checklist.md
+│       │   ├── validation-report.md
+│       │   └── handoff-to-phase-03.md
+│       └── phase-03/
 │           ├── phase-plan.md
 │           ├── readiness-assessment.md
+│           ├── research-notes.md
+│           ├── verification-log.md
 │           ├── deliverables-checklist.md
 │           ├── validation-report.md
-│           └── handoff-to-phase-03.md
+│           └── handoff-to-phase-04.md
 ```
 
 ---
