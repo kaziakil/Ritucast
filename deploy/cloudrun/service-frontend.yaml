@@ -1,0 +1,48 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: ritucast-frontend
+  labels:
+    cloud.google.com/location: asia-south1
+    app: ritucast
+    tier: frontend
+  annotations:
+    run.googleapis.com/ingress: all
+spec:
+  template:
+    metadata:
+      annotations:
+        # Scale to zero when idle for minimal operating cost (DEC-09, ADR-07)
+        autoscaling.knative.dev/minScale: "0"
+        autoscaling.knative.dev/maxScale: "5"
+        run.googleapis.com/execution-environment: gen2
+        run.googleapis.com/cpu-throttling: "true"
+    spec:
+      containerConcurrency: 80
+      timeoutSeconds: 30
+      serviceAccountName: ritucast-frontend-sa@PROJECT_ID.iam.gserviceaccount.com
+      containers:
+        - image: asia-south1-docker.pkg.dev/PROJECT_ID/ritucast/frontend:latest
+          ports:
+            - name: http1
+              containerPort: 8080
+          resources:
+            limits:
+              cpu: "1000m"
+              memory: "256Mi"
+          env:
+            - name: BACKEND_PROXY_URL
+              value: "https://ritucast-backend-HASH-uc.a.run.app"
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 1
+            periodSeconds: 3
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            periodSeconds: 15
+            failureThreshold: 3

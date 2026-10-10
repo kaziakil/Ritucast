@@ -1,0 +1,128 @@
+name: Ritucast CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-backend:
+    name: Backend Tests & Quality Gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+
+      - name: Run Test Suite
+        run: |
+          pytest tests/ -v --tb=short
+
+  test-frontend:
+    name: Frontend Tests & Build Gate
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Vitest Unit & Integration Tests
+        run: npm run test
+
+      - name: Verify Production Bundle Build
+        run: npm run build
+        env:
+          VITE_API_BASE_URL: "https://api.ritucast.app"
+
+  build-containers:
+    name: Container Build Verification
+    needs: [test-backend, test-frontend]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: actions/setup-buildx-action@v3
+
+      - name: Build Backend Container Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./deploy/docker/Dockerfile.backend
+          push: false
+          tags: ritucast/backend:test
+
+      - name: Build Frontend Container Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./deploy/docker/Dockerfile.frontend
+          build-args: |
+            VITE_API_BASE_URL=https://api.ritucast.app
+          push: false
+          tags: ritucast/frontend:test
+
+  deploy-cloudrun:
+    name: Deploy to Google Cloud Run (Staging / Production)
+    needs: [build-containers]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v4
+
+      - name: Check GCP Deployment Credentials
+        id: gcp-check
+        run: |
+          if [ -n "${{ secrets.GCP_PROJECT_ID }}" ] && [ -n "${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}" ]; then
+            echo "configured=true" >> $GITHUB_OUTPUT
+          else
+            echo "configured=false" >> $GITHUB_OUTPUT
+            echo "GCP deployment secrets not configured. Skipping automated cloud push."
+          fi
+
+      - name: Authenticate to Google Cloud (Workload Identity)
+        if: steps.gcp-check.outputs.configured == 'true'
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Set up Google Cloud SDK
+        if: steps.gcp-check.outputs.configured == 'true'
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Execute Cloud Run Deployment Script
+        if: steps.gcp-check.outputs.configured == 'true'
+        run: |
+          export GCP_PROJECT_ID="${{ secrets.GCP_PROJECT_ID }}"
+          export GCP_REGION="${{ secrets.GCP_REGION || 'asia-south1' }}"
+          ./deploy/cloudrun/deploy.sh
