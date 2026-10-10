@@ -1,0 +1,94 @@
+# Ritucast: Project Decision Log
+
+## 1. Decision Log Governance
+
+This document records architectural, strategic, and product decisions made throughout the Ritucast project lifecycle. Every entry documents:
+- **Decision ID & Title**
+- **Date & Phase**
+- **Context & Problem Statement**
+- **Options Considered & Trade-offs**
+- **Decision Taken & Rationale**
+- **Impact & Downstream Dependencies**
+- **Approval Status**
+
+---
+
+## 2. Phase 1 Architecture & Product Decisions
+
+---
+
+### DEC-01: Adoption of 18-Phase Governed Development Lifecycle
+- **Date**: 2026-10-10 (Phase 1)
+- **Status**: **Approved**
+- **Context**: Large-scale agricultural technology platforms frequently suffer from premature optimization, ungrounded feature creep, or incomplete scientific validation if driven solely by rapid prototyping.
+- **Alternatives Considered**:
+  - *Option A*: Unstructured agile development (rapid sprint prototyping without formal phase boundaries).
+  - *Option B*: Traditional heavy waterfall with no intermediate iterations.
+  - *Option C (Selected)*: Disciplined 18-phase development roadmap with rigorous entry/exit criteria, formal phase artifacts, and change management.
+- **Rationale**: An 18-phase model enforces scientific validation, user alignment, and architecture stability before heavy code deployment.
+- **Downstream Impact**: Phases 2–18 remain strictly pending until prerequisite phase quality gates are validated and accepted.
+
+---
+
+### DEC-02: User Segment Selection: The Dual-Anchor Model (SAAOs + Lead Farmers)
+- **Date**: 2026-10-10 (Phase 1)
+- **Status**: **Approved**
+- **Context**: Over 80% of Bangladesh farmers are smallholders with varying literacy, smartphone access, and digital confidence. Direct-to-marginal-farmer apps often suffer from high churn.
+- **Alternatives Considered**:
+  - *Option A*: Direct-to-Consumer (D2C) targeting all 16 million smallholder farmers via a mobile app.
+  - *Option B*: Institutional-only B2G tool serving only Dhaka-level DAE directors and researchers.
+  - *Option C (Selected)*: **Dual-Anchor Model**—co-targeting frontline extension officers (SAAOs) and progressive lead farmers / tubewell managers as primary users.
+- **Rationale**: SAAOs already visit farmers weekly and possess agronomic training to interpret data. Lead farmers have smartphones, manage irrigation capital, and influence neighboring smallholders.
+- **Downstream Impact**: Drives Phase 2 persona creation, Phase 6 information architecture, and Phase 7 UI design (dual quick-action vs diagnostic modes).
+
+---
+
+### DEC-03: Geographic Scope: Dual-Zone Calibrated Pilot with National Background
+- **Date**: 2026-10-10 (Phase 1)
+- **Status**: **Approved**
+- **Context**: Bangladesh possesses 30 distinct Agro-Ecological Zones (AEZs). Calibrating micro-models across all zones in the initial release risks broad, inaccurate advisories.
+- **Alternatives Considered**:
+  - *Option A*: Full 64-district national rollout on Day 1.
+  - *Option B*: Single-district micro pilot (e.g., only Rajshahi Sadar).
+  - *Option C (Selected)*: **Dual-Zone Representative Pilot** (Barind Tract for drought/irrigation; Haor Basin for flash flood/inundation) paired with a coarse **National Background Agro-Weather Tier**.
+- **Rationale**: Tests both critical agro-climatic extremes (acute water deficit vs. catastrophic sudden flooding) on high-value Boro rice, while keeping algorithmic tuning manageable.
+- **Downstream Impact**: Defines testbed regions for Phase 3 data gathering, Phase 4 agronomic models, and Phase 14 usability testing.
+
+---
+
+### DEC-04: Remote Sensing Modality Hierarchy: Cloud-Penetrating Priority
+- **Date**: 2026-10-10 (Phase 1)
+- **Status**: **Approved**
+- **Context**: Bangladesh experiences persistent cloud cover (80–90%) throughout the monsoon (June–October), rendering optical sensors (MODIS, Sentinel-2) blind for multi-week stretches.
+- **Alternatives Considered**:
+  - *Option A*: Optical-first architecture (NDVI/EVI primary).
+  - *Option B (Selected)*: Radar and microwave priority (Sentinel-1 C-band SAR + GPM IMERG microwave precipitation) for waterlogging and flood risk, utilizing optical indices strictly as secondary or dry-season indicators.
+- **Rationale**: Guarantees system resilience during the most hazardous wet months when smallholders face peak flood and waterlogging risks.
+- **Downstream Impact**: Shapes Phase 3 dataset validation and Phase 8 data ingestion pipelines.
+
+---
+
+### DEC-05: Product Positioning: Agro-Climatic Decision Support System (DSS)
+- **Date**: 2026-10-10 (Phase 1)
+- **Status**: **Approved**
+- **Context**: Need to define clear product boundaries between a simple weather app and an unfeasible farm-automation platform.
+- **Alternatives Considered**:
+  - *Option A*: Generic Agricultural Information Portal (news, static crop lists).
+  - *Option B*: Raw Satellite Visualization Dashboard (academic GIS tool).
+  - *Option C (Selected)*: **Agro-Climatic Decision-Support System with Real-Time Risk Awareness**.
+- **Rationale**: Fills the specific unaddressed gap in Bangladesh agriculture: translating environmental observations into actionable operational guidance (when to irrigate, when to harvest, when to prepare for inundation).
+- **Downstream Impact**: Guides Phase 2 requirements specification and Phase 9 recommendation engine design.
+
+---
+
+### DEC-06: Explicit Exclusions from Initial Product Scope
+- **Date**: 2026-10-10 (Phase 1)
+- **Status**: **Approved**
+- **Context**: High-risk capabilities can easily derail timelines and compromise credibility if unvalidated.
+- **Decided Exclusions for Initial Release**:
+  1. *No individual-field farm-level yield guarantees.*
+  2. *No computer-vision disease diagnosis from coarse satellite data.*
+  3. *No automated irrigation actuator or machinery IoT controls.*
+  4. *No commercial brand advertising or input endorsements.*
+- **Rationale**: Protects scientific credibility, prevents legal/agronomic liabilities, and maintains laser focus on core decision-support value.
+- **Downstream Impact**: Keeps Phase 2 feature prioritization focused and achievable.
