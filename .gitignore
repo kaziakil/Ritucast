@@ -76,3 +76,6 @@ Thumbs.db
 scratch/
 tmp/
 *.tmp
+
+# AGENTS.md
+AGENTS.md
