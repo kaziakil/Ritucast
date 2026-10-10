@@ -8,6 +8,8 @@ import { FloodHazardView } from './components/FloodHazardView'
 import { ProvenanceView } from './components/ProvenanceView'
 import { Footer } from './components/Footer'
 import { apiClient } from './services/apiClient'
+import { ThemeProvider } from './context/ThemeContext'
+import { LanguageProvider, useLanguage } from './context/LanguageContext'
 import type {
   UpazilaSummary,
   CropInfo,
@@ -20,7 +22,9 @@ import type {
   ReadinessResponse,
 } from './types/api'
 
-export const App: React.FC = () => {
+export const AppContent: React.FC = () => {
+  const { language, t } = useLanguage()
+
   // Navigation State
   const [activeTab, setActiveTab] = useState<string>('advisories')
 
@@ -126,14 +130,21 @@ export const App: React.FC = () => {
       if (provRes.status === 'fulfilled') setProvenance(provRes.value)
 
       if (advRes.status === 'rejected' && wxRes.status === 'rejected') {
-        setDataError('সার্ভার থেকে তথ্য পাওয়া যায়নি। অনুগ্রহ করে ব্যাকএন্ড সংযোগ পরীক্ষা করুন।')
+        setDataError(
+          language === 'en'
+            ? 'Unable to retrieve data from server. Please verify backend connection.'
+            : 'সার্ভার থেকে তথ্য পাওয়া যায়নি। অনুগ্রহ করে ব্যাকএন্ড সংযোগ পরীক্ষা করুন।'
+        )
       }
     } catch (err: any) {
-      setDataError(err.message || 'ডেটা লোড করতে ব্যর্থ হয়েছে')
+      setDataError(
+        err.message ||
+          (language === 'en' ? 'Failed to load agronomic data' : 'ডেটা লোড করতে ব্যর্থ হয়েছে')
+      )
     } finally {
       setLoadingData(false)
     }
-  }, [selectedUpazilaId, selectedCropId, selectedStage])
+  }, [selectedUpazilaId, selectedCropId, selectedStage, language])
 
   // Trigger analysis when context changes
   useEffect(() => {
@@ -144,7 +155,7 @@ export const App: React.FC = () => {
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       {/* Skip to Main Content Link (WCAG 2.1 SC 2.4.1) */}
       <a href="#main-content" className="skip-to-content">
-        মূল বিষয়বস্তুতে সরাসরি প্রবেশ (Skip to main content)
+        {t('skip_to_content')}
       </a>
 
       {/* App Header */}
@@ -222,6 +233,16 @@ export const App: React.FC = () => {
       {/* Global Footer */}
       <Footer />
     </div>
+  )
+}
+
+export const App: React.FC = () => {
+  return (
+    <ThemeProvider>
+      <LanguageProvider>
+        <AppContent />
+      </LanguageProvider>
+    </ThemeProvider>
   )
 }
 

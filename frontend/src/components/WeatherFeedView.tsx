@@ -1,6 +1,7 @@
 import React from 'react'
 import { CloudRain, Sun, Wind, Droplet, Thermometer, CloudLightning, ShieldAlert } from 'lucide-react'
 import type { WeatherFeedResponse } from '../types/api'
+import { useLanguage } from '../context/LanguageContext'
 
 interface WeatherFeedViewProps {
   weather: WeatherFeedResponse | null
@@ -13,6 +14,8 @@ export const WeatherFeedView: React.FC<WeatherFeedViewProps> = ({
   loading,
   error,
 }) => {
+  const { language, t } = useLanguage()
+
   if (loading) {
     return (
       <div className="card">
@@ -32,7 +35,7 @@ export const WeatherFeedView: React.FC<WeatherFeedViewProps> = ({
     return (
       <div className="error-box" role="alert" aria-live="assertive">
         <CloudLightning size={40} style={{ margin: '0 auto 12px' }} />
-        <h3 className="error-title">আবহাওয়া তথ্য লোড করা যায়নি</h3>
+        <h3 className="error-title">{t('weather_error_title')}</h3>
         <p>{error}</p>
       </div>
     )
@@ -52,71 +55,71 @@ export const WeatherFeedView: React.FC<WeatherFeedViewProps> = ({
         <div className="card-header">
           <h3 className="card-title">
             <Sun size={20} color="var(--primitive-amber-600)" />
-            <span>বিগত ২৪ ঘণ্টার প্রত্যক্ষ আবহাওয়া পর্যবেক্ষণ (Tier 1)</span>
+            <span>{t('weather_obs_title')}</span>
           </h3>
           <span className="status-badge" style={{ backgroundColor: 'var(--primitive-sky-100)', color: 'var(--primitive-sky-800)' }}>
-            উৎস: {weather.tier_1_observations.source}
+            {t('weather_obs_source')} {weather.tier_1_observations.source}
           </span>
         </div>
 
         <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-caption)', marginBottom: 'var(--spacing-md)' }}>
-          হালনাগাদ সময়: {weather.tier_1_observations.updated_at_bst} • তারিখ: {yesterday.date}
+          {language === 'en' ? 'Last Updated:' : 'হালনাগাদ সময়:'} {weather.tier_1_observations.updated_at_bst} • {language === 'en' ? 'Date:' : 'তারিখ:'} {yesterday.date}
         </p>
 
         <div className="metric-grid">
           <div className="metric-pill">
             <span className="metric-label">
               <Thermometer size={14} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} />
-              সর্বোচ্চ তাপমাত্রা
+              {t('weather_max_temp')}
             </span>
-            <span className="metric-value">{yesterday.temp_max_c}° সে.</span>
-            <span className="metric-sub">দিনের সর্বোচ্চ</span>
+            <span className="metric-value">{yesterday.temp_max_c}° {language === 'en' ? 'C' : 'সে.'}</span>
+            <span className="metric-sub">{language === 'en' ? 'Daily maximum' : 'দিনের সর্বোচ্চ'}</span>
           </div>
 
           <div className="metric-pill">
             <span className="metric-label">
               <Thermometer size={14} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} />
-              সর্বনিম্ন তাপমাত্রা
+              {t('weather_min_temp')}
             </span>
-            <span className="metric-value">{yesterday.temp_min_c}° সে.</span>
-            <span className="metric-sub">রাত্রিকালীন সর্বনিম্ন</span>
+            <span className="metric-value">{yesterday.temp_min_c}° {language === 'en' ? 'C' : 'সে.'}</span>
+            <span className="metric-sub">{language === 'en' ? 'Nighttime minimum' : 'রাত্রিকালীন সর্বনিম্ন'}</span>
           </div>
 
           <div className="metric-pill">
             <span className="metric-label">
               <CloudRain size={14} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} />
-              বৃষ্টিপাত (২৪ ঘণ্টা)
+              {t('weather_precip_24h')}
             </span>
-            <span className="metric-value">{yesterday.precip_24h_mm} মিমি</span>
-            <span className="metric-sub">মোট বৃষ্টি পরিমাণ</span>
+            <span className="metric-value">{yesterday.precip_24h_mm} {language === 'en' ? 'mm' : 'মিমি'}</span>
+            <span className="metric-sub">{language === 'en' ? 'Cumulative precipitation' : 'মোট বৃষ্টি পরিমাণ'}</span>
           </div>
 
           <div className="metric-pill">
             <span className="metric-label">
               <Sun size={14} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} />
-              সৌর বিকিরণ
+              {t('weather_solar_rad')}
             </span>
             <span className="metric-value">{yesterday.solar_radiation_mj_m2} MJ/m²</span>
-            <span className="metric-sub">দৈনিক মোট সৌরশক্তি</span>
+            <span className="metric-sub">{language === 'en' ? 'Daily solar irradiance' : 'দৈনিক মোট সৌরশক্তি'}</span>
           </div>
 
           <div className="metric-pill">
             <span className="metric-label">
               <Droplet size={14} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} />
-              গড় আপেক্ষিক আর্দ্রতা
+              {t('weather_rh_mean')}
             </span>
             <span className="metric-value">{yesterday.rh_mean_pct}%</span>
-            <span className="metric-sub">বাতাসের আর্দ্রতা</span>
+            <span className="metric-sub">{language === 'en' ? 'Atmospheric humidity' : 'বাতাসের আর্দ্রতা'}</span>
           </div>
 
           {yesterday.wind_speed_ms !== undefined && (
             <div className="metric-pill">
               <span className="metric-label">
                 <Wind size={14} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} />
-                বাতাসের গতিবেগ (২ মি.)
+                {t('weather_wind_speed')}
               </span>
-              <span className="metric-value">{yesterday.wind_speed_ms} মি/সে.</span>
-              <span className="metric-sub">মাটির উপরিভাগের বায়ুপ্রবাহ</span>
+              <span className="metric-value">{yesterday.wind_speed_ms} {language === 'en' ? 'm/s' : 'মি/সে.'}</span>
+              <span className="metric-sub">{language === 'en' ? 'Surface 2m anemometer' : 'মাটির উপরিভাগের বায়ুপ্রবাহ'}</span>
             </div>
           )}
         </div>
@@ -127,15 +130,15 @@ export const WeatherFeedView: React.FC<WeatherFeedViewProps> = ({
         <div className="card-header">
           <h3 className="card-title">
             <CloudRain size={20} color="var(--color-brand-primary)" />
-            <span>আগামী ৭২ ঘণ্টার সম্ভাব্যতাভিত্তিক আবহাওয়া পূর্বাভাস (Tier 3)</span>
+            <span>{t('weather_fcst_title')}</span>
           </h3>
           <span style={{ fontSize: 'var(--font-size-caption)', color: 'var(--color-text-muted)' }}>
-            মডেল এনসেম্বল বিস্তার: <strong>{weather.tier_3_forecasts.ensemble_spread_pct}%</strong>
+            {language === 'en' ? 'Ensemble Spread:' : 'মডেল এনসেম্বল বিস্তার:'} <strong>{weather.tier_3_forecasts.ensemble_spread_pct}%</strong>
           </span>
         </div>
 
         <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-caption)', marginBottom: 'var(--spacing-md)' }}>
-          মডেল সূত্র: {weather.tier_3_forecasts.model_sources.join(', ')} • ইস্যুর সময়: {weather.tier_3_forecasts.issued_at_bst}
+          {language === 'en' ? 'Model Feeds:' : 'মডেল সূত্র:'} {weather.tier_3_forecasts.model_sources.join(', ')} • {language === 'en' ? 'Issued At:' : 'ইস্যুর সময়:'} {weather.tier_3_forecasts.issued_at_bst}
         </p>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 'var(--spacing-md)' }}>
@@ -146,11 +149,11 @@ export const WeatherFeedView: React.FC<WeatherFeedViewProps> = ({
                 border: '1px solid var(--color-border-default)',
                 borderRadius: 'var(--radius-lg)',
                 padding: 'var(--spacing-lg)',
-                backgroundColor: 'var(--primitive-neutral-50)',
+                backgroundColor: 'var(--color-bg-subtle)',
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: varSp(8) }}>
-                <span style={{ fontWeight: 700, fontSize: '1.05rem', color: 'var(--primitive-neutral-900)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <span style={{ fontWeight: 700, fontSize: '1.05rem', color: 'var(--color-text-primary)' }}>
                   {fcst.date}
                 </span>
                 <span
@@ -163,40 +166,40 @@ export const WeatherFeedView: React.FC<WeatherFeedViewProps> = ({
                     fontWeight: 600,
                   }}
                 >
-                  {fcst.lead_time_h} ঘণ্টা • {fcst.confidence === 'HIGH' ? 'উচ্চ আস্থা' : 'মাঝারি আস্থা'}
+                  {fcst.lead_time_h} {language === 'en' ? 'h' : 'ঘণ্টা'} • {fcst.confidence === 'HIGH' ? (language === 'en' ? 'High Confidence' : 'উচ্চ আস্থা') : (language === 'en' ? 'Moderate Confidence' : 'মাঝারি আস্থা')}
                 </span>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, margin: '12px 0' }}>
-                <span style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--primitive-neutral-900)' }}>
-                  {fcst.qpf_precip_mm} মিমি
+                <span style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>
+                  {fcst.qpf_precip_mm} {language === 'en' ? 'mm' : 'মিমি'}
                 </span>
                 <span style={{ color: 'var(--color-text-muted)', fontSize: 'var(--font-size-caption)' }}>
-                  বৃষ্টিপাতের পূর্বাভাস (QPF)
+                  {t('weather_qpf')}
                 </span>
               </div>
 
               {/* Rain Probability Progress Bar */}
               <div style={{ marginBottom: 12 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--font-size-caption)', marginBottom: 4 }}>
-                  <span>বৃষ্টির সম্ভাবনা:</span>
+                  <span>{t('weather_rain_prob')}:</span>
                   <strong style={{ color: 'var(--color-brand-primary)' }}>{fcst.precip_probability_pct}%</strong>
                 </div>
-                <div style={{ height: 8, backgroundColor: 'var(--primitive-neutral-200)', borderRadius: varRad(4), overflow: 'hidden' }}>
+                <div style={{ height: 8, backgroundColor: 'var(--color-border-default)', borderRadius: '4px', overflow: 'hidden' }}>
                   <div
                     style={{
                       height: '100%',
                       width: `${fcst.precip_probability_pct}%`,
-                      backgroundColor: 'var(--primitive-sky-600)',
-                      borderRadius: varRad(4),
+                      backgroundColor: 'var(--color-brand-sky)',
+                      borderRadius: '4px',
                     }}
                   />
                 </div>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--font-size-caption)', color: 'var(--color-text-secondary)', borderTop: '1px solid var(--color-border-default)', paddingTop: 8 }}>
-                <span>তাপমাত্রা পরিসীমা:</span>
-                <strong>{fcst.temp_min_c}° - {fcst.temp_max_c}° সে.</strong>
+                <span>{language === 'en' ? 'Temp Range:' : 'তাপমাত্রা পরিসীমা:'}</span>
+                <strong>{fcst.temp_min_c}° - {fcst.temp_max_c}° {language === 'en' ? 'C' : 'সে.'}</strong>
               </div>
             </div>
           ))}
@@ -204,17 +207,14 @@ export const WeatherFeedView: React.FC<WeatherFeedViewProps> = ({
 
         <div style={{ marginTop: 'var(--spacing-lg)', display: 'flex', alignItems: 'center', gap: 6, fontSize: 'var(--font-size-caption)', color: 'var(--color-text-muted)' }}>
           <ShieldAlert size={14} />
-          <span>পূর্বাভাস উপাত্ত প্রতি ৬ ঘণ্টা অন্তর ইসিএমডব্লিউএফ ও জিএফএস গ্লোবাল মডেল থেকে স্বয়ংক্রিয়ভাবে নবায়ন করা হয়।</span>
+          <span>
+            {language === 'en'
+              ? 'Forecast models are refreshed automatically every 6 hours from ECMWF and GFS global ensembles.'
+              : 'পূর্বাভাস উপাত্ত প্রতি ৬ ঘণ্টা অন্তর ইসিএমডব্লিউএফ ও জিএফএস গ্লোবাল মডেল থেকে স্বয়ংক্রিয়ভাবে নবায়ন করা হয়।'}
+          </span>
         </div>
       </div>
     </div>
   )
 }
-
-function varSp(px: number) {
-  return `${px}px`
-}
-
-function varRad(px: number) {
-  return `${px}px`
-}
+export default WeatherFeedView

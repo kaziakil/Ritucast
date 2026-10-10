@@ -1,6 +1,8 @@
 import React from 'react'
 import { MapPin, Wheat, Calendar, RefreshCw, AlertCircle } from 'lucide-react'
 import type { UpazilaSummary, CropInfo } from '../types/api'
+import { useLanguage } from '../context/LanguageContext'
+import { STAGE_TRANSLATIONS } from '../i18n/translations'
 
 interface ContextSelectorProps {
   upazilas: UpazilaSummary[]
@@ -16,14 +18,6 @@ interface ContextSelectorProps {
   loading: boolean
 }
 
-const STAGE_LABELS_BN: Record<string, string> = {
-  Tillering: 'কুশি পর্যায় (বৃদ্ধি)',
-  Booting: 'থোর পর্যায় (গর্ভকাল)',
-  Flowering: 'ফুল ফোটা পর্যায় (পরাগায়ন)',
-  Dough: 'দুধ/দানা গঠন পর্যায়',
-  Maturity: 'পাকা পর্যায় (কর্তন)',
-}
-
 export const ContextSelector: React.FC<ContextSelectorProps> = ({
   upazilas,
   selectedUpazilaId,
@@ -37,11 +31,13 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
   onRefresh,
   loading,
 }) => {
+  const { language, t } = useLanguage()
   const currentUpazila = upazilas.find((u) => u.upazila_id === selectedUpazilaId)
+  const stagesMap = STAGE_TRANSLATIONS[language] || STAGE_TRANSLATIONS.bn
 
   return (
     <section
-      aria-label="Context Selection"
+      aria-label={t('context_section_label')}
       style={{
         backgroundColor: 'var(--color-bg-surface)',
         borderBottom: '1px solid var(--color-border-default)',
@@ -63,7 +59,7 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
           <div className="form-group" style={{ marginBottom: 0 }}>
             <label className="form-label" htmlFor="upazila-select">
               <MapPin size={14} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} />
-              উপজেলা (পাইলট অঞ্চল):
+              {t('upazila_label')}
             </label>
             <select
               id="upazila-select"
@@ -71,11 +67,16 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
               value={selectedUpazilaId}
               onChange={(e) => setSelectedUpazilaId(e.target.value)}
             >
-              {upazilas.map((u) => (
-                <option key={u.upazila_id} value={u.upazila_id}>
-                  {u.name_bn} ({u.name_en}) — {u.district_name} ({u.aez_code === 26 ? 'বরেন্দ্র' : 'হাওড়'})
-                </option>
-              ))}
+              {upazilas.map((u) => {
+                const zoneName = u.aez_code === 26 ? t('zone_barind') : t('zone_haor')
+                return (
+                  <option key={u.upazila_id} value={u.upazila_id}>
+                    {language === 'en'
+                      ? `${u.name_en} (${u.name_bn}) — ${u.district_name} (${zoneName})`
+                      : `${u.name_bn} (${u.name_en}) — ${u.district_name} (${zoneName})`}
+                  </option>
+                )
+              })}
             </select>
           </div>
 
@@ -83,7 +84,7 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
           <div className="form-group" style={{ marginBottom: 0 }}>
             <label className="form-label" htmlFor="crop-select">
               <Wheat size={14} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} />
-              ফসল (ক্যালিব্রেটেড):
+              {t('crop_label')}
             </label>
             <select
               id="crop-select"
@@ -93,7 +94,9 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
             >
               {crops.map((c) => (
                 <option key={c.crop_id} value={c.crop_id}>
-                  {c.name_bn} ({c.name_en})
+                  {language === 'en'
+                    ? `${c.name_en} (${c.name_bn})`
+                    : `${c.name_bn} (${c.name_en})`}
                 </option>
               ))}
             </select>
@@ -103,7 +106,7 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
           <div className="form-group" style={{ marginBottom: 0 }}>
             <label className="form-label" htmlFor="stage-select">
               <Calendar size={14} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} />
-              ফসলের বৃদ্ধির বর্তমান পর্যায় (DEC-17):
+              {t('stage_label')}
             </label>
             <select
               id="stage-select"
@@ -113,7 +116,7 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
             >
               {growthStages.map((stage) => (
                 <option key={stage} value={stage}>
-                  {STAGE_LABELS_BN[stage] || stage}
+                  {stagesMap[stage] || stage}
                 </option>
               ))}
             </select>
@@ -127,10 +130,10 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
               disabled={loading}
               aria-busy={loading}
               style={{ width: '100%', minWidth: '160px' }}
-              aria-label="হালনাগাদ তথ্য আনুন"
+              aria-label={t('refresh_aria_label')}
             >
               <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
-              <span>{loading ? 'লোড হচ্ছে...' : 'বিশ্লেষণ হালনাগাদ'}</span>
+              <span>{loading ? t('refresh_loading') : t('refresh_btn')}</span>
             </button>
           </div>
         </div>
@@ -150,7 +153,7 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)' }}>
-            <span style={{ fontWeight: 600 }}>বর্তমান অঞ্চল:</span>
+            <span style={{ fontWeight: 600 }}>{t('current_zone')}</span>
             <span
               style={{
                 backgroundColor: currentUpazila?.aez_code === 26 ? 'var(--primitive-amber-100)' : 'var(--primitive-sky-100)',
@@ -162,15 +165,23 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
             >
               {currentUpazila?.aez_name} (AEZ-{currentUpazila?.aez_code})
             </span>
-            <span>• মূল প্রাকৃতিক ঝুঁকি: <strong>{currentUpazila?.primary_risk === 'FLASH_FLOOD' ? 'আকস্মিক বন্যা' : 'ভূগর্ভস্থ পানির ঘাটতি ও খরা'}</strong></span>
+            <span>
+              • {t('primary_risk_label')}{' '}
+              <strong>
+                {currentUpazila?.primary_risk === 'FLASH_FLOOD'
+                  ? t('primary_risk_flood')
+                  : t('primary_risk_drought')}
+              </strong>
+            </span>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: 'var(--primitive-green-800)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: 'var(--color-brand-primary)' }}>
             <AlertCircle size={14} />
-            <span>প্রসঙ্গ-ভিত্তিক যাচাই (DEC-17): সক্রিয় ও সম্পূর্ণ</span>
+            <span>{t('gating_verified')}</span>
           </div>
         </div>
       </div>
     </section>
   )
 }
+export default ContextSelector

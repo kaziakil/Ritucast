@@ -1,6 +1,7 @@
 import React from 'react'
 import { Waves, AlertTriangle, CloudRain, Eye, ArrowUpRight, Info } from 'lucide-react'
 import type { FloodHazardResponse } from '../types/api'
+import { useLanguage } from '../context/LanguageContext'
 
 interface FloodHazardViewProps {
   flood: FloodHazardResponse | null
@@ -13,6 +14,8 @@ export const FloodHazardView: React.FC<FloodHazardViewProps> = ({
   loading,
   error,
 }) => {
+  const { language, t } = useLanguage()
+
   if (loading) {
     return (
       <div className="card">
@@ -31,7 +34,7 @@ export const FloodHazardView: React.FC<FloodHazardViewProps> = ({
     return (
       <div className="error-box" role="alert" aria-live="assertive">
         <Waves size={40} style={{ margin: '0 auto 12px' }} />
-        <h3 className="error-title">বন্যা ঝুঁকি নির্দেশক পাওয়া যায়নি</h3>
+        <h3 className="error-title">{t('flood_error_title')}</h3>
         <p>{error}</p>
       </div>
     )
@@ -50,11 +53,13 @@ export const FloodHazardView: React.FC<FloodHazardViewProps> = ({
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)' }}>
           <Info size={32} color="var(--primitive-slate-600)" style={{ flexShrink: 0 }} />
           <div>
-            <h3 style={{ fontSize: '1.2rem', marginBottom: 4 }}>
-              হাওড় আকস্মিক বন্যা ঝুঁকি সূচক প্রযোজ্য নয়
+            <h3 style={{ fontSize: '1.2rem', marginBottom: 4, color: 'var(--color-text-primary)' }}>
+              {t('flood_not_applicable_title')}
             </h3>
             <p style={{ margin: 0, color: 'var(--color-text-secondary)' }}>
-              নির্বাচিত উপজেলাটি (<strong>{flood.name_bn}</strong>) উচ্চ বরেন্দ্র অঞ্চলের (AEZ-26) অন্তর্গত। এখানে ভূগর্ভস্থ পানির ঘাটতি ও খরা প্রধান ঝুঁকি; হাওড় নদী অববাহিকার আকস্মিক বন্যা ঝুঁকি শুধুমাত্র সিলেট বিভাগের হাওড় অঞ্চলের (AEZ-21: তাহিরপুর, সুনামগঞ্জ সদর) জন্য কার্যকর।
+              {language === 'en'
+                ? `The selected upazila is located within the High Barind Tract (AEZ-26), where groundwater depletion and drought are primary risks. Transboundary flash flood indices apply exclusively to the Haor Basin (AEZ-21: Tahirpur, Sunamganj Sadar).`
+                : `নির্বাচিত উপজেলাটি (${flood.name_bn}) উচ্চ বরেন্দ্র অঞ্চলের (AEZ-26) অন্তর্গত। এখানে ভূগর্ভস্থ পানির ঘাটতি ও খরা প্রধান ঝুঁকি; হাওড় নদী অববাহিকার আকস্মিক বন্যা ঝুঁকি শুধুমাত্র সিলেট বিভাগের হাওড় অঞ্চলের (AEZ-21: তাহিরপুর, সুনামগঞ্জ সদর) জন্য কার্যকর।`}
             </p>
           </div>
         </div>
@@ -73,13 +78,13 @@ export const FloodHazardView: React.FC<FloodHazardViewProps> = ({
         <div
           className="card"
           style={{
-            backgroundColor: 'var(--primitive-red-50)',
-            border: '2px solid var(--primitive-red-600)',
+            backgroundColor: 'var(--color-status-critical-bg)',
+            border: '2px solid var(--color-status-critical-border)',
             marginBottom: 'var(--spacing-xl)',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)' }}>
-            <AlertTriangle size={36} color="var(--primitive-red-700)" style={{ flexShrink: 0 }} />
+            <AlertTriangle size={36} color="var(--primitive-red-600)" style={{ flexShrink: 0 }} />
             <div>
               <span
                 style={{
@@ -92,13 +97,17 @@ export const FloodHazardView: React.FC<FloodHazardViewProps> = ({
                   textTransform: 'uppercase',
                 }}
               >
-                জরুরি ফসল কর্তন সতর্কতা (RULE-FLD-01)
+                {language === 'en' ? 'Emergency Harvest Alert (RULE-FLD-01)' : 'জরুরি ফসল কর্তন সতর্কতা (RULE-FLD-01)'}
               </span>
-              <h2 style={{ fontSize: '1.3rem', marginTop: 4, marginBottom: 4, color: 'var(--primitive-red-900)' }}>
-                হাওড়ে আকস্মিক বন্যার আশঙ্কা: ৮০% পাকা ধান অবিলম্বে কর্তন করুন
+              <h2 style={{ fontSize: '1.3rem', marginTop: 4, marginBottom: 4, color: 'var(--color-text-primary)' }}>
+                {language === 'en'
+                  ? 'Haor Flash Flood Threat: Expedite harvest of 80% ripe Boro rice'
+                  : 'হাওড়ে আকস্মিক বন্যার আশঙ্কা: ৮০% পাকা ধান অবিলম্বে কর্তন করুন'}
               </h2>
-              <p style={{ margin: 0, color: 'var(--primitive-red-800)', fontSize: 'var(--font-size-body)' }}>
-                সুরমা নদীর পানি বিপৎসীমার কাছাকাছি উঠেছে এবং মেঘালয় পাহাড়ে ভারী বর্ষণ অব্যাহত রয়েছে। পরবর্তী ৪৮ ঘণ্টার মধ্যে বাঁধ উপচে ফসলি জমি প্লাবিত হওয়ার চরম ঝুঁকি রয়েছে।
+              <p style={{ margin: 0, color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-body)' }}>
+                {language === 'en'
+                  ? 'Surma river levels are approaching danger thresholds and torrential rains persist in the Meghalaya hills. Risk of levee overtopping within 48h is severe.'
+                  : 'সুরমা নদীর পানি বিপৎসীমার কাছাকাছি উঠেছে এবং মেঘালয় পাহাড়ে ভারী বর্ষণ অব্যাহত রয়েছে। পরবর্তী ৪৮ ঘণ্টার মধ্যে বাঁধ উপচে ফসলি জমি প্লাবিত হওয়ার চরম ঝুঁকি রয়েছে।'}
               </p>
             </div>
           </div>
@@ -110,7 +119,7 @@ export const FloodHazardView: React.FC<FloodHazardViewProps> = ({
         <div className="card-header">
           <h3 className="card-title">
             <Waves size={20} color="var(--color-brand-primary)" />
-            <span>হাওড় সমন্বিত আকস্মিক বন্যা ঝুঁকি সূচক (I_flood)</span>
+            <span>{t('flood_title')}</span>
           </h3>
           <span
             style={{
@@ -130,27 +139,27 @@ export const FloodHazardView: React.FC<FloodHazardViewProps> = ({
               fontSize: 'var(--font-size-caption)',
             }}
           >
-            {f.hazard_tier_bn}
+            {language === 'en' ? f.hazard_tier : f.hazard_tier_bn}
           </span>
         </div>
 
         <p style={{ fontSize: 'var(--font-size-caption)', color: 'var(--color-text-muted)', marginBottom: 'var(--spacing-lg)' }}>
-          মূল্যায়ন সময়: {f.evaluation_timestamp_bst} • সমীকরণ: <strong>IDX-FLD-01</strong>
+          {language === 'en' ? 'Evaluation Time:' : 'মূল্যায়ন সময়:'} {f.evaluation_timestamp_bst} • {language === 'en' ? 'Equation:' : 'সমীকরণ:'} <strong>IDX-FLD-01</strong>
         </p>
 
         {/* Index Progress Bar */}
         <div style={{ margin: 'var(--spacing-xl) 0' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-            <span>সূচক মান: <strong>{f.flood_hazard_index_iflood}</strong> (০.০০ – ১.০০)</span>
-            <span style={{ fontWeight: 600, color: isEmergency ? 'var(--primitive-red-700)' : 'var(--primitive-green-700)' }}>
-              ঝুঁকি স্তর: {indexPct}%
+            <span>{language === 'en' ? 'Index Value:' : 'সূচক মান:'} <strong>{f.flood_hazard_index_iflood}</strong> (0.00 – 1.00)</span>
+            <span style={{ fontWeight: 600, color: isEmergency ? 'var(--primitive-red-600)' : 'var(--color-brand-primary)' }}>
+              {language === 'en' ? 'Hazard Level:' : 'ঝুঁকি স্তর:'} {indexPct}%
             </span>
           </div>
 
           <div
             style={{
               height: 24,
-              backgroundColor: 'var(--primitive-slate-200)',
+              backgroundColor: 'var(--color-border-default)',
               borderRadius: 'var(--radius-pill)',
               position: 'relative',
               overflow: 'hidden',
@@ -167,7 +176,7 @@ export const FloodHazardView: React.FC<FloodHazardViewProps> = ({
                 backgroundColor: 'var(--primitive-amber-600)',
                 zIndex: 2,
               }}
-              title="সতর্কতা সীমা (০.৬০)"
+              title="Warning Threshold (0.60)"
             />
             {/* Emergency threshold line at 0.75 */}
             <div
@@ -180,7 +189,7 @@ export const FloodHazardView: React.FC<FloodHazardViewProps> = ({
                 backgroundColor: 'var(--primitive-red-600)',
                 zIndex: 2,
               }}
-              title="জরুরি সীমা (০.৭৫)"
+              title="Emergency Threshold (0.75)"
             />
 
             <div
@@ -191,7 +200,7 @@ export const FloodHazardView: React.FC<FloodHazardViewProps> = ({
                   ? 'var(--primitive-red-600)'
                   : isWarning
                   ? 'var(--primitive-amber-500)'
-                  : 'var(--primitive-green-600)',
+                  : 'var(--color-brand-primary)',
                 borderRadius: 'var(--radius-pill)',
                 transition: 'width 0.5s ease',
               }}
@@ -199,10 +208,10 @@ export const FloodHazardView: React.FC<FloodHazardViewProps> = ({
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6, fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
-            <span>০.০০ (স্বাভাবিক)</span>
-            <span>০.৬০ (সতর্কবার্তা)</span>
-            <span style={{ color: 'var(--primitive-red-700)', fontWeight: 600 }}>০.৭৫ (জরুরি কর্তন সীমা)</span>
-            <span>১.০০ (সর্বোচ্চ বন্যা)</span>
+            <span>0.00 ({language === 'en' ? 'Normal' : 'স্বাভাবিক'})</span>
+            <span>0.60 ({language === 'en' ? 'Advisory' : 'সতর্কবার্তা'})</span>
+            <span style={{ color: 'var(--primitive-red-600)', fontWeight: 600 }}>0.75 ({language === 'en' ? 'Emergency Harvest' : 'জরুরি কর্তন সীমা'})</span>
+            <span>1.00 ({language === 'en' ? 'Maximum Inundation' : 'সর্বোচ্চ বন্যা'})</span>
           </div>
         </div>
 
@@ -211,45 +220,46 @@ export const FloodHazardView: React.FC<FloodHazardViewProps> = ({
           <div className="metric-pill">
             <span className="metric-label">
               <CloudRain size={14} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} />
-              মেঘালয় ক্যাচমেন্ট বৃষ্টিপাত (P_cat)
+              {language === 'en' ? 'Meghalaya Catchment Rain (P_cat)' : 'মেঘালয় ক্যাচমেন্ট বৃষ্টিপাত (P_cat)'}
             </span>
             <span className="metric-value">
               {f.sub_indices.meghalaya_catchment_48h_rain_mm !== undefined
-                ? `${f.sub_indices.meghalaya_catchment_48h_rain_mm} মিমি`
+                ? `${f.sub_indices.meghalaya_catchment_48h_rain_mm} ${language === 'en' ? 'mm' : 'মিমি'}`
                 : `${f.sub_indices.f_P || 0}`}
             </span>
-            <span className="metric-sub">৪৮ ঘণ্টার পুঞ্জীভূত পাহাড়ি বৃষ্টি ($w_1 = 0.35$)</span>
+            <span className="metric-sub">{language === 'en' ? '48h cumulative upstream rainfall' : '৪৮ ঘণ্টার পুঞ্জীভূত পাহাড়ি বৃষ্টি ($w_1 = 0.35$)'}</span>
           </div>
 
           <div className="metric-pill">
             <span className="metric-label">
               <ArrowUpRight size={14} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} />
-              সুরমা নদীর পানির স্তর ও বৃদ্ধির হার
+              {language === 'en' ? 'Surma River Level & Rising Rate' : 'সুরমা নদীর পানির স্তর ও বৃদ্ধির হার'}
             </span>
             <span className="metric-value">
               {f.sub_indices.surma_river_stage_m !== undefined
-                ? `${f.sub_indices.surma_river_stage_m} মি.`
+                ? `${f.sub_indices.surma_river_stage_m} ${language === 'en' ? 'm' : 'মি.'}`
                 : `${f.sub_indices.f_S || 0}`}
             </span>
             <span className="metric-sub">
-              বিপৎসীমা: ৮.২৫ মি. • বৃদ্ধির হার: +০.৮৫ মি/দিন
+              {language === 'en' ? 'Danger level: 8.25m • Rate: +0.85m/day' : 'বিপৎসীমা: ৮.২৫ মি. • বৃদ্ধির হার: +০.৮৫ মি/দিন'}
             </span>
           </div>
 
           <div className="metric-pill">
             <span className="metric-label">
               <Eye size={14} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} />
-              রাডার স্যাটেলাইট প্লাবন অনুপাত ($f_I$)
+              {language === 'en' ? 'Radar Inundation Fraction (f_I)' : 'রাডার স্যাটেলাইট প্লাবন অনুপাত ($f_I$)'}
             </span>
             <span className="metric-value">
               {f.sub_indices.sentinel1_sar_inundation_pct !== undefined
                 ? `${f.sub_indices.sentinel1_sar_inundation_pct}%`
                 : `${f.sub_indices.f_I || 0}`}
             </span>
-            <span className="metric-sub">Sentinel-1 SAR C-band রাডার পরিমাপ</span>
+            <span className="metric-sub">{language === 'en' ? 'Sentinel-1 SAR C-band observation' : 'Sentinel-1 SAR C-band রাডার পরিমাপ'}</span>
           </div>
         </div>
       </div>
     </div>
   )
 }
+export default FloodHazardView
