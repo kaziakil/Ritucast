@@ -1,0 +1,1598 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Ritucast Agricultural Intelligence API",
+    "description": "Evidence-based agricultural intelligence and decision-support API for Bangladesh. Exposes validated observations (Tier 1), physical indicators (Tier 2), probabilistic forecasts (Tier 3), and actionable agronomic recommendations (Tier 4) for pilot testbeds in High Barind Tract (Rajshahi) and Haor Basin (Sylhet).",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "System Health & Readiness"
+        ],
+        "summary": "Process liveness check",
+        "description": "Verify that the FastAPI application process is running and accepting HTTP requests.",
+        "operationId": "get_health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ready": {
+      "get": {
+        "tags": [
+          "System Health & Readiness"
+        ],
+        "summary": "Analytical readiness check",
+        "description": "Verify that required Phase 8 processed Parquet tables and analytical dependencies are ready.",
+        "operationId": "get_readiness_ready_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReadinessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/upazilas": {
+      "get": {
+        "tags": [
+          "Geographic Catalog"
+        ],
+        "summary": "List authorized pilot Upazilas",
+        "description": "Retrieve list of authorized pilot Upazilas in High Barind Tract and Haor Basin with centroid coordinates.",
+        "operationId": "list_upazilas_api_v1_upazilas_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response List Upazilas Api V1 Upazilas Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/upazilas/{upazila_id}": {
+      "get": {
+        "tags": [
+          "Geographic Catalog"
+        ],
+        "summary": "Get Upazila details",
+        "description": "Retrieve detailed metadata, area, and calibrated crops for a specific Upazila.",
+        "operationId": "get_upazila_api_v1_upazilas__upazila_id__get",
+        "parameters": [
+          {
+            "name": "upazila_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Upazila Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Upazila Api V1 Upazilas  Upazila Id  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/crops": {
+      "get": {
+        "tags": [
+          "Agricultural Metadata"
+        ],
+        "summary": "List calibrated crops",
+        "description": "Retrieve list of crops calibrated in the Ritucast pilot (anchor: Boro rice).",
+        "operationId": "list_crops_api_v1_crops_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response List Crops Api V1 Crops Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/seasons": {
+      "get": {
+        "tags": [
+          "Agricultural Metadata"
+        ],
+        "summary": "List cropping seasons",
+        "description": "Retrieve agricultural seasons recognized in Bangladesh (Boro, Aus, Aman).",
+        "operationId": "list_seasons_api_v1_seasons_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response List Seasons Api V1 Seasons Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/upazilas/{upazila_id}/weather": {
+      "get": {
+        "tags": [
+          "Weather Observations & Forecasts"
+        ],
+        "summary": "Retrieve Tier 1 observations and Tier 3 probabilistic forecasts for an Upazila",
+        "description": "Returns empirical meteorological observations (Tier 1: NASA POWER / BMD station) and numerical weather prediction forecasts (Tier 3: ECMWF IFS / NOAA GFS) for the specified Upazila.",
+        "operationId": "get_upazila_weather_api_v1_upazilas__upazila_id__weather_get",
+        "parameters": [
+          {
+            "name": "upazila_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Target Upazila code (e.g. BD-50-20-30 or shorthand BD-50-28)",
+              "title": "Upazila Id"
+            },
+            "description": "Target Upazila code (e.g. BD-50-20-30 or shorthand BD-50-28)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WeatherFeedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/upazilas/{upazila_id}/water-balance": {
+      "get": {
+        "tags": [
+          "Agronomic Indicators"
+        ],
+        "summary": "Calculate Tier 2 FAO-56 Reference ET0 and Root-Zone Water Deficit",
+        "description": "Calculates Penman-Monteith ET0, calibrated crop evapotranspiration (ETc), and daily root-zone water depletion (Dt) with AWD thresholds for the given Upazila, crop, and stage.",
+        "operationId": "get_upazila_water_balance_api_v1_upazilas__upazila_id__water_balance_get",
+        "parameters": [
+          {
+            "name": "upazila_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Target Upazila code (e.g. BD-50-20-30 or BD-50-28)",
+              "title": "Upazila Id"
+            },
+            "description": "Target Upazila code (e.g. BD-50-20-30 or BD-50-28)"
+          },
+          {
+            "name": "crop",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Crop identifier (e.g. boro_rice)",
+              "title": "Crop"
+            },
+            "description": "Crop identifier (e.g. boro_rice)"
+          },
+          {
+            "name": "stage",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Phenological growth stage (e.g. vegetative_tillering, flowering)",
+              "title": "Stage"
+            },
+            "description": "Phenological growth stage (e.g. vegetative_tillering, flowering)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaterBalanceResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/upazilas/{upazila_id}/flood-hazard": {
+      "get": {
+        "tags": [
+          "Agronomic Indicators"
+        ],
+        "summary": "Calculate Tier 2 Haor Flash Flood Hazard Index (I_flood)",
+        "description": "Computes the normalized flash flood hazard index (I_flood) combining transboundary Meghalaya catchment rainfall, Surma river stage elevation, rate of rise, and SAR inundation fraction.",
+        "operationId": "get_upazila_flood_hazard_api_v1_upazilas__upazila_id__flood_hazard_get",
+        "parameters": [
+          {
+            "name": "upazila_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Target Upazila code (e.g. BD-60-90-89 or BD-60-90)",
+              "title": "Upazila Id"
+            },
+            "description": "Target Upazila code (e.g. BD-60-90-89 or BD-60-90)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FloodHazardResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/upazilas/{upazila_id}/advisories": {
+      "get": {
+        "tags": [
+          "Actionable Advisories & Recommendations"
+        ],
+        "summary": "Retrieve context-gated 4-tier agricultural advisory for an Upazila",
+        "description": "Primary decision-support endpoint evaluating active Phase 9 scientific rules (irrigation postponement, moisture deficit alert, Haor early harvest, thermal stress). Strictly gated by Upazila, Crop, and Phenological Stage (DEC-17).",
+        "operationId": "get_upazila_advisories_api_v1_upazilas__upazila_id__advisories_get",
+        "parameters": [
+          {
+            "name": "upazila_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Target Upazila code (e.g. BD-50-20-30 or shorthand BD-50-28)",
+              "title": "Upazila Id"
+            },
+            "description": "Target Upazila code (e.g. BD-50-20-30 or shorthand BD-50-28)"
+          },
+          {
+            "name": "crop",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Active crop identifier (e.g. boro_rice, boro)",
+              "title": "Crop"
+            },
+            "description": "Active crop identifier (e.g. boro_rice, boro)"
+          },
+          {
+            "name": "stage",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Active phenological growth stage (e.g. vegetative_tillering, flowering, dough)",
+              "title": "Stage"
+            },
+            "description": "Active phenological growth stage (e.g. vegetative_tillering, flowering, dough)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdvisoryResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/advisories/evaluate": {
+      "post": {
+        "tags": [
+          "Actionable Advisories & Recommendations"
+        ],
+        "summary": "Evaluate custom scenario through the Phase 9 recommendation engine",
+        "description": "Allows direct evaluation of advisory rules with custom environmental inputs, data timestamps, or ensemble spread metrics.",
+        "operationId": "evaluate_custom_advisories_api_v1_advisories_evaluate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdvisoryEvaluateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdvisoryResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/risk/evaluate": {
+      "post": {
+        "tags": [
+          "Physical Hazard Assessment"
+        ],
+        "summary": "Evaluate physical agricultural hazards without uncalibrated probabilities",
+        "description": "Evaluates environmental hazard thresholds (soil moisture deficit, Haor flash flood, cold/heat stress) using physical observations and scientific criteria. Strictly adheres to DEC-06: does not provide uncalibrated crop failure probabilities.",
+        "operationId": "evaluate_risk_api_v1_risk_evaluate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RiskEvaluationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RiskEvaluationResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/provenance": {
+      "get": {
+        "tags": [
+          "Data Freshness & Provenance"
+        ],
+        "summary": "Retrieve system data freshness, methodology inventory, and scientific safeguards",
+        "description": "Exposes dataset update timestamps, source agency attributions, equations, and scientific non-goal boundary declarations (DEC-06).",
+        "operationId": "get_provenance_api_v1_provenance_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SystemProvenanceResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AdvisoryEvaluateRequest": {
+        "properties": {
+          "upazila_id": {
+            "type": "string",
+            "title": "Upazila Id",
+            "description": "Target Upazila ID (e.g. BD-50-20-30)"
+          },
+          "crop_name": {
+            "type": "string",
+            "title": "Crop Name",
+            "description": "Crop name",
+            "default": "Boro Rice"
+          },
+          "growth_stage": {
+            "type": "string",
+            "title": "Growth Stage",
+            "description": "Active phenological stage"
+          },
+          "inputs": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Inputs",
+            "description": "Optional custom environmental parameters"
+          },
+          "data_timestamp_utc": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data Timestamp Utc",
+            "description": "Optional source observation timestamp"
+          },
+          "ensemble_spread_pct": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ensemble Spread Pct",
+            "description": "Optional ensemble spread percentage"
+          },
+          "rain_prob_pct": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rain Prob Pct",
+            "description": "Optional rain probability percentage"
+          }
+        },
+        "type": "object",
+        "required": [
+          "upazila_id",
+          "growth_stage"
+        ],
+        "title": "AdvisoryEvaluateRequest",
+        "description": "Direct advisory evaluation request payload."
+      },
+      "AdvisoryResponse": {
+        "properties": {
+          "upazila_id": {
+            "type": "string",
+            "title": "Upazila Id",
+            "description": "Canonical Upazila ID"
+          },
+          "upazila_name_bn": {
+            "type": "string",
+            "title": "Upazila Name Bn",
+            "description": "Upazila name in Bengali"
+          },
+          "crop_id": {
+            "type": "string",
+            "title": "Crop Id",
+            "description": "Crop ID"
+          },
+          "crop_name_bn": {
+            "type": "string",
+            "title": "Crop Name Bn",
+            "description": "Crop name in Bengali"
+          },
+          "growth_stage": {
+            "type": "string",
+            "title": "Growth Stage",
+            "description": "Phenological growth stage"
+          },
+          "growth_stage_bn": {
+            "type": "string",
+            "title": "Growth Stage Bn",
+            "description": "Growth stage in Bengali"
+          },
+          "generated_at_bst": {
+            "type": "string",
+            "title": "Generated At Bst",
+            "description": "Generation timestamp in BST"
+          },
+          "tier_1_observations": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tier1ObservationSummary"
+              }
+            ],
+            "description": "Empirical observations"
+          },
+          "tier_2_indicators": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tier2IndicatorSummary"
+              }
+            ],
+            "description": "Derived physical indicators"
+          },
+          "tier_3_predictions": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tier3PredictionSummary"
+              }
+            ],
+            "description": "Probabilistic model forecasts"
+          },
+          "tier_4_recommendation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Tier4RecommendationDetail"
+              }
+            ],
+            "description": "Actionable recommendation"
+          },
+          "all_cards": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array",
+            "title": "All Cards",
+            "description": "All evaluated Phase 9 cards"
+          },
+          "provenance": {
+            "type": "object",
+            "title": "Provenance",
+            "description": "Traceability provenance"
+          }
+        },
+        "type": "object",
+        "required": [
+          "upazila_id",
+          "upazila_name_bn",
+          "crop_id",
+          "crop_name_bn",
+          "growth_stage",
+          "growth_stage_bn",
+          "generated_at_bst",
+          "tier_1_observations",
+          "tier_2_indicators",
+          "tier_3_predictions",
+          "tier_4_recommendation"
+        ],
+        "title": "AdvisoryResponse",
+        "description": "Full 4-tier advisory response envelope."
+      },
+      "DatasetProvenanceItem": {
+        "properties": {
+          "dataset_id": {
+            "type": "string",
+            "title": "Dataset Id",
+            "description": "Dataset identifier (e.g. DATA-MET-01)"
+          },
+          "dataset_name": {
+            "type": "string",
+            "title": "Dataset Name",
+            "description": "Dataset formal title"
+          },
+          "source_agency": {
+            "type": "string",
+            "title": "Source Agency",
+            "description": "Provider agency (NASA, BMD, ECMWF, BWDB)"
+          },
+          "spatial_coverage": {
+            "type": "string",
+            "title": "Spatial Coverage",
+            "description": "Coverage scope"
+          },
+          "temporal_resolution": {
+            "type": "string",
+            "title": "Temporal Resolution",
+            "description": "Time interval"
+          },
+          "latency_hours": {
+            "type": "number",
+            "title": "Latency Hours",
+            "description": "Update latency in hours"
+          },
+          "latest_record_bst": {
+            "type": "string",
+            "title": "Latest Record Bst",
+            "description": "Latest available record in BST"
+          },
+          "license": {
+            "type": "string",
+            "title": "License",
+            "description": "Data usage license"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "Operational status (ACTIVE, NOMINAL)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "dataset_id",
+          "dataset_name",
+          "source_agency",
+          "spatial_coverage",
+          "temporal_resolution",
+          "latency_hours",
+          "latest_record_bst",
+          "license",
+          "status"
+        ],
+        "title": "DatasetProvenanceItem",
+        "description": "Provenance entry for an ingested environmental dataset."
+      },
+      "FloodHazardIndicators": {
+        "properties": {
+          "evaluation_timestamp_bst": {
+            "type": "string",
+            "title": "Evaluation Timestamp Bst",
+            "description": "Evaluation timestamp in BST"
+          },
+          "flood_hazard_index_iflood": {
+            "type": "number",
+            "title": "Flood Hazard Index Iflood",
+            "description": "Normalized flood index (0.0 to 1.0)"
+          },
+          "hazard_tier": {
+            "type": "string",
+            "title": "Hazard Tier",
+            "description": "Hazard level (NORMAL, ADVISORY, WARNING, EMERGENCY)"
+          },
+          "hazard_tier_bn": {
+            "type": "string",
+            "title": "Hazard Tier Bn",
+            "description": "Hazard level in Bengali"
+          },
+          "sub_indices": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Sub Indices",
+            "description": "Sub-index breakdown"
+          },
+          "trigger_early_harvest": {
+            "type": "boolean",
+            "title": "Trigger Early Harvest",
+            "description": "Whether emergency harvest criteria are met"
+          }
+        },
+        "type": "object",
+        "required": [
+          "evaluation_timestamp_bst",
+          "flood_hazard_index_iflood",
+          "hazard_tier",
+          "hazard_tier_bn",
+          "sub_indices",
+          "trigger_early_harvest"
+        ],
+        "title": "FloodHazardIndicators",
+        "description": "Tier 2 Haor flash flood hazard indicators."
+      },
+      "FloodHazardResponse": {
+        "properties": {
+          "upazila_id": {
+            "type": "string",
+            "title": "Upazila Id",
+            "description": "Upazila code"
+          },
+          "name_bn": {
+            "type": "string",
+            "title": "Name Bn",
+            "description": "Upazila name in Bengali"
+          },
+          "tier_2_indicators": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FloodHazardIndicators"
+              }
+            ],
+            "description": "Derived hydrological hazard indicators"
+          },
+          "provenance": {
+            "type": "object",
+            "title": "Provenance",
+            "description": "Gauge and satellite provenance"
+          }
+        },
+        "type": "object",
+        "required": [
+          "upazila_id",
+          "name_bn",
+          "tier_2_indicators"
+        ],
+        "title": "FloodHazardResponse",
+        "description": "Haor flash flood hazard response."
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "Service liveness state",
+            "default": "healthy"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version",
+            "description": "API semantic version"
+          },
+          "timestamp_utc": {
+            "type": "string",
+            "title": "Timestamp Utc",
+            "description": "Current server timestamp"
+          }
+        },
+        "type": "object",
+        "required": [
+          "version"
+        ],
+        "title": "HealthResponse",
+        "description": "Liveness probe response."
+      },
+      "ModelMethodologyItem": {
+        "properties": {
+          "method_id": {
+            "type": "string",
+            "title": "Method Id",
+            "description": "Equation or rule ID (e.g. EQN-ET0-01)"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "description": "Method title"
+          },
+          "reference_standard": {
+            "type": "string",
+            "title": "Reference Standard",
+            "description": "Scientific standard (e.g. FAO-56 Paper No. 56)"
+          },
+          "calibration_status": {
+            "type": "string",
+            "title": "Calibration Status",
+            "description": "Regional calibration status"
+          }
+        },
+        "type": "object",
+        "required": [
+          "method_id",
+          "title",
+          "reference_standard",
+          "calibration_status"
+        ],
+        "title": "ModelMethodologyItem",
+        "description": "Methodology documentation item."
+      },
+      "PhysicalHazardAssessment": {
+        "properties": {
+          "hazard_domain": {
+            "type": "string",
+            "title": "Hazard Domain",
+            "description": "Hazard identifier (e.g. moisture_deficit, flash_flood)"
+          },
+          "hazard_tier": {
+            "type": "string",
+            "title": "Hazard Tier",
+            "description": "Categorical hazard level (LOW, MODERATE, HIGH, CRITICAL)"
+          },
+          "hazard_tier_bn": {
+            "type": "string",
+            "title": "Hazard Tier Bn",
+            "description": "Hazard level in Bengali"
+          },
+          "primary_metric_name": {
+            "type": "string",
+            "title": "Primary Metric Name",
+            "description": "Primary physical metric driving assessment"
+          },
+          "primary_metric_value": {
+            "type": "number",
+            "title": "Primary Metric Value",
+            "description": "Numerical value of primary metric"
+          },
+          "threshold_applied": {
+            "type": "number",
+            "title": "Threshold Applied",
+            "description": "Agronomic critical threshold"
+          },
+          "action_warranted": {
+            "type": "boolean",
+            "title": "Action Warranted",
+            "description": "True if physical threshold breached"
+          }
+        },
+        "type": "object",
+        "required": [
+          "hazard_domain",
+          "hazard_tier",
+          "hazard_tier_bn",
+          "primary_metric_name",
+          "primary_metric_value",
+          "threshold_applied",
+          "action_warranted"
+        ],
+        "title": "PhysicalHazardAssessment",
+        "description": "Assessment of a single physical hazard domain."
+      },
+      "ReadinessResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "Service readiness state ('ready' or 'unready')",
+            "default": "ready"
+          },
+          "data_store_ready": {
+            "type": "boolean",
+            "title": "Data Store Ready",
+            "description": "True if required Phase 8 processed tables exist"
+          },
+          "analytics_ready": {
+            "type": "boolean",
+            "title": "Analytics Ready",
+            "description": "True if analytics engine is initialized"
+          },
+          "verified_datasets": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Verified Datasets",
+            "description": "List of verified Parquet tables"
+          },
+          "missing_dependencies": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Missing Dependencies",
+            "description": "Missing prerequisites, if any"
+          },
+          "timestamp_utc": {
+            "type": "string",
+            "title": "Timestamp Utc",
+            "description": "Readiness verification timestamp"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data_store_ready",
+          "analytics_ready"
+        ],
+        "title": "ReadinessResponse",
+        "description": "Readiness probe response checking data tables and analytics dependencies."
+      },
+      "RiskEvaluationRequest": {
+        "properties": {
+          "upazila_id": {
+            "type": "string",
+            "title": "Upazila Id",
+            "description": "Target Upazila code (e.g. BD-50-20-30)"
+          },
+          "crop_id": {
+            "type": "string",
+            "title": "Crop Id",
+            "description": "Crop identifier",
+            "default": "boro_rice"
+          },
+          "growth_stage": {
+            "type": "string",
+            "title": "Growth Stage",
+            "description": "Active phenological growth stage (e.g. Tillering, Flowering)"
+          },
+          "hazard_types": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hazard Types",
+            "description": "Hazard domains to evaluate"
+          }
+        },
+        "type": "object",
+        "required": [
+          "upazila_id",
+          "growth_stage"
+        ],
+        "title": "RiskEvaluationRequest",
+        "description": "Agricultural hazard assessment query payload."
+      },
+      "RiskEvaluationResponse": {
+        "properties": {
+          "upazila_id": {
+            "type": "string",
+            "title": "Upazila Id",
+            "description": "Upazila code"
+          },
+          "crop_id": {
+            "type": "string",
+            "title": "Crop Id",
+            "description": "Crop code"
+          },
+          "growth_stage": {
+            "type": "string",
+            "title": "Growth Stage",
+            "description": "Growth stage"
+          },
+          "evaluation_date": {
+            "type": "string",
+            "title": "Evaluation Date",
+            "description": "Evaluation date (YYYY-MM-DD)"
+          },
+          "overall_hazard_tier": {
+            "type": "string",
+            "title": "Overall Hazard Tier",
+            "description": "Composite peak hazard level"
+          },
+          "overall_hazard_tier_bn": {
+            "type": "string",
+            "title": "Overall Hazard Tier Bn",
+            "description": "Composite hazard level in Bengali"
+          },
+          "hazard_assessments": {
+            "items": {
+              "$ref": "#/components/schemas/PhysicalHazardAssessment"
+            },
+            "type": "array",
+            "title": "Hazard Assessments",
+            "description": "Detailed assessments per hazard"
+          },
+          "scientific_disclaimer_bn": {
+            "type": "string",
+            "title": "Scientific Disclaimer Bn",
+            "description": "Mandatory scientific safeguard disclaimer (DEC-06)",
+            "default": "এই মূল্যায়ন শুধুমাত্র প্রাকৃতিক পরিবেশগত ঝুঁকির নির্দেশক; এটি আর্থিক ক্ষতি বা চূড়ান্ত ফলন হ্রাসের নিশ্চয়তা দেয় না।"
+          },
+          "provenance": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Provenance",
+            "description": "Model and data source versions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "upazila_id",
+          "crop_id",
+          "growth_stage",
+          "evaluation_date",
+          "overall_hazard_tier",
+          "overall_hazard_tier_bn",
+          "hazard_assessments"
+        ],
+        "title": "RiskEvaluationResponse",
+        "description": "Complete physical risk assessment response."
+      },
+      "SoilPropertiesSchema": {
+        "properties": {
+          "texture": {
+            "type": "string",
+            "title": "Texture",
+            "description": "Soil texture class"
+          },
+          "root_zone_depth_m": {
+            "type": "number",
+            "title": "Root Zone Depth M",
+            "description": "Effective root zone depth in meters"
+          },
+          "total_available_water_taw_mm": {
+            "type": "number",
+            "title": "Total Available Water Taw Mm",
+            "description": "TAW in mm"
+          },
+          "readily_available_water_raw_mm": {
+            "type": "number",
+            "title": "Readily Available Water Raw Mm",
+            "description": "RAW in mm"
+          }
+        },
+        "type": "object",
+        "required": [
+          "texture",
+          "root_zone_depth_m",
+          "total_available_water_taw_mm",
+          "readily_available_water_raw_mm"
+        ],
+        "title": "SoilPropertiesSchema",
+        "description": "Soil physical properties."
+      },
+      "SystemProvenanceResponse": {
+        "properties": {
+          "system_name": {
+            "type": "string",
+            "title": "System Name",
+            "default": "Ritucast Agricultural Intelligence Platform"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version",
+            "default": "1.0.0-phase10"
+          },
+          "generated_at_bst": {
+            "type": "string",
+            "title": "Generated At Bst",
+            "description": "Report generation timestamp"
+          },
+          "pilot_regions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Pilot Regions",
+            "description": "Active geographic testbeds"
+          },
+          "datasets": {
+            "items": {
+              "$ref": "#/components/schemas/DatasetProvenanceItem"
+            },
+            "type": "array",
+            "title": "Datasets",
+            "description": "Ingested dataset status"
+          },
+          "scientific_methodologies": {
+            "items": {
+              "$ref": "#/components/schemas/ModelMethodologyItem"
+            },
+            "type": "array",
+            "title": "Scientific Methodologies",
+            "description": "Scientific equations and rules"
+          },
+          "scientific_boundaries": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Scientific Boundaries",
+            "description": "Scope boundaries and non-goals (DEC-06)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "generated_at_bst",
+          "pilot_regions",
+          "datasets",
+          "scientific_methodologies",
+          "scientific_boundaries"
+        ],
+        "title": "SystemProvenanceResponse",
+        "description": "Complete system provenance and freshness envelope."
+      },
+      "Tier1ObservationSummary": {
+        "properties": {
+          "summary_bn": {
+            "type": "string",
+            "title": "Summary Bn",
+            "description": "Bengali description of sensor observations"
+          },
+          "rainfall_7d_total_mm": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rainfall 7D Total Mm",
+            "description": "7-day cumulative rainfall (mm)"
+          },
+          "mean_temp_c": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mean Temp C",
+            "description": "Mean temperature (°C)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "summary_bn"
+        ],
+        "title": "Tier1ObservationSummary",
+        "description": "Tier 1 Empirical observations summary."
+      },
+      "Tier2IndicatorSummary": {
+        "properties": {
+          "summary_bn": {
+            "type": "string",
+            "title": "Summary Bn",
+            "description": "Bengali description of calculated indicators"
+          },
+          "soil_water_deficit_dt_mm": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Soil Water Deficit Dt Mm",
+            "description": "Current soil water deficit Dt (mm)"
+          },
+          "fao56_et0_mm_day": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fao56 Et0 Mm Day",
+            "description": "Reference evapotranspiration (mm/day)"
+          },
+          "flood_hazard_index_iflood": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Flood Hazard Index Iflood",
+            "description": "Haor flood hazard index (0-1)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "summary_bn"
+        ],
+        "title": "Tier2IndicatorSummary",
+        "description": "Tier 2 Derived agronomic indicators summary."
+      },
+      "Tier3PredictionSummary": {
+        "properties": {
+          "summary_bn": {
+            "type": "string",
+            "title": "Summary Bn",
+            "description": "Bengali description of forecast"
+          },
+          "rain_probability_48h_pct": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rain Probability 48H Pct",
+            "description": "48-hour rain probability (%)"
+          },
+          "qpf_48h_mm": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Qpf 48H Mm",
+            "description": "48-hour quantitative precipitation forecast (mm)"
+          },
+          "ensemble_spread_pct": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ensemble Spread Pct",
+            "description": "NWP ensemble spread (%)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "summary_bn"
+        ],
+        "title": "Tier3PredictionSummary",
+        "description": "Tier 3 Probabilistic forecast summary."
+      },
+      "Tier4RecommendationDetail": {
+        "properties": {
+          "rule_id": {
+            "type": "string",
+            "title": "Rule Id",
+            "description": "Triggered rule identifier (e.g. RULE-IRR-01)"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category",
+            "description": "Advisory category (e.g. IRRIGATION, FLASH_FLOOD, THERMAL_STRESS)"
+          },
+          "action_code": {
+            "type": "string",
+            "title": "Action Code",
+            "description": "Action directive code"
+          },
+          "severity": {
+            "type": "string",
+            "title": "Severity",
+            "description": "Urgency severity (INFO, ADVISORY, WARNING, EMERGENCY)"
+          },
+          "headline_bn": {
+            "type": "string",
+            "title": "Headline Bn",
+            "description": "Plain-language Bengali headline"
+          },
+          "body_bn": {
+            "type": "string",
+            "title": "Body Bn",
+            "description": "Operational advisory body in Bengali"
+          },
+          "mandatory_disclaimer_bn": {
+            "type": "string",
+            "title": "Mandatory Disclaimer Bn",
+            "description": "Mandatory field verification copy (DEC-10, AGENTS.md)",
+            "default": "সেচ বন্ধ করার আগে জমির আইল এবং মাটির রস নিজে হাত দিয়ে পরীক্ষা করুন।"
+          },
+          "action_items_bn": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Action Items Bn",
+            "description": "Concrete action directives in Bengali"
+          },
+          "rationale_breakdown": {
+            "type": "object",
+            "title": "Rationale Breakdown",
+            "description": "Scientific and economic rationale"
+          },
+          "confidence": {
+            "type": "object",
+            "title": "Confidence",
+            "description": "Confidence classification and score"
+          },
+          "is_suppressed": {
+            "type": "boolean",
+            "title": "Is Suppressed",
+            "description": "Whether advisory was suppressed due to data age or spread",
+            "default": false
+          },
+          "suppression_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Suppression Reason",
+            "description": "Suppression cause if suppressed"
+          }
+        },
+        "type": "object",
+        "required": [
+          "rule_id",
+          "category",
+          "action_code",
+          "severity",
+          "headline_bn",
+          "body_bn"
+        ],
+        "title": "Tier4RecommendationDetail",
+        "description": "Tier 4 Actionable recommendation synthesized from Phase 9 rule evaluation."
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "WaterBalanceIndicators": {
+        "properties": {
+          "calculation_date": {
+            "type": "string",
+            "title": "Calculation Date",
+            "description": "Calculation date (YYYY-MM-DD)"
+          },
+          "fao56_et0_mm_day": {
+            "type": "number",
+            "title": "Fao56 Et0 Mm Day",
+            "description": "FAO-56 reference evapotranspiration (mm/day)"
+          },
+          "calibrated_kc": {
+            "type": "number",
+            "title": "Calibrated Kc",
+            "description": "Active crop coefficient Kc"
+          },
+          "crop_etc_mm_day": {
+            "type": "number",
+            "title": "Crop Etc Mm Day",
+            "description": "Crop water demand ETc (mm/day)"
+          },
+          "soil_properties": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SoilPropertiesSchema"
+              }
+            ],
+            "description": "Soil parameters"
+          },
+          "current_soil_water_deficit_dt_mm": {
+            "type": "number",
+            "title": "Current Soil Water Deficit Dt Mm",
+            "description": "Root-zone water depletion Dt in mm"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "Agronomic status code"
+          },
+          "status_bn": {
+            "type": "string",
+            "title": "Status Bn",
+            "description": "Agronomic status in Bengali"
+          }
+        },
+        "type": "object",
+        "required": [
+          "calculation_date",
+          "fao56_et0_mm_day",
+          "calibrated_kc",
+          "crop_etc_mm_day",
+          "soil_properties",
+          "current_soil_water_deficit_dt_mm",
+          "status",
+          "status_bn"
+        ],
+        "title": "WaterBalanceIndicators",
+        "description": "Tier 2 water balance indicators."
+      },
+      "WaterBalanceResponse": {
+        "properties": {
+          "upazila_id": {
+            "type": "string",
+            "title": "Upazila Id",
+            "description": "Upazila code"
+          },
+          "crop_id": {
+            "type": "string",
+            "title": "Crop Id",
+            "description": "Crop code"
+          },
+          "growth_stage": {
+            "type": "string",
+            "title": "Growth Stage",
+            "description": "Phenological growth stage"
+          },
+          "tier_2_indicators": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WaterBalanceIndicators"
+              }
+            ],
+            "description": "Derived water balance indicators"
+          },
+          "provenance": {
+            "type": "object",
+            "title": "Provenance",
+            "description": "Algorithm and dataset provenance"
+          }
+        },
+        "type": "object",
+        "required": [
+          "upazila_id",
+          "crop_id",
+          "growth_stage",
+          "tier_2_indicators"
+        ],
+        "title": "WaterBalanceResponse",
+        "description": "Root-zone water balance response."
+      },
+      "WeatherFeedResponse": {
+        "properties": {
+          "upazila_id": {
+            "type": "string",
+            "title": "Upazila Id",
+            "description": "Upazila code"
+          },
+          "name_bn": {
+            "type": "string",
+            "title": "Name Bn",
+            "description": "Upazila name in Bengali"
+          },
+          "timezone": {
+            "type": "string",
+            "title": "Timezone",
+            "description": "Local timezone",
+            "default": "Asia/Dhaka"
+          },
+          "tier_1_observations": {
+            "type": "object",
+            "title": "Tier 1 Observations",
+            "description": "Empirical sensor observations"
+          },
+          "tier_3_forecasts": {
+            "type": "object",
+            "title": "Tier 3 Forecasts",
+            "description": "Probabilistic weather forecasts"
+          }
+        },
+        "type": "object",
+        "required": [
+          "upazila_id",
+          "name_bn",
+          "tier_1_observations",
+          "tier_3_forecasts"
+        ],
+        "title": "WeatherFeedResponse",
+        "description": "Combined Tier 1 observations and Tier 3 forecast feed."
+      }
+    }
+  }
+}
