@@ -1,0 +1,688 @@
+/* ==========================================================================
+   Ritucast Master Design System Stylesheet (index.css)
+   Strictly adheres to ADR-03, DEC-20, and docs/design/design-tokens.md
+   ========================================================================== */
+
+:root {
+  /* ------------------------------------------------------------------------
+     1. Foundational Color Primitives
+     ------------------------------------------------------------------------ */
+  --primitive-green-900: #14532D;
+  --primitive-green-800: #166534;
+  --primitive-green-700: #15803D;
+  --primitive-green-600: #16A34A;
+  --primitive-green-500: #22C55E;
+  --primitive-green-100: #DCFCE7;
+  --primitive-green-50:  #F0FDF4;
+
+  --primitive-slate-900: #0F172A;
+  --primitive-slate-800: #1E293B;
+  --primitive-slate-700: #334155;
+  --primitive-slate-600: #475569;
+  --primitive-slate-500: #64748B;
+  --primitive-slate-400: #94A3B8;
+  --primitive-slate-200: #E2E8F0;
+  --primitive-slate-100: #F1F5F9;
+
+  --primitive-amber-800: #92400E;
+  --primitive-amber-700: #B45309;
+  --primitive-amber-600: #D97706;
+  --primitive-amber-500: #F59E0B;
+  --primitive-amber-100: #FEF3C7;
+  --primitive-amber-50:  #FFFBEB;
+
+  --primitive-red-800:   #991B1B;
+  --primitive-red-700:   #B91C1C;
+  --primitive-red-600:   #DC2626;
+  --primitive-red-100:   #FEE2E2;
+  --primitive-red-50:    #FEF2F2;
+
+  --primitive-sky-800:   #075985;
+  --primitive-sky-700:   #0369A1;
+  --primitive-sky-600:   #0284C7;
+  --primitive-sky-500:   #0EA5E9;
+  --primitive-sky-100:   #E0F2FE;
+  --primitive-sky-50:    #F0F9FF;
+
+  --primitive-neutral-950: #030712;
+  --primitive-neutral-900: #111827;
+  --primitive-neutral-700: #374151;
+  --primitive-neutral-500: #6B7280;
+  --primitive-neutral-400: #9CA3AF;
+  --primitive-neutral-300: #D1D5DB;
+  --primitive-neutral-200: #E5E7EB;
+  --primitive-neutral-100: #F3F4F6;
+  --primitive-neutral-50:  #F9FAFB;
+  --primitive-white:       #FFFFFF;
+
+  /* ------------------------------------------------------------------------
+     2. Semantic Colors (Surfaces & Backgrounds)
+     ------------------------------------------------------------------------ */
+  --color-bg-canvas:        #F8FAF8;
+  --color-bg-surface:       var(--primitive-white);
+  --color-bg-subtle:        var(--primitive-slate-100);
+  --color-bg-card-hover:    var(--primitive-neutral-50);
+
+  /* ------------------------------------------------------------------------
+     3. Semantic Colors (Text & Typography)
+     ------------------------------------------------------------------------ */
+  --color-text-primary:     var(--primitive-neutral-900);
+  --color-text-secondary:   var(--primitive-neutral-700);
+  --color-text-muted:       var(--primitive-slate-500);
+  --color-text-inverse:     var(--primitive-white);
+
+  /* ------------------------------------------------------------------------
+     4. Semantic Colors (Brand & Accents)
+     ------------------------------------------------------------------------ */
+  --color-brand-primary:       var(--primitive-green-700);
+  --color-brand-primary-hover: var(--primitive-green-800);
+  --color-brand-secondary:     var(--primitive-slate-900);
+  --color-brand-accent:        var(--primitive-amber-600);
+  --color-brand-sky:           var(--primitive-sky-600);
+
+  /* ------------------------------------------------------------------------
+     5. Semantic Colors (Borders & Dividers)
+     ------------------------------------------------------------------------ */
+  --color-border-default:   var(--primitive-neutral-200);
+  --color-border-strong:    var(--primitive-neutral-400);
+  --color-divider:          var(--primitive-slate-200);
+
+  /* ------------------------------------------------------------------------
+     6. Semantic Status & Risk Colors
+     ------------------------------------------------------------------------ */
+  --color-status-success:        var(--primitive-green-800);
+  --color-status-success-bg:     var(--primitive-green-50);
+  --color-status-success-border: var(--primitive-green-600);
+
+  --color-status-warning:        var(--primitive-amber-700);
+  --color-status-warning-bg:     var(--primitive-amber-50);
+  --color-status-warning-border: var(--primitive-amber-600);
+
+  --color-status-critical:       var(--primitive-red-700);
+  --color-status-critical-bg:    var(--primitive-red-50);
+  --color-status-critical-border: var(--primitive-red-600);
+
+  --color-status-info:           var(--primitive-sky-700);
+  --color-status-info-bg:        var(--primitive-sky-50);
+  --color-status-info-border:    var(--primitive-sky-500);
+
+  --color-status-neutral:        var(--primitive-slate-700);
+  --color-status-neutral-bg:     var(--primitive-slate-100);
+
+  /* ------------------------------------------------------------------------
+     7. Interactive & Focus Tokens
+     ------------------------------------------------------------------------ */
+  --color-focus-ring:            var(--primitive-sky-600);
+  --color-control-disabled:      var(--primitive-neutral-200);
+  --color-control-disabled-text: var(--primitive-slate-400);
+
+  /* ------------------------------------------------------------------------
+     8. Typography Scale
+     ------------------------------------------------------------------------ */
+  --font-family-bangla: 'Hind Siliguri', 'Noto Sans Bengali', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-sans:   'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-mono:   'JetBrains Mono', 'Roboto Mono', ui-monospace, monospace;
+
+  --font-size-display: 1.75rem;   /* 28px */
+  --font-size-h1:      1.375rem;  /* 22px */
+  --font-size-h2:      1.125rem;  /* 18px */
+  --font-size-h3:      1.0rem;    /* 16px */
+  --font-size-body:    0.9375rem; /* 15px */
+  --font-size-caption: 0.8125rem; /* 13px */
+  --font-size-meta:    0.75rem;   /* 12px */
+
+  --font-weight-regular: 400;
+  --font-weight-medium:  500;
+  --font-weight-semibold: 600;
+  --font-weight-bold:    700;
+
+  --line-height-display: 1.28;
+  --line-height-heading: 1.35;
+  --line-height-body:    1.60;
+  --line-height-caption: 1.38;
+
+  /* ------------------------------------------------------------------------
+     9. Spacing Scale (8pt grid)
+     ------------------------------------------------------------------------ */
+  --spacing-2xs: 2px;
+  --spacing-xs:  4px;
+  --spacing-sm:  8px;
+  --spacing-md:  12px;
+  --spacing-lg:  16px;
+  --spacing-xl:  24px;
+  --spacing-2xl: 32px;
+  --spacing-3xl: 48px;
+
+  /* ------------------------------------------------------------------------
+     10. Physical Touch Target & Ergonomics
+     ------------------------------------------------------------------------ */
+  --touch-target-min: 48px;
+
+  /* ------------------------------------------------------------------------
+     11. Border Radius Scale
+     ------------------------------------------------------------------------ */
+  --radius-xs:   4px;
+  --radius-sm:   6px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-pill: 9999px;
+
+  /* ------------------------------------------------------------------------
+     12. Elevation & Shadows (Outdoor Tuned)
+     ------------------------------------------------------------------------ */
+  --shadow-none: none;
+  --shadow-sm:   0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md:   0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg:   0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+
+  /* ------------------------------------------------------------------------
+     13. Motion & Animation Timings (Reduced-Motion Aware)
+     ------------------------------------------------------------------------ */
+  --duration-fast:   150ms;
+  --duration-normal: 250ms;
+  --ease-standard:   cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Reduced Motion Override (WCAG 2.2 SC 2.3.3) */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast:   0ms;
+    --duration-normal: 0ms;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Base Reset & Box Sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family-bangla);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-canvas);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Focus styles for keyboard accessibility */
+:focus-visible {
+  outline: 3px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Typography styles */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-text-primary);
+  line-height: var(--line-height-heading);
+  font-weight: var(--font-weight-bold);
+}
+
+h1 { font-size: var(--font-size-display); }
+h2 { font-size: var(--font-size-h1); }
+h3 { font-size: var(--font-size-h2); }
+h4 { font-size: var(--font-size-h3); }
+
+p {
+  margin-bottom: var(--spacing-sm);
+}
+
+/* Base button and interactive reset */
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* ==========================================================================
+   Reusable Utility & Component Classes
+   ========================================================================== */
+
+/* Layout Container */
+.app-container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+}
+
+@media (max-width: 640px) {
+  .app-container {
+    padding: 0 var(--spacing-md);
+  }
+}
+
+/* Header & Navigation Bar */
+.app-header {
+  background-color: var(--color-bg-surface);
+  border-bottom: 1px solid var(--color-border-default);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: var(--shadow-sm);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  text-decoration: none;
+  color: var(--color-brand-primary);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-h2);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  list-style: none;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  min-height: 40px;
+  transition: all var(--duration-fast) var(--ease-standard);
+}
+
+.nav-link:hover {
+  background-color: var(--primitive-slate-100);
+  color: var(--color-brand-primary);
+}
+
+.nav-link.active {
+  background-color: var(--primitive-green-100);
+  color: var(--primitive-green-900);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Navigation Badges / Status Chips */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: 2px var(--spacing-sm);
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-medium);
+}
+
+.status-badge.live {
+  background-color: var(--primitive-green-100);
+  color: var(--primitive-green-800);
+  border: 1px solid var(--primitive-green-500);
+}
+
+.status-badge.unready {
+  background-color: var(--primitive-amber-100);
+  color: var(--primitive-amber-800);
+  border: 1px solid var(--primitive-amber-500);
+}
+
+/* Cards & Panels */
+.card {
+  background-color: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--duration-fast) var(--ease-standard);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-md);
+}
+
+.card-title {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-bold);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+/* Form Controls & Selectors */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-md);
+}
+
+.form-label {
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+}
+
+.form-select, .form-input {
+  min-height: var(--touch-target-min);
+  padding: 0 var(--spacing-md);
+  border: 1.5px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  background-color: var(--color-bg-surface);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-body);
+  transition: border-color var(--duration-fast) var(--ease-standard);
+}
+
+.form-select:hover, .form-input:hover {
+  border-color: var(--color-border-strong);
+}
+
+.form-select:focus, .form-input:focus {
+  border-color: var(--color-brand-primary);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--primitive-green-100);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  min-height: var(--touch-target-min);
+  padding: 0 var(--spacing-xl);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+  transition: all var(--duration-fast) var(--ease-standard);
+  text-decoration: none;
+}
+
+.btn-primary {
+  background-color: var(--color-brand-primary);
+  color: var(--color-text-inverse);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-brand-primary-hover);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-secondary {
+  background-color: var(--primitive-slate-100);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-default);
+}
+
+.btn-secondary:hover {
+  background-color: var(--primitive-slate-200);
+}
+
+.btn-outline {
+  border: 1.5px solid var(--color-brand-primary);
+  color: var(--color-brand-primary);
+  background-color: transparent;
+}
+
+.btn-outline:hover {
+  background-color: var(--primitive-green-50);
+}
+
+.btn:disabled {
+  background-color: var(--color-control-disabled);
+  color: var(--color-control-disabled-text);
+  cursor: not-allowed;
+  border-color: transparent;
+}
+
+/* 4-Tier Information Taxonomy Styles (DEC-08) */
+.tier-card {
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
+  border-left: 4px solid transparent;
+}
+
+.tier-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-sm);
+  letter-spacing: 0.02em;
+}
+
+/* Tier 1: Observations */
+.tier-1 {
+  background-color: var(--primitive-sky-50);
+  border-left-color: var(--primitive-sky-600);
+}
+.tier-1-badge {
+  background-color: var(--primitive-sky-100);
+  color: var(--primitive-sky-800);
+}
+
+/* Tier 2: Calculated Indicators */
+.tier-2 {
+  background-color: #FAF5FF; /* Subtle purple/violet */
+  border-left-color: #9333EA;
+}
+.tier-2-badge {
+  background-color: #F3E8FF;
+  color: #6B21A8;
+}
+
+/* Tier 3: Probabilistic Predictions */
+.tier-3 {
+  background-color: var(--primitive-amber-50);
+  border-left-color: var(--primitive-amber-600);
+}
+.tier-3-badge {
+  background-color: var(--primitive-amber-100);
+  color: var(--primitive-amber-800);
+}
+
+/* Tier 4: Actionable Recommendations */
+.tier-4 {
+  background-color: var(--primitive-green-50);
+  border-left-color: var(--primitive-green-700);
+  border: 1px solid var(--primitive-green-600);
+}
+.tier-4-badge {
+  background-color: var(--primitive-green-700);
+  color: var(--primitive-white);
+}
+
+/* Recommendation Severity Highlights */
+.severity-EMERGENCY {
+  background-color: var(--primitive-red-50);
+  border-left-color: var(--primitive-red-600);
+  border: 1.5px solid var(--primitive-red-600);
+}
+.severity-EMERGENCY .tier-4-badge {
+  background-color: var(--primitive-red-700);
+}
+
+.severity-WARNING {
+  background-color: var(--primitive-amber-50);
+  border-left-color: var(--primitive-amber-600);
+  border: 1.5px solid var(--primitive-amber-600);
+}
+
+.severity-INFO {
+  background-color: var(--primitive-green-50);
+  border-left-color: var(--primitive-green-600);
+}
+
+/* Automated Suppression Banner (DEC-10) */
+.suppression-alert {
+  background-color: var(--primitive-amber-100);
+  border: 1.5px solid var(--primitive-amber-600);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+  color: var(--primitive-amber-900);
+  margin-bottom: var(--spacing-lg);
+}
+
+/* Mandatory Field Verification Disclaimer (AGENTS.md) */
+.field-verification-box {
+  background-color: var(--primitive-slate-100);
+  border-left: 3px solid var(--primitive-slate-700);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--radius-sm);
+  margin-top: var(--spacing-md);
+  font-size: var(--font-size-caption);
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+/* Metric Pill Grid */
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-md);
+}
+
+.metric-pill {
+  background-color: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+}
+
+.metric-label {
+  font-size: var(--font-size-caption);
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-medium);
+}
+
+.metric-value {
+  font-size: 1.25rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin-top: var(--spacing-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.metric-sub {
+  font-size: var(--font-size-meta);
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+/* Tab Bar / Page Views */
+.view-tabs {
+  display: flex;
+  gap: var(--spacing-xs);
+  border-bottom: 2px solid var(--color-border-default);
+  margin-bottom: var(--spacing-xl);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.tab-btn {
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  min-height: var(--touch-target-min);
+  transition: all var(--duration-fast) var(--ease-standard);
+}
+
+.tab-btn:hover {
+  color: var(--color-brand-primary);
+}
+
+.tab-btn.active {
+  color: var(--color-brand-primary);
+  border-bottom-color: var(--color-brand-primary);
+}
+
+/* Loading Skeleton */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Error State Container */
+.error-box {
+  background-color: var(--primitive-red-50);
+  border: 1px solid var(--primitive-red-600);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  color: var(--primitive-red-800);
+  text-align: center;
+  margin: var(--spacing-xl) 0;
+}
+
+.error-title {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-xs);
+}
+
+/* Footer */
+.app-footer {
+  margin-top: var(--spacing-3xl);
+  border-top: 1px solid var(--color-border-default);
+  background-color: var(--color-bg-surface);
+  padding: var(--spacing-2xl) 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-caption);
+}
+
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-lg);
+}
