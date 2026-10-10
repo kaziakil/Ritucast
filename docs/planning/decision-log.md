@@ -302,4 +302,61 @@ This document records architectural, strategic, and product decisions made throu
 - **Rationale**: Intercepts all outgoing recommendation payloads before serialization; guarantees that even if a buggy algorithmic heuristic emits an advisory, it is suppressed server-side and replaced with the safe field-verification notice.
 - **Downstream Impact**: Informs Phase 10 API gateway security and Phase 13 integration test suite. Ref: [ADR-08](file:///Users/kazi/Projects/RITUCAST/docs/architecture/decisions/ADR-08-automated-suppression-middleware.md).
 
+---
+
+## 7. Phase 6 Information Architecture & UX Decisions
+
+---
+
+### DEC-24: Decision-Driven, Non-Pipeline Navigation Architecture
+- **Date**: 2026-10-10 (Phase 6)
+- **Status**: **Approved**
+- **Context**: Organizing the user interface around internal remote sensing datasets (e.g., separate tabs for NASA, Sentinel-1, SMAP) confuses farmers and extension workers who think in operational farming questions.
+- **Alternatives Considered**:
+  - *Option A*: Dataset-centric navigation (Tabs: Satellite Radar, Weather API, Soil Moisture, Predictions).
+  - *Option B*: Map-first GIS layout (Interactive map as primary landing view).
+  - *Option C (Selected)*: **Decision-Driven 5-Item Navigation** (`আজকের পরামর্শ`, `আবহাওয়া ও পূর্বাভাস`, `মাটি ও সেচ / বন্যা ও প্লাবন`, `মানচিত্র ও বিশ্লেষণ`, `সাহায্য ও তথ্যসূত্র`).
+- **Rationale**: Places immediate operational advice on the home screen; maps and technical indicators are progressively disclosed when needed.
+- **Downstream Impact**: Guides Phase 7 navigation design tokens, Phase 11 client routing, and Phase 14 usability testing. Ref: [information-architecture.md](file:///Users/kazi/Projects/RITUCAST/docs/ux/information-architecture.md).
+
+---
+
+### DEC-25: Context-Adaptive Regional Navigation Switching
+- **Date**: 2026-10-10 (Phase 6)
+- **Status**: **Approved**
+- **Context**: The High Barind Tract faces chronic groundwater drought, requiring AWD irrigation scheduling; the Haor Basin faces catastrophic sudden flash floods, requiring emergency harvest warnings. Forcing both into static tabs creates irrelevant visual clutter.
+- **Alternatives Considered**:
+  - *Option A*: Static tabs displaying both Soil and Flood modules simultaneously across all regions.
+  - *Option B*: Separate standalone web apps for Barind and Haor.
+  - *Option C (Selected)*: **Context-Adaptive Navigation Module (Module 3)**. Dynamically renders `মাটি ও সেচ` when a Barind Upazila is active, and `বন্যা ও প্লাবন` when a Haor Upazila is active.
+- **Rationale**: Maintains a unified codebase and seamless user experience while delivering hyper-relevant local decision support.
+- **Downstream Impact**: Directs Phase 7 component states and Phase 11 React routing logic. Ref: [information-architecture.md](file:///Users/kazi/Projects/RITUCAST/docs/ux/information-architecture.md).
+
+---
+
+### DEC-26: Chip Modal Location Selection over Interactive Map Picker
+- **Date**: 2026-10-10 (Phase 6)
+- **Status**: **Approved**
+- **Context**: Rural target users operate budget Android devices (2GB RAM) over 3G cellular connections. Forcing an interactive map canvas render solely to select an Upazila creates 5–8 second latency and high crash rates (`RSK-19`, `DEC-09`).
+- **Alternatives Considered**:
+  - *Option A*: Map-click-only location picker.
+  - *Option B*: Standard browser HTML dropdown `<select>`.
+  - *Option C (Selected)*: **High-Performance Chip & Search Bottom Sheet Modal** (Instant load <100ms; quick chips for pilot Upazilas; fuzzy Bangla text search).
+- **Rationale**: Enables location selection in $\le 2$ taps and $\le 3$ seconds on budget smartphones without loading heavy WebGL map assets.
+- **Downstream Impact**: Shapes Phase 7 modal wireframes and Phase 11 state persistence. Ref: [geographic-context-and-selection.md](file:///Users/kazi/Projects/RITUCAST/docs/ux/geographic-context-and-selection.md).
+
+---
+
+### DEC-27: 8-Layer Agricultural Insight Hierarchy and Non-Color-Only Accessibility Mandate
+- **Date**: 2026-10-10 (Phase 6)
+- **Status**: **Approved**
+- **Context**: Agricultural operations carry significant economic and food security risks. Ambiguous color indicators or blurring observations with predictions leads to false confidence or dangerous inaction.
+- **Alternatives Considered**:
+  - *Option A*: Single unified risk score badge (e.g., "Risk: 7/10").
+  - *Option B*: Color-coded status dots without text labels.
+  - *Option C (Selected)*: **8-Layer Information Hierarchy with Non-Color-Only WCAG 2.2 AA Enforcement**. Every card pairs color with a distinct glyph icon (`[✓]`, `[⚠️]`, `[🚨]`) and descriptive text label.
+- **Rationale**: Guarantees legibility in intense outdoor sunlight and accessibility for color-blind farmers while strictly upholding the `DEC-08` information taxonomy.
+- **Downstream Impact**: Governs Phase 7 design system token pairing and Phase 11 accessible component templates. Ref: [agricultural-insight-information-model.md](file:///Users/kazi/Projects/RITUCAST/docs/ux/agricultural-insight-information-model.md), [accessibility-localization-and-connectivity.md](file:///Users/kazi/Projects/RITUCAST/docs/ux/accessibility-localization-and-connectivity.md).
+
+
 
