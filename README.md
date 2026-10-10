@@ -26,8 +26,9 @@ Ritucast is developed under a strict **18-phase governed engineering lifecycle**
 | **02** | **Requirements and Product Strategy** | **Completed (PASS)** |
 | **03** | **Dataset Research and Validation** | **Completed (PASS)** |
 | **04** | **Agricultural Knowledge & Scientific Validation Planning** | **Completed (PASS)** |
-| 05 | System Architecture & Technology Decisions | *Pending Review* |
-| 06–18 | Detailed Design through Long-Term Expansion | *Pending* |
+| **05** | **System Architecture & Technology Decisions** | **Completed (PASS)** |
+| 06 | Information Architecture & User Journey Design | *Pending Review (Next)* |
+| 07–18 | Detailed Design through Long-Term Expansion | *Pending* |
 
 Full details and phase governance rules can be viewed in the [Master Project Roadmap](file:///Users/kazi/Projects/RITUCAST/docs/planning/roadmap.md).
 
@@ -82,12 +83,35 @@ Full details and phase governance rules can be viewed in the [Master Project Roa
 - [Scientific Governance & Provenance](file:///Users/kazi/Projects/RITUCAST/docs/science/scientific-governance.md): Master Scientific Asset Registry tracking 12 assets with lifecycle states and versioning.
 - [Research Gaps Register](file:///Users/kazi/Projects/RITUCAST/docs/science/research-gaps.md): Catalog of 5 open scientific uncertainties with assigned roadmap phases and fallback plans.
 
+### Phase 5: System Architecture & Technology Decisions
+- [Architecture Requirements](file:///Users/kazi/Projects/RITUCAST/docs/architecture/architecture-requirements.md): Traceable functional/non-functional drivers, client performance budgets ($\le 1.5\text{MB}$ bundle, $\le 3.5\text{s}$ TTI, $\le 45\text{MB}$ heap).
+- [System Architecture](file:///Users/kazi/Projects/RITUCAST/docs/architecture/system-architecture.md): Alternative evaluations, selection of Decoupled Modular Monolith, master topology diagram.
+- [Component Boundaries](file:///Users/kazi/Projects/RITUCAST/docs/architecture/component-boundaries.md): Responsibilities, I/O, and failure modes across 8 core subsystems.
+- [Technology Stack](file:///Users/kazi/Projects/RITUCAST/docs/architecture/technology-stack.md): Justified stack: React 18, TypeScript, Vite, Vanilla CSS, FastAPI, PostGIS, Redis, MapLibre.
+- [Data Architecture](file:///Users/kazi/Projects/RITUCAST/docs/architecture/data-architecture.md): Lifecycle stages, relational schemas (ERD), spatial CRS conventions, temporal alignment, provenance.
+- [API & Component Contracts](file:///Users/kazi/Projects/RITUCAST/docs/architecture/api-and-component-contracts.md): OpenAPI 3.0 REST contracts for Upazilas, Weather, Water Balance, Flood Hazard, and Advisories.
+- [Security & Data Governance](file:///Users/kazi/Projects/RITUCAST/docs/architecture/security-and-data-governance.md): Threat modeling, Zero-PII policy, Secret Manager, Cloud Armor rate limits, open licenses.
+- [Reliability, Performance & Cost](file:///Users/kazi/Projects/RITUCAST/docs/architecture/reliability-performance-and-cost.md): 4-tier caching, budget Android tuning, Google Cloud cost model ($\le \$65/\text{month}$).
+- [Repository & Module Structure](file:///Users/kazi/Projects/RITUCAST/docs/architecture/repository-and-module-structure.md): Decoupled monorepo layout, dependency invariant rules, coding standards.
+- [Testing & Quality Strategy](file:///Users/kazi/Projects/RITUCAST/docs/architecture/testing-and-quality-strategy.md): 5-tier testing pyramid, automated CI/CD blueprint, software vs scientific validity.
+- [Architecture Risk Register](file:///Users/kazi/Projects/RITUCAST/docs/architecture/architecture-risk-register.md): 8 engineering risks (`RSK-ARC-01` to `RSK-ARC-08`) with triggers and fallbacks.
+- **Architecture Decision Records (ADRs)**:
+  - [ADR-01: Decoupled Modular Architecture](file:///Users/kazi/Projects/RITUCAST/docs/architecture/decisions/ADR-01-decoupled-modular-architecture.md)
+  - [ADR-02: FastAPI Python Backend](file:///Users/kazi/Projects/RITUCAST/docs/architecture/decisions/ADR-02-fastapi-backend.md)
+  - [ADR-03: React 18, TypeScript & Vanilla CSS](file:///Users/kazi/Projects/RITUCAST/docs/architecture/decisions/ADR-03-react-typescript-vanilla-css.md)
+  - [ADR-04: PostgreSQL & PostGIS Spatial Datastore](file:///Users/kazi/Projects/RITUCAST/docs/architecture/decisions/ADR-04-postgis-spatial-datastore.md)
+  - [ADR-05: Redis Multi-Tier Caching & Task Broker](file:///Users/kazi/Projects/RITUCAST/docs/architecture/decisions/ADR-05-redis-caching-and-broker.md)
+  - [ADR-06: MapLibre GL JS Client Mapping](file:///Users/kazi/Projects/RITUCAST/docs/architecture/decisions/ADR-06-maplibre-vector-maps.md)
+  - [ADR-07: Asymmetric Regional Pipelines](file:///Users/kazi/Projects/RITUCAST/docs/architecture/decisions/ADR-07-asymmetric-regional-pipelines.md)
+  - [ADR-08: Automated Suppression Middleware](file:///Users/kazi/Projects/RITUCAST/docs/architecture/decisions/ADR-08-automated-suppression-middleware.md)
+  - [ADR-09: Celery & Redis Scheduled Ingestion](file:///Users/kazi/Projects/RITUCAST/docs/architecture/decisions/ADR-09-celery-scheduled-ingestion.md)
+
 ### Planning, Governance & Quality Registers
 - [Agent Operating Instructions (AGENTS.md)](file:///Users/kazi/Projects/RITUCAST/AGENTS.md): Project-wide AI operating principles, scope boundaries, and safety guardrails.
 - [Phase 1–4 Continuity & Readiness Audit](file:///Users/kazi/Projects/RITUCAST/docs/project/phase-1-to-4-continuity-audit.md): Comprehensive pre-Phase 5 audit of artifacts, tests, data, and risks.
-- [Assumptions Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/assumptions-register.md): Tracked assumptions with verification paths (updated with ASM-04/07/11).
-- [Risk Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/risk-register.md): 18 prioritized risks with mitigations (updated with RSK-15 through RSK-18).
-- [Decision Log](file:///Users/kazi/Projects/RITUCAST/docs/planning/decision-log.md): Architectural decisions log (updated with DEC-15 through DEC-18).
+- [Assumptions Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/assumptions-register.md): Tracked assumptions with verification paths (updated with ASM-04/07/11/12).
+- [Risk Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/risk-register.md): 22 prioritized risks with mitigations (updated with RSK-19 through RSK-22).
+- [Decision Log](file:///Users/kazi/Projects/RITUCAST/docs/planning/decision-log.md): Architectural decisions log (updated with DEC-19 through DEC-23).
 - [Master Project Roadmap](file:///Users/kazi/Projects/RITUCAST/docs/planning/roadmap.md): 18-phase lifecycle status.
 
 ### Phase Execution Packages
@@ -95,6 +119,7 @@ Full details and phase governance rules can be viewed in the [Master Project Roa
 - **Phase 02 Package**: [Phase Plan](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-02/phase-plan.md) | [Readiness Assessment](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-02/readiness-assessment.md) | [Deliverables Checklist](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-02/deliverables-checklist.md) | [Validation Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-02/validation-report.md) | [Handoff to Phase 3](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-02/handoff-to-phase-03.md)
 - **Phase 03 Package**: [Phase Plan](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-03/phase-plan.md) | [Readiness Assessment](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-03/readiness-assessment.md) | [Research Notes](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-03/research-notes.md) | [Verification Log](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-03/verification-log.md) | [Deliverables Checklist](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-03/deliverables-checklist.md) | [Validation Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-03/validation-report.md) | [Handoff to Phase 4](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-03/handoff-to-phase-04.md)
 - **Phase 04 Package**: [Phase Plan](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-04/phase-plan.md) | [Readiness Assessment](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-04/readiness-assessment.md) | [Evidence Register](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-04/evidence-register.md) | [Deliverables Checklist](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-04/deliverables-checklist.md) | [Validation Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-04/validation-report.md) | [Handoff to Phase 5](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-04/handoff-to-phase-05.md)
+- **Phase 05 Package**: [Phase Plan](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-05/phase-plan.md) | [Readiness Assessment](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-05/readiness-assessment.md) | [Deliverables Checklist](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-05/deliverables-checklist.md) | [Validation Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-05/validation-report.md) | [Handoff to Phase 6](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-05/handoff-to-phase-06.md)
 
 ---
 
@@ -103,63 +128,48 @@ Full details and phase governance rules can be viewed in the [Master Project Roa
 ```text
 RITUCAST/
 ├── README.md
+├── AGENTS.md
+├── .editorconfig
 ├── .gitignore
-├── docs/
-│   ├── project/
-│   │   ├── project-overview.md
-│   │   ├── problem-definition.md
-│   │   ├── target-users.md
-│   │   ├── product-vision.md
-│   │   ├── initial-scope.md
-│   │   ├── geographic-agricultural-scope.md
-│   │   ├── success-metrics.md
-│   │   └── long-term-direction.md
-│   ├── product/
-│   │   ├── product-strategy.md
-│   │   ├── user-needs-and-journeys.md
-│   │   ├── release-strategy.md
-│   │   └── success-measurement-plan.md
-│   ├── requirements/
-│   │   ├── product-requirements.md
-│   │   ├── nonfunctional-requirements.md
-│   │   ├── feature-prioritization.md
-│   │   ├── requirements-traceability.md
-│   │   ├── data-requirements.md
-│   │   └── recommendation-quality-and-safety.md
-│   ├── data/
-│   │   ├── dataset-inventory.md
-│   │   ├── dataset-comparison-matrix.md
-│   │   ├── initial-dataset-stack.md
-│   │   ├── data-access-and-licensing.md
-│   │   ├── data-quality-validation.md
-│   │   ├── spatial-temporal-requirements.md
-│   │   └── source-registry.md
-│   ├── planning/
-│   │   ├── assumptions-register.md
-│   │   ├── risk-register.md
-│   │   ├── decision-log.md
-│   │   └── roadmap.md
-│   └── phases/
-│       ├── phase-01/
-│       │   ├── phase-plan.md
-│       │   ├── research-notes.md
-│       │   ├── deliverables-checklist.md
-│       │   ├── validation-report.md
-│       │   └── handoff-to-phase-02.md
-│       ├── phase-02/
-│       │   ├── phase-plan.md
-│       │   ├── readiness-assessment.md
-│       │   ├── deliverables-checklist.md
-│       │   ├── validation-report.md
-│       │   └── handoff-to-phase-03.md
-│       └── phase-03/
-│           ├── phase-plan.md
-│           ├── readiness-assessment.md
-│           ├── research-notes.md
-│           ├── verification-log.md
-│           ├── deliverables-checklist.md
-│           ├── validation-report.md
-│           └── handoff-to-phase-04.md
+└── docs/
+    ├── project/
+    ├── product/
+    ├── requirements/
+    ├── data/
+    ├── science/
+    ├── architecture/
+    │   ├── decisions/
+    │   │   ├── ADR-01-decoupled-modular-architecture.md
+    │   │   ├── ADR-02-fastapi-backend.md
+    │   │   ├── ADR-03-react-typescript-vanilla-css.md
+    │   │   ├── ADR-04-postgis-spatial-datastore.md
+    │   │   ├── ADR-05-redis-caching-and-broker.md
+    │   │   ├── ADR-06-maplibre-vector-maps.md
+    │   │   ├── ADR-07-asymmetric-regional-pipelines.md
+    │   │   ├── ADR-08-automated-suppression-middleware.md
+    │   │   └── ADR-09-celery-scheduled-ingestion.md
+    │   ├── architecture-requirements.md
+    │   ├── system-architecture.md
+    │   ├── component-boundaries.md
+    │   ├── technology-stack.md
+    │   ├── data-architecture.md
+    │   ├── api-and-component-contracts.md
+    │   ├── security-and-data-governance.md
+    │   ├── reliability-performance-and-cost.md
+    │   ├── repository-and-module-structure.md
+    │   ├── testing-and-quality-strategy.md
+    │   └── architecture-risk-register.md
+    ├── planning/
+    │   ├── roadmap.md
+    │   ├── decision-log.md
+    │   ├── risk-register.md
+    │   └── assumptions-register.md
+    └── phases/
+        ├── phase-01/
+        ├── phase-02/
+        ├── phase-03/
+        ├── phase-04/
+        └── phase-05/
 ```
 
 ---

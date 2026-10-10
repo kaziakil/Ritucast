@@ -232,3 +232,74 @@ This document records architectural, strategic, and product decisions made throu
 - **Rationale**: Mathematically enforces honest communication of uncertainty, aligns with the 4-tier taxonomy, and guarantees automated suppression when data is stale ($>36\text{h}$) or model disagreement exceeds $50\%$.
 - **Downstream Impact**: Directs Phase 5 data structures, Phase 9 advisory calculation, and Phase 11 UI badge rendering.
 
+---
+
+## 6. Phase 5 System Architecture & Technology Decisions
+
+---
+
+### DEC-19: Selection of Decoupled Modular Architecture
+- **Date**: 2026-10-10 (Phase 5)
+- **Status**: **Approved**
+- **Context**: The platform requires strong separation between UI presentation, analytical computations, and asynchronous geospatial ingestion without incurring the operational overhead of microservices or Kubernetes.
+- **Alternatives Considered**:
+  - *Option A*: Traditional Monolith (Django / Laravel with server-side templates).
+  - *Option B*: Full Microservices (separate containers for Auth, Weather, Ingestion, Maps, Advisories).
+  - *Option C*: Full Serverless (AWS Lambda / Google Cloud Functions for all processing).
+  - *Option D (Selected)*: **Decoupled Modular Architecture** (FastAPI backend + Celery workers + PostGIS/Redis + Static React/Vite PWA client).
+- **Rationale**: Keeps total cloud hosting costs $\le \$65/\text{month}$, eliminates distributed transaction complexity, preserves modular boundaries for future extraction, and enables static edge-caching of the PWA bundle.
+- **Downstream Impact**: Informs repository layout, Docker Compose configs, and Phase 8–11 development workflows. Ref: [ADR-01](file:///Users/kazi/Projects/RITUCAST/docs/architecture/decisions/ADR-01-decoupled-modular-architecture.md).
+
+---
+
+### DEC-20: Frontend Stack: React 18, TypeScript, Vite, and Vanilla CSS Tokens
+- **Date**: 2026-10-10 (Phase 5)
+- **Status**: **Approved**
+- **Context**: Target rural users operate budget Android devices (2GB–3GB RAM) over 3G cellular networks, requiring bundle size $\le 1.5\text{MB}$, TTI $\le 3.5\text{s}$, and heap $\le 45\text{MB}$.
+- **Alternatives Considered**:
+  - *Option A*: React with Tailwind CSS and Next.js SSR.
+  - *Option B*: Vue.js / Nuxt.js.
+  - *Option C (Selected)*: **React 18 + TypeScript + Vite + Vanilla CSS Custom Properties (Tokens)**.
+- **Rationale**: Eliminates Tailwind runtime overhead and heavy utility classes; Vanilla CSS tokens provide full control over typography, high-contrast theming, and micro-animations while keeping production JS/CSS payloads under 350KB gzipped (well within the 1.5MB budget).
+- **Downstream Impact**: Directs Phase 7 design system tokens and Phase 11 frontend development. Ref: [ADR-03](file:///Users/kazi/Projects/RITUCAST/docs/architecture/decisions/ADR-03-react-typescript-vanilla-css.md).
+
+---
+
+### DEC-21: Backend & Spatial Datastore: FastAPI, Python 3.11, PostgreSQL 16 + PostGIS 3.4
+- **Date**: 2026-10-10 (Phase 5)
+- **Status**: **Approved**
+- **Context**: Scientific equations (FAO-56, water balance) and geospatial manipulation (GeoJSON, rasters) require native Python ecosystem integration and high-performance vector spatial indexing.
+- **Alternatives Considered**:
+  - *Option A*: Node.js (Express/NestJS) with MongoDB.
+  - *Option B*: Go with PostgreSQL.
+  - *Option C (Selected)*: **FastAPI + Python 3.11 + Pydantic v2 + PostgreSQL 16 / PostGIS 3.4 + Redis 7**.
+- **Rationale**: Direct interoperability with NumPy, SciPy, and Rasterio; Pydantic v2 delivers high-speed validation for advisory schemas; PostGIS provides native spatial queries (e.g., `ST_Contains`, `ST_Intersects`) for Upazila administrative polygons.
+- **Downstream Impact**: Directs Phase 8 pipelines, Phase 9 analytics engine, and Phase 10 API implementation. Ref: [ADR-02](file:///Users/kazi/Projects/RITUCAST/docs/architecture/decisions/ADR-02-fastapi-backend.md), [ADR-04](file:///Users/kazi/Projects/RITUCAST/docs/architecture/decisions/ADR-04-postgis-spatial-datastore.md).
+
+---
+
+### DEC-22: Asymmetric Regional Pipelines for Pilot Testbeds
+- **Date**: 2026-10-10 (Phase 5)
+- **Status**: **Approved**
+- **Context**: Barind irrigation management operates on a slow, cumulative 24-hour evaporative cycle, whereas Haor flash floods develop within 6–12 hours of transboundary Meghalaya rainfall spikes.
+- **Alternatives Considered**:
+  - *Option A*: Uniform daily 24h cron schedule across all regions.
+  - *Option B*: Uniform 1-hour polling across all regions.
+  - *Option C (Selected)*: **Asymmetric Regional Pipelines** (Daily 24h pipeline for Barind Tract; 6-hourly pipeline with rapid-poll fallback for Haor Basin).
+- **Rationale**: Prevents costly compute and API waste in Barind while guaranteeing timely early-harvest warnings in Haor before upstream runoff inundates Boro fields.
+- **Downstream Impact**: Defines Celery beat schedules in Phase 8 and alert generation triggers in Phase 9. Ref: [ADR-07](file:///Users/kazi/Projects/RITUCAST/docs/architecture/decisions/ADR-07-asymmetric-regional-pipelines.md).
+
+---
+
+### DEC-23: Centralized Automated Suppression Middleware
+- **Date**: 2026-10-10 (Phase 5)
+- **Status**: **Approved**
+- **Context**: Strict adherence to the `DEC-10` automated suppression policy requires an infallible mechanism to prevent stale (>36h) or highly uncertain advisory delivery.
+- **Alternatives Considered**:
+  - *Option A*: Client-side advisory filtering in React.
+  - *Option B*: Ad-hoc `if` statements inside individual analytics functions.
+  - *Option C (Selected)*: **Centralized FastAPI Middleware (`AdvisorySuppressionMiddleware`)**.
+- **Rationale**: Intercepts all outgoing recommendation payloads before serialization; guarantees that even if a buggy algorithmic heuristic emits an advisory, it is suppressed server-side and replaced with the safe field-verification notice.
+- **Downstream Impact**: Informs Phase 10 API gateway security and Phase 13 integration test suite. Ref: [ADR-08](file:///Users/kazi/Projects/RITUCAST/docs/architecture/decisions/ADR-08-automated-suppression-middleware.md).
+
+
