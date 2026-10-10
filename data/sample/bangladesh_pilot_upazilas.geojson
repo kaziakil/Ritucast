@@ -1,0 +1,112 @@
+{
+  "type": "FeatureCollection",
+  "name": "bangladesh_pilot_upazilas",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "upazila_id": "BD-50-20-30",
+        "upazila_name": "Godagari",
+        "upazila_name_bn": "গোদাগাড়ী",
+        "district_id": "BD-50-20",
+        "district_name": "Rajshahi",
+        "division_name": "Rajshahi",
+        "pilot_region": "High Barind Tract",
+        "area_sq_km": 472.1
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [88.20, 24.35],
+            [88.45, 24.35],
+            [88.45, 24.60],
+            [88.20, 24.60],
+            [88.20, 24.35]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "upazila_id": "BD-50-20-90",
+        "upazila_name": "Tanore",
+        "upazila_name_bn": "তানোর",
+        "district_id": "BD-50-20",
+        "district_name": "Rajshahi",
+        "division_name": "Rajshahi",
+        "pilot_region": "High Barind Tract",
+        "area_sq_km": 295.4
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [88.48, 24.48],
+            [88.68, 24.48],
+            [88.68, 24.68],
+            [88.48, 24.68],
+            [88.48, 24.48]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "upazila_id": "BD-60-90-86",
+        "upazila_name": "Sunamganj Sadar",
+        "upazila_name_bn": "সুনামগঞ্জ সদর",
+        "district_id": "BD-60-90",
+        "district_name": "Sunamganj",
+        "division_name": "Sylhet",
+        "pilot_region": "Haor Basin",
+        "area_sq_km": 268.5
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [91.30, 24.95],
+            [91.50, 24.95],
+            [91.50, 25.18],
+            [91.30, 25.18],
+            [91.30, 24.95]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "upazila_id": "BD-60-90-89",
+        "upazila_name": "Tahirpur",
+        "upazila_name_bn": "তাহিরপুর",
+        "district_id": "BD-60-90",
+        "district_name": "Sunamganj",
+        "division_name": "Sylhet",
+        "pilot_region": "Haor Basin",
+        "area_sq_km": 315.3
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [91.05, 25.08],
+            [91.30, 25.08],
+            [91.30, 25.30],
+            [91.05, 25.30],
+            [91.05, 25.08]
+          ]
+        ]
+      }
+    }
+  ]
+}

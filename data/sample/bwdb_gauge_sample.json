@@ -1,0 +1,35 @@
+{
+  "station_id": "BWDB-177",
+  "river_name": "Surma",
+  "location": "Sunamganj Sadar",
+  "upazila_id": "BD-60-90-86",
+  "danger_level_m_pwd": 8.25,
+  "highest_flood_level_m_pwd": 9.33,
+  "readings": [
+    {
+      "timestamp_utc": "2026-03-01T06:00:00Z",
+      "water_level_m_pwd": 4.85,
+      "trend": "STEADY"
+    },
+    {
+      "timestamp_utc": "2026-03-02T06:00:00Z",
+      "water_level_m_pwd": 5.40,
+      "trend": "RISING"
+    },
+    {
+      "timestamp_utc": "2026-03-03T06:00:00Z",
+      "water_level_m_pwd": 6.75,
+      "trend": "RAPIDLY_RISING"
+    },
+    {
+      "timestamp_utc": "2026-03-04T06:00:00Z",
+      "water_level_m_pwd": 7.60,
+      "trend": "RAPIDLY_RISING"
+    },
+    {
+      "timestamp_utc": "2026-03-05T06:00:00Z",
+      "water_level_m_pwd": 7.95,
+      "trend": "RISING"
+    }
+  ]
+}

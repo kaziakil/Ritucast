@@ -1,0 +1,19 @@
+{
+  "products": [
+    {
+      "id": "S1A_IW_GRDH_1SDV_20260303T115822_20260303T115847_063421_07B2A1_102C",
+      "platform": "Sentinel-1A",
+      "sensor_mode": "IW",
+      "product_type": "GRD",
+      "polarization": "VV+VH",
+      "sensing_time_utc": "2026-03-03T11:58:22Z",
+      "publication_time_utc": "2026-03-03T14:03:19Z",
+      "relative_orbit": 121,
+      "footprint_wkt": "POLYGON((90.8 24.8, 92.2 24.8, 92.2 25.6, 90.8 25.6, 90.8 24.8))",
+      "coverage_upazilas": ["BD-60-90-86", "BD-60-90-89"],
+      "water_extent_pct": 28.4,
+      "mean_backscatter_vv_db": -16.2,
+      "mean_backscatter_vh_db": -22.8
+    }
+  ]
+}

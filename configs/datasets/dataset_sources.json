@@ -1,0 +1,97 @@
+{
+  "project": "Ritucast",
+  "version": "1.0.0",
+  "sources": {
+    "nasa_power": {
+      "id": "DATA-MET-01",
+      "name": "NASA POWER Daily Agrometeorology",
+      "base_url": "https://power.larc.nasa.gov/api/temporal/daily/point",
+      "community": "AG",
+      "parameters": [
+        "T2M",
+        "T2M_MAX",
+        "T2M_MIN",
+        "ALLSKY_SFC_SW_DWN",
+        "RH2M",
+        "WS2M",
+        "PRECTOTCORR"
+      ],
+      "format": "JSON",
+      "rate_limit_per_minute": 30,
+      "timeout_seconds": 30,
+      "max_retries": 3,
+      "spatial_resolution_km": 50.0
+    },
+    "open_meteo": {
+      "id": "DATA-FCST-01",
+      "name": "Open-Meteo Operational Weather Forecasts",
+      "base_url": "https://api.open-meteo.com/v1/forecast",
+      "models": ["ecmwf_ifs025", "gfs_seamless"],
+      "hourly_variables": [
+        "temperature_2m",
+        "relative_humidity_2m",
+        "precipitation_probability",
+        "precipitation",
+        "wind_speed_10m"
+      ],
+      "daily_variables": [
+        "temperature_2m_max",
+        "temperature_2m_min",
+        "precipitation_sum",
+        "precipitation_probability_max"
+      ],
+      "rate_limit_daily": 10000,
+      "timeout_seconds": 20,
+      "max_retries": 3,
+      "spatial_resolution_km": 28.0
+    },
+    "gpm_imerg": {
+      "id": "DATA-PCP-01",
+      "name": "GPM IMERG Multi-Satellite Precipitation (V07)",
+      "cmr_base_url": "https://cmr.earthdata.nasa.gov/search/granules.json",
+      "collections": {
+        "early": "GPM_3IMERGDE",
+        "final": "GPM_3IMERGDF"
+      },
+      "version": "07",
+      "spatial_resolution_km": 10.0,
+      "timeout_seconds": 30
+    },
+    "sentinel1_sar": {
+      "id": "DATA-SAR-01",
+      "name": "Copernicus Sentinel-1 C-Band SAR GRD",
+      "odata_base_url": "https://catalogue.dataspace.copernicus.eu/odata/v1/Products",
+      "collection": "SENTINEL-1",
+      "product_type": "GRD",
+      "polarization": "VV+VH",
+      "spatial_resolution_m": 10.0,
+      "water_backscatter_threshold_db": -14.0
+    },
+    "smap_soil_moisture": {
+      "id": "DATA-SMC-01",
+      "name": "SMAP Enhanced L3 9km Radiometer Soil Moisture",
+      "short_name": "SPL3SMP_E",
+      "version": "006",
+      "spatial_resolution_km": 9.0,
+      "depth_cm": [0, 5]
+    },
+    "bwdb_hydrology": {
+      "id": "DATA-HYD-01",
+      "name": "BWDB FFWC River Stage Gauge Logs",
+      "stations": [
+        {
+          "station_id": "BWDB-177",
+          "river": "Surma",
+          "location": "Sunamganj",
+          "danger_level_m_pwd": 8.25
+        },
+        {
+          "station_id": "BWDB-178",
+          "river": "Surma",
+          "location": "Chhatak",
+          "danger_level_m_pwd": 10.95
+        }
+      ]
+    }
+  }
+}

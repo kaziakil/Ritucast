@@ -1,0 +1,106 @@
+{
+  "crop": "Boro Rice",
+  "botanical_name": "Oryza sativa L.",
+  "source": "Bangladesh Rice Research Institute (BRRI)",
+  "varieties": [
+    {
+      "variety_name": "BRRI dhan28",
+      "duration_days": 140,
+      "gdd_requirement": 1950.0,
+      "stages": [
+        {
+          "stage_name": "Transplanting / Initial",
+          "stage_name_bn": "চারা রোপণ ও প্রাথমিক বৃদ্ধি",
+          "start_day": 1,
+          "end_day": 20,
+          "kc": 1.05,
+          "root_depth_m": 0.20,
+          "depletion_fraction_p": 0.20
+        },
+        {
+          "stage_name": "Tillering / Crop Development",
+          "stage_name_bn": "কুশি গজানো পর্যায়",
+          "start_day": 21,
+          "end_day": 50,
+          "kc": 1.15,
+          "root_depth_m": 0.30,
+          "depletion_fraction_p": 0.20
+        },
+        {
+          "stage_name": "Panicle Initiation to Flowering (Mid-Season)",
+          "stage_name_bn": "থোর হওয়া থেকে ফুল ফোটা",
+          "start_day": 51,
+          "end_day": 95,
+          "kc": 1.25,
+          "root_depth_m": 0.40,
+          "depletion_fraction_p": 0.10
+        },
+        {
+          "stage_name": "Milking to Dough (Late-Season)",
+          "stage_name_bn": "দুধ ও দানা শক্ত হওয়া",
+          "start_day": 96,
+          "end_day": 125,
+          "kc": 1.10,
+          "root_depth_m": 0.40,
+          "depletion_fraction_p": 0.25
+        },
+        {
+          "stage_name": "Ripening to Maturity",
+          "stage_name_bn": "পরিপক্কতা ও কর্তন",
+          "start_day": 126,
+          "end_day": 140,
+          "kc": 0.90,
+          "root_depth_m": 0.40,
+          "depletion_fraction_p": 0.40
+        }
+      ]
+    },
+    {
+      "variety_name": "BRRI dhan29",
+      "duration_days": 160,
+      "gdd_requirement": 2250.0,
+      "stages": [
+        {
+          "stage_name": "Initial",
+          "start_day": 1,
+          "end_day": 25,
+          "kc": 1.05,
+          "root_depth_m": 0.20,
+          "depletion_fraction_p": 0.20
+        },
+        {
+          "stage_name": "Development",
+          "start_day": 26,
+          "end_day": 60,
+          "kc": 1.15,
+          "root_depth_m": 0.30,
+          "depletion_fraction_p": 0.20
+        },
+        {
+          "stage_name": "Mid-Season",
+          "start_day": 61,
+          "end_day": 110,
+          "kc": 1.25,
+          "root_depth_m": 0.40,
+          "depletion_fraction_p": 0.10
+        },
+        {
+          "stage_name": "Late-Season",
+          "start_day": 111,
+          "end_day": 145,
+          "kc": 1.10,
+          "root_depth_m": 0.40,
+          "depletion_fraction_p": 0.25
+        },
+        {
+          "stage_name": "Maturity",
+          "start_day": 146,
+          "end_day": 160,
+          "kc": 0.90,
+          "root_depth_m": 0.40,
+          "depletion_fraction_p": 0.40
+        }
+      ]
+    }
+  ]
+}

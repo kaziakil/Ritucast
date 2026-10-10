@@ -1,0 +1,115 @@
+{
+  "pilot_zones": [
+    {
+      "upazila_id": "BD-50-20-30",
+      "upazila_name": "Godagari",
+      "upazila_name_bn": "গোদাগাড়ী",
+      "district_id": "BD-50-20",
+      "district_name": "Rajshahi",
+      "district_name_bn": "রাজশাহী",
+      "division_name": "Rajshahi",
+      "division_name_bn": "রাজশাহী",
+      "pilot_region": "High Barind Tract",
+      "centroid": {
+        "longitude": 88.3315,
+        "latitude": 24.4682
+      },
+      "bounding_box": {
+        "min_longitude": 88.20,
+        "min_latitude": 24.35,
+        "max_longitude": 88.45,
+        "max_latitude": 24.60
+      },
+      "area_sq_km": 472.1,
+      "primary_hazard": "Groundwater deficit & drought",
+      "anchor_crops": ["Boro Rice", "Potato", "Mustard"]
+    },
+    {
+      "upazila_id": "BD-50-20-90",
+      "upazila_name": "Tanore",
+      "upazila_name_bn": "তানোর",
+      "district_id": "BD-50-20",
+      "district_name": "Rajshahi",
+      "district_name_bn": "রাজশাহী",
+      "division_name": "Rajshahi",
+      "division_name_bn": "রাজশাহী",
+      "pilot_region": "High Barind Tract",
+      "centroid": {
+        "longitude": 88.5786,
+        "latitude": 24.5831
+      },
+      "bounding_box": {
+        "min_longitude": 88.48,
+        "min_latitude": 24.48,
+        "max_longitude": 88.68,
+        "max_latitude": 24.68
+      },
+      "area_sq_km": 295.4,
+      "primary_hazard": "Groundwater deficit & drought",
+      "anchor_crops": ["Boro Rice", "Potato", "Mustard"]
+    },
+    {
+      "upazila_id": "BD-60-90-86",
+      "upazila_name": "Sunamganj Sadar",
+      "upazila_name_bn": "সুনামগঞ্জ সদর",
+      "district_id": "BD-60-90",
+      "district_name": "Sunamganj",
+      "district_name_bn": "সুনামগঞ্জ",
+      "division_name": "Sylhet",
+      "division_name_bn": "সিলেট",
+      "pilot_region": "Haor Basin",
+      "centroid": {
+        "longitude": 91.4034,
+        "latitude": 25.0682
+      },
+      "bounding_box": {
+        "min_longitude": 91.30,
+        "min_latitude": 24.95,
+        "max_longitude": 91.50,
+        "max_latitude": 25.18
+      },
+      "area_sq_km": 268.5,
+      "primary_hazard": "Transboundary pre-monsoon flash floods",
+      "anchor_crops": ["Boro Rice"]
+    },
+    {
+      "upazila_id": "BD-60-90-89",
+      "upazila_name": "Tahirpur",
+      "upazila_name_bn": "তাহিরপুর",
+      "district_id": "BD-60-90",
+      "district_name": "Sunamganj",
+      "district_name_bn": "সুনামগঞ্জ",
+      "division_name": "Sylhet",
+      "division_name_bn": "সিলেট",
+      "pilot_region": "Haor Basin",
+      "centroid": {
+        "longitude": 91.1768,
+        "latitude": 25.1947
+      },
+      "bounding_box": {
+        "min_longitude": 91.05,
+        "min_latitude": 25.08,
+        "max_longitude": 91.30,
+        "max_latitude": 25.30
+      },
+      "area_sq_km": 315.3,
+      "primary_hazard": "Transboundary pre-monsoon flash floods & Meghalaya cloudbursts",
+      "anchor_crops": ["Boro Rice"]
+    }
+  ],
+  "transboundary_catchments": [
+    {
+      "catchment_id": "MEGHALAYA_ESCARP",
+      "name": "Southern Meghalaya Escarpment",
+      "draining_into": "Surma-Kushiyara Basin (Sunamganj)",
+      "bounding_box": {
+        "min_longitude": 90.0,
+        "min_latitude": 25.0,
+        "max_longitude": 92.8,
+        "max_latitude": 26.2
+      },
+      "area_sq_km": 14200.0,
+      "runoff_lag_hours_range": [12, 36]
+    }
+  ]
+}

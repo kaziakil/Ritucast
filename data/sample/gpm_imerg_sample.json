@@ -1,0 +1,42 @@
+{
+  "collection": "GPM_3IMERGDF_07",
+  "domain": "MEGHALAYA_ESCARP",
+  "bounding_box": [90.0, 25.0, 92.8, 26.2],
+  "records": [
+    {
+      "date": "2026-03-01",
+      "precipitation_cal_mm": 42.5,
+      "precipitation_uncal_mm": 38.2,
+      "random_error_mm": 4.1,
+      "quality_flag": 0
+    },
+    {
+      "date": "2026-03-02",
+      "precipitation_cal_mm": 68.4,
+      "precipitation_uncal_mm": 61.9,
+      "random_error_mm": 6.8,
+      "quality_flag": 0
+    },
+    {
+      "date": "2026-03-03",
+      "precipitation_cal_mm": 112.0,
+      "precipitation_uncal_mm": 105.4,
+      "random_error_mm": 11.2,
+      "quality_flag": 0
+    },
+    {
+      "date": "2026-03-04",
+      "precipitation_cal_mm": 15.2,
+      "precipitation_uncal_mm": 14.1,
+      "random_error_mm": 2.0,
+      "quality_flag": 0
+    },
+    {
+      "date": "2026-03-05",
+      "precipitation_cal_mm": 4.8,
+      "precipitation_uncal_mm": 4.5,
+      "random_error_mm": 0.8,
+      "quality_flag": 0
+    }
+  ]
+}

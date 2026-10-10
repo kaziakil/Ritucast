@@ -1,0 +1,62 @@
+{
+  "semantic_ranges": {
+    "temperature_c": {
+      "min": -5.0,
+      "max": 55.0,
+      "unit": "degC",
+      "action_on_violation": "REJECT"
+    },
+    "precipitation_mm_day": {
+      "min": 0.0,
+      "max": 600.0,
+      "unit": "mm/day",
+      "action_on_violation": "REJECT"
+    },
+    "solar_radiation_mj_m2_day": {
+      "min": 0.0,
+      "max": 35.0,
+      "unit": "MJ/m2/day",
+      "action_on_violation": "REJECT"
+    },
+    "relative_humidity_pct": {
+      "min": 0.0,
+      "max": 100.0,
+      "unit": "%",
+      "action_on_violation": "REJECT"
+    },
+    "wind_speed_m_s": {
+      "min": 0.0,
+      "max": 45.0,
+      "unit": "m/s",
+      "action_on_violation": "REJECT"
+    },
+    "volumetric_soil_moisture_m3_m3": {
+      "min": 0.02,
+      "max": 0.60,
+      "unit": "m3/m3",
+      "action_on_violation": "REJECT"
+    },
+    "sar_backscatter_db": {
+      "min": -40.0,
+      "max": 10.0,
+      "unit": "dB",
+      "action_on_violation": "REJECT"
+    },
+    "river_water_level_m_pwd": {
+      "min": 0.0,
+      "max": 25.0,
+      "unit": "m PWD",
+      "action_on_violation": "REJECT"
+    }
+  },
+  "fill_values": [
+    -999.0,
+    -9999.0,
+    -99.0,
+    9999.0,
+    -1.0e+30,
+    "NaN",
+    "null",
+    "NA"
+  ]
+}
