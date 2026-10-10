@@ -139,3 +139,51 @@ This document records architectural, strategic, and product decisions made throu
 - **Decision Taken**: Enforce automated suppression of definitive action cards if weather data is $>36\text{ hours}$ old (`NFR-REL-03`) or if weather model ensemble spread exceeds 50%, falling back to a safe advisory to inspect fields and consult local SAAOs.
 - **Rationale**: Prioritizes farmer safety and organizational credibility over false availability.
 - **Downstream Impact**: Informs Phase 8 data freshness tracking and Phase 9 recommendation fallback rules.
+
+---
+
+## 4. Phase 3 Dataset Research & Validation Decisions
+
+---
+
+### DEC-11: Selection of 8-Dataset Initial Release Core Stack
+- **Date**: 2026-10-10 (Phase 3)
+- **Status**: **Approved**
+- **Context**: Need to lock the minimal defensible data stack supporting the Minimum Complete Product (MCP) without unnecessary technical complexity or data bloat.
+- **Decision Taken**: Formally select 8 core datasets: (1) NASA POWER Daily Agrometeorology (`DATA-MET-01`), (2) Open-Meteo Operational NWP Forecasts (`DATA-FCST-01`), (3) GPM IMERG V07 Precipitation (`DATA-PCP-01`), (4) Sentinel-1 C-Band SAR GRD (`DATA-SAR-01`), (5) SMAP Enhanced L3 9km Soil Moisture (`DATA-SMC-01`), (6) BRRI/BARI Phenology & $K_c$ Tables (`DATA-AGR-01`), (7) Bangladesh Admin Boundaries GeoJSON (`DATA-BND-01`), and (8) BWDB River Stage Logs (`DATA-HYD-01`).
+- **Rationale**: Every selected dataset directly fulfills a locked Phase 2 functional requirement and has been verified via live API queries for Bangladesh.
+- **Downstream Impact**: Directs Phase 4 scientific validation planning and Phase 8 ETL ingestion architecture.
+
+---
+
+### DEC-12: Adoption of Sentinel-1 C-Band SAR as Primary Monsoon Inundation Modality
+- **Date**: 2026-10-10 (Phase 3)
+- **Status**: **Approved**
+- **Context**: Monsoon cloud cover (80–90%) blinds optical sensors (Sentinel-2, MODIS) during the crucial pre-monsoon and monsoon flood seasons in Bangladesh.
+- **Decision Taken**: Mandate Sentinel-1 C-band Synthetic Aperture Radar (SAR) as the primary satellite sensor for mapping standing floodwater and waterlogging in the Haor basin.
+- **Rationale**: C-band radar at 5.405 GHz is 100% cloud-penetrating; live CDSE OData testing confirmed immediate product publication within 2 hours and 5 minutes of sensing over Bangladesh.
+- **Downstream Impact**: Shapes Phase 4 flood rule calibration and Phase 8 radar GRD backscatter thresholding workflows.
+
+---
+
+### DEC-13: Selection of Open-Meteo for Operational NWP Weather Forecast Feeds
+- **Date**: 2026-10-10 (Phase 3)
+- **Status**: **Approved**
+- **Context**: Need a reliable, non-commercial, lightweight REST API for 7-day precipitation, temperature, and wind forecasts without paid API keys or restrictive quotas.
+- **Decision Taken**: Select Open-Meteo API (aggregating ECMWF IFS 9km and NOAA GFS 13km models) as the primary operational forecast provider for the MCP.
+- **Rationale**: Completely open, CC-BY 4.0 license, 10,000 calls/day free quota, delivers lightweight JSON payloads directly to backend caches with zero client API keys.
+- **Downstream Impact**: Powers Phase 10 backend weather endpoints and Phase 11 client forecast views.
+
+---
+
+### DEC-14: Formal Deferral of Sentinel-2 MSI Optical Imagery & Commercial Datasets
+- **Date**: 2026-10-10 (Phase 3)
+- **Status**: **Approved**
+- **Context**: Evaluating high-resolution optical imagery, digital soil property maps, and commercial financial/insurance datasets.
+- **Decided Actions**:
+  1. *Defer Sentinel-2 MSI* to Phase 12 due to severe monsoon cloud contamination and excessive raw data volume (~1GB/scene).
+  2. *Defer SRDI/SoilGrids* to Phase 4 for baseline soil water-holding capacity calibration.
+  3. *Reject private crop insurance claims and farmer loan records* to enforce privacy-by-design (`NFR-SEC-01`) and avoid irrelevant proprietary dependencies.
+  4. *Reject CROP-CASMA* because it is strictly restricted to the Contiguous United States (CONUS).
+- **Rationale**: Keeps the project strictly focused on achievable smallholder decision support and prevents privacy/bandwidth violations.
+- **Downstream Impact**: Eliminates unnecessary data licensing and infrastructure overhead from Phase 5 and Phase 8.
