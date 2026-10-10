@@ -28,8 +28,9 @@ Ritucast is developed under a strict **18-phase governed engineering lifecycle**
 | **04** | **Agricultural Knowledge & Scientific Validation Planning** | **Completed (PASS)** |
 | **05** | **System Architecture & Technology Decisions** | **Completed (PASS)** |
 | **06** | **Information Architecture & User Journey Design** | **Completed (PASS)** |
-| 07 | Visual Design and Design System | *Pending Review (Next)* |
-| 08–18 | Detailed Design through Long-Term Expansion | *Pending* |
+| **07** | **Visual Design and Design System** | **Completed (PASS)** |
+| 08 | Data Ingestion & Processing Pipeline | *Pending Review (Next)* |
+| 09–18 | Analytics through Long-Term Expansion | *Pending* |
 
 Full details and phase governance rules can be viewed in the [Master Project Roadmap](file:///Users/kazi/Projects/RITUCAST/docs/planning/roadmap.md).
 
@@ -113,12 +114,27 @@ Full details and phase governance rules can be viewed in the [Master Project Roa
 - [Interaction & State Matrix](file:///Users/kazi/Projects/RITUCAST/docs/ux/interaction-and-state-specification.md): Reusable state matrix specifying 14 interaction states (`ST-01` to `ST-14`).
 - [UX Success Metrics](file:///Users/kazi/Projects/RITUCAST/docs/ux/ux-success-metrics.md): 10 objective usability metrics (`UX-MET-01` to `UX-MET-10`) and evaluation protocols.
 
+### Phase 7: Visual Design and Design System
+- [Visual Direction](file:///Users/kazi/Projects/RITUCAST/docs/design/visual-direction.md): Visual identity, aesthetic tone ("Calm Scientific Authority"), solar light theme, outdoor sunlight legibility.
+- [Color System](file:///Users/kazi/Projects/RITUCAST/docs/design/color-system.md): Agronomic color tokens, solar palette, 4-tier epistemic color mapping, WCAG 2.2 AA contrast matrix ($\ge 7:1$).
+- [Typography System](file:///Users/kazi/Projects/RITUCAST/docs/design/typography-system.md): Hind Siliguri and Noto Sans Bengali type scale, tabular numbers (`tnum`), line-height $\ge 1.5$.
+- [Layout & Responsive System](file:///Users/kazi/Projects/RITUCAST/docs/design/layout-and-responsive-system.md): 8pt fluid grid, 48px touch targets, mobile-first column layouts, breakpoint rules.
+- [Design Tokens Blueprint](file:///Users/kazi/Projects/RITUCAST/docs/design/design-tokens.md): Complete Vanilla CSS `:root` Custom Properties architecture for `index.css` ($\le 50\text{KB}$, zero Tailwind).
+- [Component Design System](file:///Users/kazi/Projects/RITUCAST/docs/design/component-system.md): Reusable component specifications including the 5-section Advisory Card (`CMP-CARD-01`), navigation, drawers, chips.
+- [Data Visualization Guidelines](file:///Users/kazi/Projects/RITUCAST/docs/design/data-visualization-guidelines.md): Accessible dual-layer visualization standards (rain bars, temp lines, soil dials, flood meters + semantic tables).
+- [Scientific Transparency Patterns](file:///Users/kazi/Projects/RITUCAST/docs/design/scientific-transparency-patterns.md): 4-tier visual containers (`DEC-08`), automated suppression banner (`DEC-10`), field-check notices.
+- [Iconography & Imagery Guidelines](file:///Users/kazi/Projects/RITUCAST/docs/design/iconography-and-imagery.md): Lucide 2px outline glyphs, 24x24px grid, authentic Boro rice imagery rules, non-color-only icons.
+- [Interaction & Motion Guidelines](file:///Users/kazi/Projects/RITUCAST/docs/design/interaction-and-motion-guidelines.md): Micro-transitions (150ms/250ms), zero continuous CPU animations, `prefers-reduced-motion` overrides.
+- [Feedback & State Patterns](file:///Users/kazi/Projects/RITUCAST/docs/design/feedback-and-state-patterns.md): Visual treatments for 14 interaction states (skeletons, stale data, offline banners, server fallbacks).
+- [Accessibility Standards](file:///Users/kazi/Projects/RITUCAST/docs/design/accessibility-standards.md): WCAG 2.2 Level AA compliance rules for visual presentation and assistive devices.
+- [Visual References & Wireframes](file:///Users/kazi/Projects/RITUCAST/docs/design/visual-references.md): Annotated layout wireframes for `PAGE-01`, `PAGE-02`, `PAGE-03A`, `PAGE-03B`, and suppression states.
+
 ### Planning, Governance & Quality Registers
 - [Agent Operating Instructions (AGENTS.md)](file:///Users/kazi/Projects/RITUCAST/AGENTS.md): Project-wide AI operating principles, scope boundaries, and safety guardrails.
 - [Phase 1–4 Continuity & Readiness Audit](file:///Users/kazi/Projects/RITUCAST/docs/project/phase-1-to-4-continuity-audit.md): Comprehensive pre-Phase 5 audit of artifacts, tests, data, and risks.
-- [Assumptions Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/assumptions-register.md): Tracked assumptions with verification paths (updated with ASM-13).
-- [Risk Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/risk-register.md): 25 prioritized risks with mitigations (updated with RSK-23 through RSK-25).
-- [Decision Log](file:///Users/kazi/Projects/RITUCAST/docs/planning/decision-log.md): Architectural decisions log (updated with DEC-24 through DEC-27).
+- [Assumptions Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/assumptions-register.md): Tracked assumptions with verification paths (updated with ASM-14).
+- [Risk Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/risk-register.md): 28 prioritized risks with mitigations (updated with RSK-26 through RSK-28).
+- [Decision Log](file:///Users/kazi/Projects/RITUCAST/docs/planning/decision-log.md): Architectural decisions log (updated with DEC-28 through DEC-31).
 - [Master Project Roadmap](file:///Users/kazi/Projects/RITUCAST/docs/planning/roadmap.md): 18-phase lifecycle status.
 
 ### Phase Execution Packages
@@ -128,6 +144,7 @@ Full details and phase governance rules can be viewed in the [Master Project Roa
 - **Phase 04 Package**: [Phase Plan](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-04/phase-plan.md) | [Readiness Assessment](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-04/readiness-assessment.md) | [Evidence Register](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-04/evidence-register.md) | [Deliverables Checklist](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-04/deliverables-checklist.md) | [Validation Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-04/validation-report.md) | [Handoff to Phase 5](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-04/handoff-to-phase-05.md)
 - **Phase 05 Package**: [Phase Plan](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-05/phase-plan.md) | [Readiness Assessment](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-05/readiness-assessment.md) | [Deliverables Checklist](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-05/deliverables-checklist.md) | [Validation Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-05/validation-report.md) | [Handoff to Phase 6](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-05/handoff-to-phase-06.md)
 - **Phase 06 Package**: [Phase Plan](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-06/phase-plan.md) | [Readiness Assessment](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-06/readiness-assessment.md) | [Deliverables Checklist](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-06/deliverables-checklist.md) | [Validation Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-06/validation-report.md) | [Handoff to Phase 7](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-06/handoff-to-phase-07.md)
+- **Phase 07 Package**: [Phase Plan](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-07/phase-plan.md) | [Readiness Assessment](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-07/readiness-assessment.md) | [Deliverables Checklist](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-07/deliverables-checklist.md) | [Validation Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-07/validation-report.md) | [Handoff to Phase 8](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-07/handoff-to-phase-08.md)
 
 ---
 
@@ -153,19 +170,21 @@ RITUCAST/
     ├── ux/
     │   ├── diagrams/
     │   │   └── sitemap.mmd
-    │   ├── ux-principles.md
-    │   ├── user-groups-and-needs.md
-    │   ├── core-user-tasks.md
-    │   ├── information-architecture.md
-    │   ├── sitemap.md
-    │   ├── user-journeys.md
-    │   ├── page-requirements.md
-    │   ├── geographic-context-and-selection.md
-    │   ├── agricultural-insight-information-model.md
-    │   ├── trust-and-uncertainty-patterns.md
-    │   ├── accessibility-localization-and-connectivity.md
-    │   ├── interaction-and-state-specification.md
-    │   └── ux-success-metrics.md
+    │   └── ... (UX specifications)
+    ├── design/
+    │   ├── visual-direction.md
+    │   ├── color-system.md
+    │   ├── typography-system.md
+    │   ├── layout-and-responsive-system.md
+    │   ├── design-tokens.md
+    │   ├── component-system.md
+    │   ├── data-visualization-guidelines.md
+    │   ├── scientific-transparency-patterns.md
+    │   ├── iconography-and-imagery.md
+    │   ├── interaction-and-motion-guidelines.md
+    │   ├── feedback-and-state-patterns.md
+    │   ├── accessibility-standards.md
+    │   └── visual-references.md
     ├── planning/
     │   ├── roadmap.md
     │   ├── decision-log.md
@@ -177,7 +196,8 @@ RITUCAST/
         ├── phase-03/
         ├── phase-04/
         ├── phase-05/
-        └── phase-06/
+        ├── phase-06/
+        └── phase-07/
 ```
 
 ---

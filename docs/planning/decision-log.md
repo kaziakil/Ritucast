@@ -358,5 +358,67 @@ This document records architectural, strategic, and product decisions made throu
 - **Rationale**: Guarantees legibility in intense outdoor sunlight and accessibility for color-blind farmers while strictly upholding the `DEC-08` information taxonomy.
 - **Downstream Impact**: Governs Phase 7 design system token pairing and Phase 11 accessible component templates. Ref: [agricultural-insight-information-model.md](file:///Users/kazi/Projects/RITUCAST/docs/ux/agricultural-insight-information-model.md), [accessibility-localization-and-connectivity.md](file:///Users/kazi/Projects/RITUCAST/docs/ux/accessibility-localization-and-connectivity.md).
 
+---
+
+## 8. Phase 7 Visual Design & Design System Decisions
+
+---
+
+### DEC-28: Solar Light Theme and High-Contrast Agronomic Palette
+- **Date**: 2026-10-10 (Phase 7)
+- **Status**: **Approved**
+- **Context**: Rural extension officers and lead farmers operate mobile devices in direct outdoor sunlight across open rice fields. Low-contrast pastel tones, dark-mode default interfaces, and translucent glassmorphism wash out completely under 80,000–100,000 lux outdoor solar illumination.
+- **Alternatives Considered**:
+  - *Option A*: Dark-mode default palette (high glare and reflection in outdoor fields).
+  - *Option B*: Standard SaaS pastel palette (washed out in high ambient daylight).
+  - *Option C (Selected)*: **Solar Light Theme with $\ge 7:1$ High-Contrast Agronomic Color System**. Off-white canvas (`#F8FAF8`), crisp white surfaces (`#FFFFFF`), deep ink charcoal text (`#111827`, $16.1:1$ contrast ratio), deep forest green primary accents (`#1B4332`), and high-saturation semantic status colors.
+- **Rationale**: Guarantees legibility under harsh glare while projecting grounded scientific authority and calm confidence, exceeding WCAG 2.2 Level AAA contrast for primary body copy.
+- **Downstream Impact**: Informs Phase 7 CSS custom properties, Phase 11 client stylesheet, and Phase 14 field readability validation. Ref: [visual-direction.md](file:///Users/kazi/Projects/RITUCAST/docs/design/visual-direction.md), [color-system.md](file:///Users/kazi/Projects/RITUCAST/docs/design/color-system.md).
+
+---
+
+### DEC-29: Vanilla CSS Custom Properties Token Architecture (Zero Tailwind)
+- **Date**: 2026-10-10 (Phase 7)
+- **Status**: **Approved**
+- **Context**: Client hardware budgets dictate strict payload limits ($\le 1.5\text{MB}$ total bundle, $\le 3.5\text{s}$ TTI on 3G, `DEC-09`, `ADR-03`). Utility frameworks like Tailwind CSS introduce runtime or pre-processing overhead and violate repository architectural decisions (`ADR-03`).
+- **Alternatives Considered**:
+  - *Option A*: Tailwind CSS v3/v4 utility classes (violates ADR-03; utility bloat).
+  - *Option B*: CSS-in-JS (e.g., Styled Components; excessive runtime JS and bundle bloat).
+  - *Option C (Selected)*: **Vanilla CSS Custom Properties Architecture in `index.css`**. Central `:root` definitions for design tokens (colors, typography, spacing, elevations, transitions) consuming $\le 50\text{KB}$ uncompressed.
+- **Rationale**: Zero external styling dependencies, instantaneous CSS parsing, zero runtime overhead, native browser theme caching, and strict adherence to established project architecture.
+- **Downstream Impact**: Directly implemented in Phase 11 frontend styling; prevents dependency creep. Ref: [design-tokens.md](file:///Users/kazi/Projects/RITUCAST/docs/design/design-tokens.md), [ADR-03](file:///Users/kazi/Projects/RITUCAST/docs/architecture/decisions/ADR-03-react-typescript-vanilla-css.md).
+
+---
+
+### DEC-30: Standard 5-Section Advisory Card Layout (`CMP-CARD-01`)
+- **Date**: 2026-10-10 (Phase 7)
+- **Status**: **Approved**
+- **Context**: Frontline farmers need immediate operational guidance without cognitive friction, while scientific safety standards demand explicit data provenance and mandatory field-verification reminders (`DEC-10`, `DEC-17`).
+- **Alternatives Considered**:
+  - *Option A*: Unstructured free-form notification cards.
+  - *Option B*: Purely technical meteorological summaries without clear operational recommendations.
+  - *Option C (Selected)*: **Strict 5-Section Card Anatomy (`CMP-CARD-01`)**:
+    1. Header & Tier Badge (Upazila, Crop, Growth Stage, Tier 4 Indicator).
+    2. Operational Status Pill (Actionable Directive with icon and label).
+    3. Agronomic Copy & Physical Reasoning (Plain Bangla context).
+    4. Economic Impact & One-Click WhatsApp Share (Diesel/cost savings, peer distribution).
+    5. Scientific Provenance & Mandatory Field-Check Notice (`"সেচ বন্ধ করার আগে জমির আইল এবং মাটির রস নিজে হাত দিয়ে পরীক্ষা করুন।"`).
+- **Rationale**: Eliminates guesswork, standardizes user cognitive parsing across all modules, and structurally embeds scientific safeguards into every rendered advisory.
+- **Downstream Impact**: Informs Phase 7 component specs, Phase 11 React card templates, and Phase 14 comprehension testing. Ref: [component-system.md](file:///Users/kazi/Projects/RITUCAST/docs/design/component-system.md), [scientific-transparency-patterns.md](file:///Users/kazi/Projects/RITUCAST/docs/design/scientific-transparency-patterns.md).
+
+---
+
+### DEC-31: Accessible Dual-Layer Visualization Standards
+- **Date**: 2026-10-10 (Phase 7)
+- **Status**: **Approved**
+- **Context**: Rural extension workers using screen readers or low-end rendering engines cannot interpret standalone SVG/Canvas graphs; graphic-only charts violate WCAG 2.2 Success Criterion 1.1.1 (Non-text Content).
+- **Alternatives Considered**:
+  - *Option A*: Graphical SVG/Canvas charts only with generic `alt` text.
+  - *Option B*: Text tables only without visual trends.
+  - *Option C (Selected)*: **Dual-Layer Visualization Standard**. Every visual chart (48h rainfall probability bars, temperature trend lines, soil water balance dials, flood risk gauges) is paired with a semantically complete, visually hidden (`sr-only`) HTML `<table>` or structured `<dl>` list containing exact numerical values, dates, and units.
+- **Rationale**: Delivers high-clarity visual cues for sighted users in the field while guaranteeing 100% programmatic accessibility and automated screen-reader parsing.
+- **Downstream Impact**: Directs Phase 7 visualization guidelines, Phase 11 accessible chart components, and Phase 12 interactive graphics. Ref: [data-visualization-guidelines.md](file:///Users/kazi/Projects/RITUCAST/docs/design/data-visualization-guidelines.md), [accessibility-standards.md](file:///Users/kazi/Projects/RITUCAST/docs/design/accessibility-standards.md).
+
+
 
 
