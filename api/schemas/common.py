@@ -59,3 +59,20 @@ class ReadinessResponse(BaseModel):
         default_factory=lambda: datetime.now(timezone.utc).isoformat(),
         description="Readiness verification timestamp",
     )
+
+
+class DeepHealthResponse(BaseModel):
+    """Detailed production diagnostic probe response."""
+    model_config = ConfigDict(protected_namespaces=())
+
+    status: str = Field(..., description="Overall service status ('healthy', 'degraded', 'unhealthy')")
+    version: str = Field(..., description="Application semantic version")
+    uptime_seconds: float = Field(..., description="Uptime in seconds since process start")
+    system_metrics: Dict[str, Any] = Field(..., description="Resource utilization metrics (RSS memory MB, etc.)")
+    components: Dict[str, Any] = Field(..., description="Subsystem readiness and component breakdown")
+    pipeline_health: Dict[str, Any] = Field(..., description="Data pipeline freshness and circuit-breaker status")
+    governance: Dict[str, str] = Field(..., description="Status of active governance and safety frameworks")
+    timestamp_utc: str = Field(
+        default_factory=lambda: datetime.now(timezone.utc).isoformat(),
+        description="Evaluation timestamp",
+    )

@@ -6,10 +6,12 @@ from api.middleware.security import (
     RequestSizeLimitMiddleware,
     RateLimitMiddleware,
 )
+from api.middleware.logging import StructuredLoggingMiddleware
 
 __all__ = [
     "register_error_handlers",
     "SecurityHeadersMiddleware",
     "RequestSizeLimitMiddleware",
     "RateLimitMiddleware",
+    "StructuredLoggingMiddleware",
 ]

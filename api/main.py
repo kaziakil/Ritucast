@@ -11,6 +11,7 @@ from api.middleware import (
     SecurityHeadersMiddleware,
     RequestSizeLimitMiddleware,
     RateLimitMiddleware,
+    StructuredLoggingMiddleware,
 )
 from api.routers import (
     health_router,
@@ -51,6 +52,9 @@ def create_app() -> FastAPI:
         allow_methods=settings.CORS_ALLOW_METHODS,
         allow_headers=settings.CORS_ALLOW_HEADERS,
     )
+
+    # Structured Logging & Correlation Tracking Middleware
+    app.add_middleware(StructuredLoggingMiddleware)
 
     # Security Headers Middleware (OWASP defensive headers)
     app.add_middleware(SecurityHeadersMiddleware)
