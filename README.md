@@ -21,12 +21,13 @@
 Ritucast is developed under a strict **18-phase governed engineering lifecycle**.
 
 | Current Phase | Phase Name | Status |
-| :---: | :--- | :---: |
+| :---: | :--- | :--- |
 | **01** | **Project Discovery and Problem Definition** | **Completed (PASS)** |
 | **02** | **Requirements and Product Strategy** | **Completed (PASS)** |
 | **03** | **Dataset Research and Validation** | **Completed (PASS)** |
-| 04 | Agricultural Knowledge & Scientific Validation Planning | *Pending Review* |
-| 05–18 | System Architecture through Long-Term Expansion | *Pending* |
+| **04** | **Agricultural Knowledge & Scientific Validation Planning** | **Completed (PASS)** |
+| 05 | System Architecture & Technology Decisions | *Pending Review* |
+| 06–18 | Detailed Design through Long-Term Expansion | *Pending* |
 
 Full details and phase governance rules can be viewed in the [Master Project Roadmap](file:///Users/kazi/Projects/RITUCAST/docs/planning/roadmap.md).
 
@@ -67,16 +68,31 @@ Full details and phase governance rules can be viewed in the [Master Project Roa
 - [Spatial & Temporal Aggregation Requirements](file:///Users/kazi/Projects/RITUCAST/docs/data/spatial-temporal-requirements.md): Mixed-pixel realities, zonal aggregation math, and anti-false-precision rules.
 - [Technical Source Registry](file:///Users/kazi/Projects/RITUCAST/docs/data/source-registry.md): Machine-readable technical catalog of verified endpoints, bounding boxes, and collections.
 
+### Phase 4: Agricultural Knowledge & Scientific Validation
+- [Agricultural Knowledge Base](file:///Users/kazi/Projects/RITUCAST/docs/science/agricultural-knowledge-base.md): Synthesis of BRRI, BARI, BARC, FAO, IRRI, and BMD research.
+- [Crop & Regional Context Specification](file:///Users/kazi/Projects/RITUCAST/docs/science/crop-and-regional-context.md): Agro-ecological profiles of Barind (AEZ 25/26) and Haor (AEZ 21) testbeds.
+- [Dataset Scientific Interpretation](file:///Users/kazi/Projects/RITUCAST/docs/science/dataset-scientific-interpretation.md): Physical mechanics, assumptions, and observational limits of the 8 core datasets.
+- [Indicator Interpretation Framework](file:///Users/kazi/Projects/RITUCAST/docs/science/indicator-interpretation-framework.md): Mathematical formulations for FAO-56 $ET_0$, Soil Water Balance, Haor Index $I_{\text{flood}}$.
+- [Agricultural Rule Specifications](file:///Users/kazi/Projects/RITUCAST/docs/science/agricultural-rule-specifications.md): Catalog of 6 core rules (`RULE-IRR-01`, `RULE-FLD-01`, etc.) with quantitative triggers.
+- [Scientific Validation Plan](file:///Users/kazi/Projects/RITUCAST/docs/science/scientific-validation-plan.md): Ground-truth benchmarking with BMD synoptic stations, BMDA lysimeters, BWDB gauges, and hindcasting.
+- [Evaluation Metrics & Acceptance Criteria](file:///Users/kazi/Projects/RITUCAST/docs/science/evaluation-metrics-and-acceptance.md): Formulations ($MAE, RMSE, POD, FAR, CSI, BS, ACR$) and release gating thresholds.
+- [Modeling Readiness & Guardrails](file:///Users/kazi/Projects/RITUCAST/docs/science/modeling-readiness-and-guardrails.md): Physical baseline-first philosophy, 6 ML readiness gates, and ban on black-box predictions.
+- [Uncertainty & Risk Communication](file:///Users/kazi/Projects/RITUCAST/docs/science/uncertainty-and-risk-communication.md): Advisory confidence score math, lead-time decay, ensemble penalty, Bangla UX copy.
+- [Recommendation Safety Framework](file:///Users/kazi/Projects/RITUCAST/docs/science/recommendation-safety-framework.md): Mandatory contextual gating (upazila/crop/stage), automated suppression triggers, "Do No Harm" protocols.
+- [Scientific Governance & Provenance](file:///Users/kazi/Projects/RITUCAST/docs/science/scientific-governance.md): Master Scientific Asset Registry tracking 12 assets with lifecycle states and versioning.
+- [Research Gaps Register](file:///Users/kazi/Projects/RITUCAST/docs/science/research-gaps.md): Catalog of 5 open scientific uncertainties with assigned roadmap phases and fallback plans.
+
 ### Planning, Governance & Quality Registers
-- [Assumptions Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/assumptions-register.md): 10 tracked assumptions with verification paths (updated with ASM-03/05 Validated).
-- [Risk Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/risk-register.md): 14 prioritized risks with mitigations (updated with RSK-13, RSK-14).
-- [Decision Log](file:///Users/kazi/Projects/RITUCAST/docs/planning/decision-log.md): Architectural decisions log (updated with DEC-11 through DEC-14).
+- [Assumptions Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/assumptions-register.md): Tracked assumptions with verification paths (updated with ASM-04/07/11).
+- [Risk Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/risk-register.md): 18 prioritized risks with mitigations (updated with RSK-15 through RSK-18).
+- [Decision Log](file:///Users/kazi/Projects/RITUCAST/docs/planning/decision-log.md): Architectural decisions log (updated with DEC-15 through DEC-18).
 - [Master Project Roadmap](file:///Users/kazi/Projects/RITUCAST/docs/planning/roadmap.md): 18-phase lifecycle status.
 
 ### Phase Execution Packages
 - **Phase 01 Package**: [Phase Plan](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-01/phase-plan.md) | [Research Notes](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-01/research-notes.md) | [Deliverables Checklist](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-01/deliverables-checklist.md) | [Validation Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-01/validation-report.md) | [Handoff to Phase 2](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-01/handoff-to-phase-02.md)
 - **Phase 02 Package**: [Phase Plan](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-02/phase-plan.md) | [Readiness Assessment](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-02/readiness-assessment.md) | [Deliverables Checklist](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-02/deliverables-checklist.md) | [Validation Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-02/validation-report.md) | [Handoff to Phase 3](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-02/handoff-to-phase-03.md)
 - **Phase 03 Package**: [Phase Plan](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-03/phase-plan.md) | [Readiness Assessment](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-03/readiness-assessment.md) | [Research Notes](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-03/research-notes.md) | [Verification Log](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-03/verification-log.md) | [Deliverables Checklist](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-03/deliverables-checklist.md) | [Validation Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-03/validation-report.md) | [Handoff to Phase 4](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-03/handoff-to-phase-04.md)
+- **Phase 04 Package**: [Phase Plan](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-04/phase-plan.md) | [Readiness Assessment](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-04/readiness-assessment.md) | [Evidence Register](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-04/evidence-register.md) | [Deliverables Checklist](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-04/deliverables-checklist.md) | [Validation Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-04/validation-report.md) | [Handoff to Phase 5](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-04/handoff-to-phase-05.md)
 
 ---
 
