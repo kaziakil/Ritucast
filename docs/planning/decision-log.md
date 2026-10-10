@@ -773,6 +773,49 @@ This document records architectural, strategic, and product decisions made throu
 - **Rationale**: Prevents accidental deployments; guarantees that a human release engineer reviews the release notes and validation reports before production rollout; maintains an immutable deployment audit log.
 - **Downstream Impact**: Implemented in `release.yml`. Ref: [deployment-workflow.md](file:///Users/kazi/Projects/RITUCAST/docs/ci-cd/deployment-workflow.md).
 
+---
+
+### DEC-58: Defense-in-Depth HTTP Security Middleware Suite
+- **Date**: 2026-10-10 (Phase 15)
+- **Status**: **Approved**
+- **Context**: Protecting the FastAPI backend against MIME sniffing, clickjacking, oversized payload buffer exhaustion, and abusive client scraping when accessed directly or via reverse proxies.
+- **Alternatives Considered**:
+  - *Option A*: Rely exclusively on edge proxy (NGINX) headers without backend application defenses.
+  - *Option B*: Complex distributed Redis rate limiting and third-party Web Application Firewall (WAF) services.
+  - *Option C (Selected)*: **Native Defense-in-Depth Middleware Suite (`SecurityHeadersMiddleware`, `RequestSizeLimitMiddleware`, `RateLimitMiddleware`)**.
+- **Rationale**: Ensures that even if the backend container is accessed directly on Cloud Run or in local microservices testing, OWASP defensive headers (`nosniff`, `DENY`, `CSP`, `Permissions-Policy`, HSTS), a 1 MB payload ceiling, and sliding-window rate limiting (60 rpm default) are strictly enforced.
+- **Downstream Impact**: Implemented in [`api/middleware/security.py`](file:///Users/kazi/Projects/RITUCAST/api/middleware/security.py) and [`api/main.py`](file:///Users/kazi/Projects/RITUCAST/api/main.py). Ref: [`docs/security/api-security.md`](file:///Users/kazi/Projects/RITUCAST/docs/security/api-security.md).
+
+---
+
+### DEC-59: Strict Allowlist and Path Traversal Immunity for Offline Parquet Datasets
+- **Date**: 2026-10-10 (Phase 15)
+- **Status**: **Approved**
+- **Context**: Preventing directory traversal attacks or unauthorized file access via data loading interfaces in the repository layer.
+- **Decision Taken**: Enforce strict sanitization in `AgriculturalDataRepository.load_parquet_table`: reject any filename containing `..`, `/`, or `\`, enforce `.parquet` extension, and verify resolved path starts with `self.processed_dir`.
+- **Rationale**: Completely eliminates arbitrary file disclosure vulnerabilities across all internal and API data retrieval paths.
+- **Downstream Impact**: Implemented in [`api/data_access/repository.py`](file:///Users/kazi/Projects/RITUCAST/api/data_access/repository.py#L192). Ref: [`docs/security/security-findings-register.md`](file:///Users/kazi/Projects/RITUCAST/docs/security/security-findings-register.md).
+
+---
+
+### DEC-60: Non-PII Data Minimization and Direct Browser Upstream Querying Prohibition
+- **Date**: 2026-10-10 (Phase 15)
+- **Status**: **Approved**
+- **Context**: Protecting farmer privacy, preventing location tracking, and ensuring deterministic caching of public agricultural datasets.
+- **Decision Taken**: Formally codify that Ritucast operates with zero PII (no names, NIDs, phones, or parcel GPS coordinates), queries are ephemeral in memory, and the client browser is strictly prohibited from directly querying upstream Earth-observation APIs (`DEC-09`).
+- **Rationale**: Preserves smallholder confidentiality, prevents commercial data harvesting, and provides deterministic offline resilience.
+- **Downstream Impact**: Formulated in [`docs/privacy/data-inventory.md`](file:///Users/kazi/Projects/RITUCAST/docs/privacy/data-inventory.md) and [`docs/privacy/external-services-and-data-sharing.md`](file:///Users/kazi/Projects/RITUCAST/docs/privacy/external-services-and-data-sharing.md).
+
+---
+
+### DEC-61: Anti-Overconfidence Linguistic Standards & Epistemic Humility Enforcement
+- **Date**: 2026-10-10 (Phase 15)
+- **Status**: **Approved**
+- **Context**: Preventing smallholders from treating probabilistic agro-meteorological predictions as absolute guarantees.
+- **Decision Taken**: Strictly ban deterministic words (*"১০০% নিশ্চিত"*, *"নিশ্চিত বৃষ্টি"*, *"ফলনের নিশ্চয়তা"*), mandate inclusion of tactile field inspection copy (*"সেচ বন্ধ করার আগে জমির আইল এবং মাটির রস নিজে হাত দিয়ে পরীক্ষা করুন।"*) on all Tier 4 cards, and prohibit false causal economic claims in rule explainability breakdowns.
+- **Rationale**: Prioritizes farmer safety, maintains trust in agricultural extension, and prevents avoidable crop failure from micro-climatic divergences.
+- **Downstream Impact**: Formulated in [`docs/responsible-ai/agricultural-recommendation-safeguards.md`](file:///Users/kazi/Projects/RITUCAST/docs/responsible-ai/agricultural-recommendation-safeguards.md) and verified in [`tests/api/test_security_hardening.py`](file:///Users/kazi/Projects/RITUCAST/tests/api/test_security_hardening.py).
+
 
 
 

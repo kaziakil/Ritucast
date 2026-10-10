@@ -36,8 +36,9 @@ Ritucast is developed under a strict **18-phase governed engineering lifecycle**
 | **12** | **End-to-End Integration and System Validation** | **Completed (PASS)** |
 | **13** | **Deployment Architecture and Production Readiness** | **Completed (PASS)** |
 | **14** | **CI/CD Automation and Release Management** | **Completed (PASS)** |
-| 15 | Maps and Geospatial Visualization Layer | *Pending Review (Next)* |
-| 16–18 | Usability through Expansion | *Pending* |
+| **15** | **Security, Privacy, and Responsible Agricultural Intelligence** | **Completed (PASS)** |
+| 16 | Usability, Accessibility & Performance | *Pending Review (Next)* |
+| 17–18 | Scientific Validation through Expansion | *Pending* |
 
 Full details and phase governance rules can be viewed in the [Master Project Roadmap](file:///Users/kazi/Projects/RITUCAST/docs/planning/roadmap.md).
 
@@ -249,12 +250,33 @@ Full details and phase governance rules can be viewed in the [Master Project Roa
 - [Release Notes Template](file:///Users/kazi/Projects/RITUCAST/docs/releases/release-notes.md): Plain-language Bangla and technical communication standards.
 - [Rollback & Recovery](file:///Users/kazi/Projects/RITUCAST/docs/releases/rollback-and-recovery.md): Instant Cloud Run revision rollback (<2s) and post-incident review SOP.
 
+### Phase 15: Security, Privacy & Responsible Agricultural Intelligence
+- [Baseline Security Assessment](file:///Users/kazi/Projects/RITUCAST/docs/security/phase-15-security-assessment.md): Audit methodology, findings summary, and architectural trust boundaries.
+- [Threat Model & STRIDE Analysis](file:///Users/kazi/Projects/RITUCAST/docs/security/threat-model.md): Asset inventory, threat scenarios, and risk rating matrix.
+- [Security Boundaries & Trust Architecture](file:///Users/kazi/Projects/RITUCAST/docs/security/security-boundaries.md): 5-zone trust architecture and network boundaries.
+- [Security Findings Register](file:///Users/kazi/Projects/RITUCAST/docs/security/security-findings-register.md): Formal log of all findings, severity levels, and remediations.
+- [API & Backend Security](file:///Users/kazi/Projects/RITUCAST/docs/security/api-security.md): OWASP headers, payload size limiting, in-memory rate limiting, and path traversal guards.
+- [Frontend Security & User Input](file:///Users/kazi/Projects/RITUCAST/docs/security/frontend-security.md): XSS immunity, zero dangerouslySetInnerHTML, and anti-deception mock fallback policy.
+- [Secrets & Supply Chain Management](file:///Users/kazi/Projects/RITUCAST/docs/security/secrets-and-dependency-management.md): Secret hygiene, pip-audit and npm audit vulnerability analysis, and container hardening.
+- [Secure Configuration](file:///Users/kazi/Projects/RITUCAST/docs/security/secure-configuration.md): Environment separation, secure defaults, and CORS restrictions.
+- [Data Inventory & Privacy Classification](file:///Users/kazi/Projects/RITUCAST/docs/privacy/data-inventory.md): Comprehensive inventory, non-PII posture, and zero telemetry verification.
+- [Data Handling & Retention Policy](file:///Users/kazi/Projects/RITUCAST/docs/privacy/data-handling-and-retention.md): Ephemeral request processing and logging privacy guarantees.
+- [External Services & Data Sharing](file:///Users/kazi/Projects/RITUCAST/docs/privacy/external-services-and-data-sharing.md): Outbound transmission audit and prohibition of direct browser queries.
+- [Dataset Licensing & Redistribution Review](file:///Users/kazi/Projects/RITUCAST/docs/data/dataset-licensing-and-redistribution-review.md): Open data license audit, caching rights, and UI attribution.
+- [Agricultural Recommendation Safeguards](file:///Users/kazi/Projects/RITUCAST/docs/responsible-ai/agricultural-recommendation-safeguards.md): 4-tier taxonomy, contextual gating (DEC-17), suppression (DEC-10), and anti-overconfidence copy.
+- [Model Limitations & Uncertainty](file:///Users/kazi/Projects/RITUCAST/docs/responsible-ai/model-limitations-and-uncertainty.md): Physical equation bounds, epistemic uncertainty, and non-causal explainability.
+- [Geographic Coverage & Fairness](file:///Users/kazi/Projects/RITUCAST/docs/responsible-ai/geographic-coverage-and-fairness.md): Spatial resolution disparities, regional average labeling, and equitable access.
+- [Appropriate Use & Misuse Prevention](file:///Users/kazi/Projects/RITUCAST/docs/responsible-ai/appropriate-use-and-misuse-prevention.md): Non-goals (DEC-06), loan underwriting prohibitions, and agronomic primacy.
+- [Security Test Plan](file:///Users/kazi/Projects/RITUCAST/docs/security/security-test-plan.md): Automated verification coverage across pytest and vitest.
+- [Security Remediation Record](file:///Users/kazi/Projects/RITUCAST/docs/security/security-remediation-record.md): Component-by-component engineering fixes and code modifications.
+- [Remaining Risks](file:///Users/kazi/Projects/RITUCAST/docs/security/remaining-risks.md): Residual risk register, mitigating factors, and post-Phase 15 follow-up.
+
 ### Planning, Governance & Quality Registers
 - [Agent Operating Instructions (AGENTS.md)](file:///Users/kazi/Projects/RITUCAST/AGENTS.md): Project-wide AI operating principles, scope boundaries, and safety guardrails.
 - [Phase 1–4 Continuity & Readiness Audit](file:///Users/kazi/Projects/RITUCAST/docs/project/phase-1-to-4-continuity-audit.md): Comprehensive pre-Phase 5 audit of artifacts, tests, data, and risks.
-- [Assumptions Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/assumptions-register.md): Tracked assumptions with verification paths (updated with ASM-21).
-- [Risk Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/risk-register.md): 49 prioritized risks with mitigations (updated with RSK-47 through RSK-49).
-- [Decision Log](file:///Users/kazi/Projects/RITUCAST/docs/planning/decision-log.md): Architectural decisions log (updated with DEC-54 through DEC-57).
+- [Assumptions Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/assumptions-register.md): Tracked assumptions with verification paths (updated with ASM-22).
+- [Risk Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/risk-register.md): 52 prioritized risks with mitigations (updated with RSK-50 through RSK-52).
+- [Decision Log](file:///Users/kazi/Projects/RITUCAST/docs/planning/decision-log.md): Architectural decisions log (updated with DEC-58 through DEC-61).
 - [Master Project Roadmap](file:///Users/kazi/Projects/RITUCAST/docs/planning/roadmap.md): 18-phase lifecycle status.
 - [Changelog (CHANGELOG.md)](file:///Users/kazi/Projects/RITUCAST/CHANGELOG.md): Keep a Changelog documentation for release v1.0.0.
 
@@ -273,6 +295,7 @@ Full details and phase governance rules can be viewed in the [Master Project Roa
 - **Phase 12 Package**: [Phase Plan](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-12/phase-plan.md) | [Readiness Assessment](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-12/readiness-assessment.md) | [Deliverables Checklist](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-12/deliverables-checklist.md) | [Validation Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-12/validation-report.md) | [Completion Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-12/phase-12-completion-report.md) | [Handoff to Phase 13](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-12/handoff-to-phase-13.md)
 - **Phase 13 Package**: [Phase Plan](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-13/phase-plan.md) | [Readiness Assessment](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-13/readiness-assessment.md) | [Deliverables Checklist](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-13/deliverables-checklist.md) | [Validation Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-13/validation-report.md) | [Completion Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-13/phase-13-completion-report.md) | [Handoff to Phase 14](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-13/handoff-to-phase-14.md)
 - **Phase 14 Package**: [Phase Plan](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-14/phase-plan.md) | [Readiness Assessment](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-14/readiness-assessment.md) | [Deliverables Checklist](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-14/deliverables-checklist.md) | [Validation Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-14/validation-report.md) | [Completion Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-14/phase-14-completion-report.md) | [Handoff to Phase 15](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-14/handoff-to-phase-15.md)
+- **Phase 15 Package**: [Phase Plan](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-15/phase-plan.md) | [Readiness Assessment](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-15/readiness-assessment.md) | [Deliverables Checklist](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-15/deliverables-checklist.md) | [Validation Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-15/validation-report.md) | [Completion Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-15/phase-15-completion-report.md) | [Handoff to Phase 16](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-15/handoff-to-phase-16.md)
 
 ---
 
