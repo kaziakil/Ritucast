@@ -77,20 +77,22 @@ export const AdvisoryHubView: React.FC<AdvisoryHubViewProps> = ({
             </span>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)' }}>
-            <span
-              style={{
-                backgroundColor: rec.confidence.color_hex || 'var(--primitive-green-700)',
-                color: '#fff',
-                padding: '2px 8px',
-                borderRadius: 'var(--radius-pill)',
-                fontSize: 'var(--font-size-meta)',
-                fontWeight: 600,
-              }}
-            >
-              {rec.confidence.tier_bn} ({Math.round(rec.confidence.score * 100)}%)
-            </span>
-          </div>
+          {rec.confidence && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)' }}>
+              <span
+                style={{
+                  backgroundColor: rec.confidence.color_hex || 'var(--primitive-green-700)',
+                  color: '#fff',
+                  padding: '2px 8px',
+                  borderRadius: 'var(--radius-pill)',
+                  fontSize: 'var(--font-size-meta)',
+                  fontWeight: 600,
+                }}
+              >
+                {rec.confidence.tier_bn} ({Math.round(rec.confidence.score * 100)}%)
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Headline & Body */}

@@ -77,9 +77,9 @@ class AgriculturalDataRepository:
         },
     }
 
-    def __init__(self, processed_dir: Optional[Path] = None, sample_dir: Optional[Path] = None):
-        self.processed_dir = processed_dir or settings.PROCESSED_DIR
-        self.sample_dir = sample_dir or settings.SAMPLE_DIR
+    def __init__(self, processed_dir: Optional[Any] = None, sample_dir: Optional[Any] = None):
+        self.processed_dir = Path(processed_dir) if processed_dir is not None else settings.PROCESSED_DIR
+        self.sample_dir = Path(sample_dir) if sample_dir is not None else settings.SAMPLE_DIR
         self.recommendation_engine = AgriculturalRecommendationEngine()
         self._cache: Dict[str, Any] = {}
 
