@@ -68,11 +68,26 @@ flowchart LR
   2. *Radar Inundation vs River Stage*: An emergency flood inundation alert triggered by Sentinel-1 SAR is cross-checked against BWDB upstream river gauge trends. If BWDB gauges report river falling below danger levels and GPM reports zero rain, the SAR watermask is flagged for possible wind-roughening artifacts.
   3. *Temperature Diurnal Range*: $T_{\text{max}}$ must strictly exceed $T_{\text{min}}$ by at least $1.5^\circ\text{C}$. If $T_{\text{max}} \le T_{\text{min}}$, the record is discarded.
 
----
-
 ## 3. Data Quarantine & Error Telemetry
 
 When an incoming record fails validation:
 1. The record is written to a designated `data_quarantine_log` with the failure code.
 2. The ingestion service automatically falls back to secondary sources or the previous day's persistence model.
 3. If primary and fallback sources fail simultaneously for an Upazila, all automated action advisories for that Upazila are suppressed, displaying the safe manual consultation disclaimer.
+
+---
+
+## 4. Phase 8 Implementation Architecture & Automated Auditing
+
+In Phase 8, the 5-stage validation protocol is programmatically instantiated across three production-ready Python modules:
+1. **Structural Schema Validation (`pipelines/validation/schema_validator.py`)**:
+   - Pydantic v2 schemas (`MeteorologyDailySchema`, `ForecastHourlySchema`, `CatchmentRainfallSchema`, `Sentinel1MetadataSchema`, `SoilMoistureDailySchema`, `HydrologyReadingSchema`).
+   - Strict ISO date formatting, coordinate ranges, and cross-field validation ($T_{\text{max}} \ge T_{\text{min}}$).
+2. **Semantic Boundary Verification (`pipelines/validation/semantic_validator.py`)**:
+   - Programmatic physical bounds checking against Table 2 limits.
+   - Immediate rejection of impossible negative rainfall, solar insolation $>35\text{ MJ}/\text{m}^2/\text{day}$, and soil moisture $>0.60\text{ m}^3/\text{m}^3$.
+3. **Audit Reporter & Quarantine Telemetry (`pipelines/validation/quality_reporter.py`)**:
+   - Compiles batch run metrics (records checked, passed, rejected, warnings).
+   - Generates machine-readable `quality_report.json` and human-readable Markdown summaries.
+   - Integrated into the automated test suite ([test_schema_validator.py](file:///Users/kazi/Projects/RITUCAST/tests/unit/test_schema_validator.py), [test_semantic_validator.py](file:///Users/kazi/Projects/RITUCAST/tests/unit/test_semantic_validator.py)).
+
