@@ -638,6 +638,50 @@ This document records architectural, strategic, and product decisions made throu
 - **Rationale**: Replaces actionable pump/harvest directives with clear, plain-language explanation of why advice was suppressed (e.g. NWP ensemble spread $\ge 50\%$ or telemetry $>36\text{h}$ old) and immediately directs the farmer to contact their local Sub-Assistant Agriculture Officer (SAAO).
 - **Downstream Impact**: Implemented in `frontend/src/components/AdvisoryHubView.tsx`. Ref: [backend-integration.md](file:///Users/kazi/Projects/RITUCAST/docs/frontend/backend-integration.md).
 
+---
+
+## 8. Phase 12 End-to-End Integration & System Validation Decisions
+
+---
+
+### DEC-48: End-to-End System Integration Testing Topology and Test Fixture Isolation
+- **Date**: 2026-10-10 (Phase 12)
+- **Status**: **Approved**
+- **Context**: Ensuring reliable, reproducible validation across all 5 architectural tiers (Ingestion, Processing, Models, REST API, React PWA) without relying on heavy external satellite downloads during automated testing.
+- **Alternatives Considered**:
+  - *Option A*: Only test each subsystem in unit isolation with mock data.
+  - *Option B*: Require live 1GB+ satellite downloads from Copernicus and NASA on every test run.
+  - *Option C (Selected)*: **Three-Tier Testing Topology**: Deterministic System E2E (`test_system_e2e.py`), Separate Bounded Live Smoke Tests (`test_live_smoke.py`), and Frontend User Journey E2E (`e2e_user_journey.test.tsx`).
+- **Rationale**: Guarantees sub-10 second automated regression test execution; clearly isolates deterministic test fixtures (`data/sample/`) from live external services; provides graceful skipping for live smoke tests in offline environments.
+- **Downstream Impact**: Implemented in `tests/integration/` and `frontend/src/test/e2e_user_journey.test.tsx`. Ref: [phase-12-validation-strategy.md](file:///Users/kazi/Projects/RITUCAST/docs/testing/phase-12-validation-strategy.md).
+
+---
+
+### DEC-49: Coercion of File Paths to Pathlib Objects Across Data Repositories
+- **Date**: 2026-10-10 (Phase 12)
+- **Status**: **Approved**
+- **Context**: Resolving defect `DEF-12-01` where string directory paths passed into `AgriculturalDataRepository` raised `TypeError: unsupported operand type(s) for /: 'str' and 'str'`.
+- **Alternatives Considered**:
+  - *Option A*: Use `os.path.join` everywhere.
+  - *Option B (Selected)*: **Explicit `Path()` Coercion in Repository Constructor**.
+  - *Option C*: Enforce strict `pathlib.Path` type hints without runtime coercion.
+- **Rationale**: Coercing strings to `Path` objects in `AgriculturalDataRepository.__init__` accepts both `str` and `Path` arguments without runtime friction, ensuring seamless interoperability across CLI scripts, test fixtures, and FastAPI route handlers.
+- **Downstream Impact**: Implemented in `api/data_access/repository.py`. Ref: [repository.py](file:///Users/kazi/Projects/RITUCAST/api/data_access/repository.py).
+
+---
+
+### DEC-50: Strict Safeguarding of Optional Recommendation Confidence in UI Rendering
+- **Date**: 2026-10-10 (Phase 12)
+- **Status**: **Approved**
+- **Context**: Resolving defect `DEF-12-02` where `AdvisoryHubView.tsx` crashed when rendering recommendations lacking a `confidence` sub-object.
+- **Alternatives Considered**:
+  - *Option A*: Make confidence metadata mandatory on all backend responses.
+  - *Option B (Selected)*: **Safeguard Confidence Badge Rendering with `{rec.confidence && ...}` and Defensive Defaults**.
+  - *Option C*: Hide the recommendation card when confidence is missing.
+- **Rationale**: Protects client application stability; handles partial or legacy advisory payloads gracefully; preserves the primary Tier 4 actionable recommendation card even if confidence scores are being calibrated.
+- **Downstream Impact**: Implemented in `frontend/src/components/AdvisoryHubView.tsx`. Ref: [AdvisoryHubView.tsx](file:///Users/kazi/Projects/RITUCAST/frontend/src/components/AdvisoryHubView.tsx).
+
+
 
 
 
