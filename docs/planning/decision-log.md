@@ -681,6 +681,47 @@ This document records architectural, strategic, and product decisions made throu
 - **Rationale**: Protects client application stability; handles partial or legacy advisory payloads gracefully; preserves the primary Tier 4 actionable recommendation card even if confidence scores are being calibrated.
 - **Downstream Impact**: Implemented in `frontend/src/components/AdvisoryHubView.tsx`. Ref: [AdvisoryHubView.tsx](file:///Users/kazi/Projects/RITUCAST/frontend/src/components/AdvisoryHubView.tsx).
 
+---
+
+### DEC-51: Containerized Decoupled Serverless Deployment with Google Cloud Run
+- **Date**: 2026-10-10 (Phase 13)
+- **Status**: **Approved**
+- **Context**: Selecting a production hosting architecture that satisfies rural Bangladesh network characteristics (low latency to `asia-south1`), supports morning/evening peak traffic patterns, and stays strictly within the $\le \$65/\text{month}$ budget ceiling (`DEC-09`, `ADR-07`).
+- **Alternatives Considered**:
+  - *Option A*: Traditional Linux VPS (Hetzner / DigitalOcean).
+  - *Option B*: AWS ECS Fargate + S3 / CloudFront.
+  - *Option C*: Kubernetes cluster (GKE / EKS).
+  - *Option D (Selected)*: **Decoupled OCI Containers on Google Cloud Run (`asia-south1`, Mumbai)**.
+- **Rationale**: Cloud Run scales to zero instances when idle, incurring zero compute cost outside active requests. Generous free tier (2M requests, 360k vCPU-s) covers entire pilot workload at $0.00 to $5.00/month. Mumbai region ensures $<55\text{ms}$ latency to Bangladesh 3G networks. Standard OCI Knative specifications eliminate proprietary vendor lock-in.
+- **Downstream Impact**: Informs `Dockerfile.backend`, `Dockerfile.frontend`, `deploy/cloudrun/service-backend.yaml`, `service-frontend.yaml`, and `deploy.sh`. Ref: [phase-13-deployment-architecture.md](file:///Users/kazi/Projects/RITUCAST/docs/deployment/phase-13-deployment-architecture.md).
+
+---
+
+### DEC-52: Immutable In-Image Parquet Storage Over Managed External Database
+- **Date**: 2026-10-10 (Phase 13)
+- **Status**: **Approved**
+- **Context**: Selecting the data storage tier for operational pilot feature tables and administrative boundaries.
+- **Alternatives Considered**:
+  - *Option A*: Managed Cloud SQL PostgreSQL / PostGIS ($30–$60/month base cost).
+  - *Option B*: Remote Cloud Storage (GCS) buckets read on every request.
+  - *Option C (Selected)*: **Immutable In-Image Parquet Storage Packaged in Container (`/app/data/`)**.
+- **Rationale**: Total pilot data footprint is $<110\text{KB}$. Storing Parquet feature tables directly inside the container image eliminates database subscription costs, eliminates database connection-pool exhaustion, provides sub-millisecond in-memory Arrow/Pandas queries, and ensures 100% deterministic reproducibility across local and cloud environments.
+- **Downstream Impact**: Informs `Dockerfile.backend`, `.dockerignore`, and readiness probe dependencies. Ref: [data-and-model-artifacts.md](file:///Users/kazi/Projects/RITUCAST/docs/deployment/data-and-model-artifacts.md).
+
+---
+
+### DEC-53: NGINX Multi-Stage Frontend Container with Gzip, Dual-Port, and Strict Security Headers
+- **Date**: 2026-10-10 (Phase 13)
+- **Status**: **Approved**
+- **Context**: Delivering the production React 19 / TypeScript SPA to rural smallholders on budget Android smartphones and variable cellular networks under the $1.5\text{MB}$ payload ceiling (`DEC-09`).
+- **Alternatives Considered**:
+  - *Option A*: Static CDN bucket without custom reverse-proxy capabilities.
+  - *Option B*: Node.js runtime SSR server.
+  - *Option C (Selected)*: **Multi-Stage Node Builder + NGINX Alpine Runtime with Dual-Port (80/8080) Listening, Gzip, and Security Headers**.
+- **Rationale**: Gzip level 6 compresses the production bundle to $220.65\text{kB}$ ($<15\%$ of budget). NGINX alpine runtime consumes $<6\text{MB}$ memory. Dual-port listening enables out-of-the-box operation across local testing (port 80/3000) and Cloud Run (port 8080). Injects strict CSP, HSTS, X-Frame-Options, and X-Content-Type-Options headers.
+- **Downstream Impact**: Informs `deploy/docker/Dockerfile.frontend` and `deploy/docker/nginx.conf`. Ref: [containerization.md](file:///Users/kazi/Projects/RITUCAST/docs/deployment/containerization.md).
+
+
 
 
 

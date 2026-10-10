@@ -34,8 +34,9 @@ Ritucast is developed under a strict **18-phase governed engineering lifecycle**
 | **10** | **Backend API and Service Layer** | **Completed (PASS)** |
 | **11** | **Frontend Application and User Experience** | **Completed (PASS)** |
 | **12** | **End-to-End Integration and System Validation** | **Completed (PASS)** |
-| 13 | Maps and Geospatial Visualization Layer | *Pending Review (Next)* |
-| 14–18 | Field Validation through Expansion | *Pending* |
+| **13** | **Deployment Architecture and Production Readiness** | **Completed (PASS)** |
+| 14 | Maps and Geospatial Visualization Layer | *Pending Review (Next)* |
+| 15–18 | Usability through Expansion | *Pending* |
 
 Full details and phase governance rules can be viewed in the [Master Project Roadmap](file:///Users/kazi/Projects/RITUCAST/docs/planning/roadmap.md).
 
@@ -209,12 +210,32 @@ Full details and phase governance rules can be viewed in the [Master Project Roa
 - [Performance Findings](file:///Users/kazi/Projects/RITUCAST/docs/operations/phase-12-performance-findings.md): Bundle payload audit (307.5 kB / 89.3 kB gzip vs 1.5 MB budget), API latencies.
 - [Security Findings](file:///Users/kazi/Projects/RITUCAST/docs/operations/phase-12-security-findings.md): Credential hygiene, Pydantic input validation, and traceback sanitization.
 
+### Phase 13: Deployment Architecture & Production Readiness
+- [Deployment Architecture](file:///Users/kazi/Projects/RITUCAST/docs/deployment/phase-13-deployment-architecture.md): Serverless decoupled container architecture on Cloud Run (`asia-south1`).
+- [Hosting Options Comparison](file:///Users/kazi/Projects/RITUCAST/docs/deployment/hosting-options-comparison.md): Evaluation of Cloud Run, ECS Fargate, Fly.io/Render, and VPS.
+- [Deployment Topology](file:///Users/kazi/Projects/RITUCAST/docs/deployment/deployment-topology.md): Network boundaries, ingress, ports, and internal routing.
+- [Deployment Decisions](file:///Users/kazi/Projects/RITUCAST/docs/deployment/deployment-decisions.md): Formal ADRs (`DEC-51`, `DEC-52`, `DEC-53`).
+- [Build & Runtime Configuration](file:///Users/kazi/Projects/RITUCAST/docs/deployment/build-and-runtime-configuration.md): Packaging and execution SOPs for backend and frontend.
+- [Environment Variables](file:///Users/kazi/Projects/RITUCAST/docs/deployment/environment-variables.md): Reference for configuration variables and zero-secret architecture.
+- [Data and Model Artifacts](file:///Users/kazi/Projects/RITUCAST/docs/deployment/data-and-model-artifacts.md): In-image Parquet packaging (<110KB) and integrity probes.
+- [Containerization](file:///Users/kazi/Projects/RITUCAST/docs/deployment/containerization.md): Multi-stage Dockerfile specifications and non-root execution.
+- [Health Checks & Logging](file:///Users/kazi/Projects/RITUCAST/docs/deployment/health-checks-and-logging.md): `/health`, `/ready`, structured logging, and alerts.
+- [Security Checklist](file:///Users/kazi/Projects/RITUCAST/docs/deployment/security-checklist.md): Threat model, CSP/HSTS headers, and non-root UID 10001 audit.
+- [Resource & Cost Considerations](file:///Users/kazi/Projects/RITUCAST/docs/deployment/resource-and-cost-considerations.md): Memory profiling and Cloud Run free-tier budget model ($0 to $5/month).
+- [Backup & Recovery](file:///Users/kazi/Projects/RITUCAST/docs/deployment/backup-and-recovery.md): Stateless disaster recovery plan (RTO <60s, RPO 0s).
+- [Rollback Procedure](file:///Users/kazi/Projects/RITUCAST/docs/deployment/rollback-procedure.md): Instant revision traffic shifts (<2s) and canary rollout SOP.
+- [Troubleshooting Runbook](file:///Users/kazi/Projects/RITUCAST/docs/deployment/troubleshooting.md): Operational diagnosis and remediation for common alerts.
+- [Deployment Procedure](file:///Users/kazi/Projects/RITUCAST/docs/deployment/deployment-procedure.md): Step-by-step automated (`deploy.sh`) and manual cloud rollout.
+- [Deployment Validation](file:///Users/kazi/Projects/RITUCAST/docs/deployment/deployment-validation.md): Local container build and Docker Compose verification report.
+- [CI/CD Workflow](file:///Users/kazi/Projects/RITUCAST/docs/deployment/ci-cd-workflow.md): GitHub Actions automation pipeline architecture and gates.
+- [Known Limitations](file:///Users/kazi/Projects/RITUCAST/docs/deployment/known-limitations.md): Deferred items and external GCP credentials requirement.
+
 ### Planning, Governance & Quality Registers
 - [Agent Operating Instructions (AGENTS.md)](file:///Users/kazi/Projects/RITUCAST/AGENTS.md): Project-wide AI operating principles, scope boundaries, and safety guardrails.
 - [Phase 1–4 Continuity & Readiness Audit](file:///Users/kazi/Projects/RITUCAST/docs/project/phase-1-to-4-continuity-audit.md): Comprehensive pre-Phase 5 audit of artifacts, tests, data, and risks.
-- [Assumptions Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/assumptions-register.md): Tracked assumptions with verification paths (updated with ASM-19).
-- [Risk Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/risk-register.md): 43 prioritized risks with mitigations (updated with RSK-41 through RSK-43).
-- [Decision Log](file:///Users/kazi/Projects/RITUCAST/docs/planning/decision-log.md): Architectural decisions log (updated with DEC-48 through DEC-50).
+- [Assumptions Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/assumptions-register.md): Tracked assumptions with verification paths (updated with ASM-20).
+- [Risk Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/risk-register.md): 46 prioritized risks with mitigations (updated with RSK-44 through RSK-46).
+- [Decision Log](file:///Users/kazi/Projects/RITUCAST/docs/planning/decision-log.md): Architectural decisions log (updated with DEC-51 through DEC-53).
 - [Master Project Roadmap](file:///Users/kazi/Projects/RITUCAST/docs/planning/roadmap.md): 18-phase lifecycle status.
 
 ### Phase Execution Packages
@@ -230,6 +251,7 @@ Full details and phase governance rules can be viewed in the [Master Project Roa
 - **Phase 10 Package**: [Phase Plan](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-10/phase-plan.md) | [Readiness Assessment](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-10/readiness-assessment.md) | [Deliverables Checklist](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-10/deliverables-checklist.md) | [Validation Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-10/validation-report.md) | [Completion Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-10/phase-10-completion-report.md) | [Handoff to Phase 11](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-10/handoff-to-phase-11.md)
 - **Phase 11 Package**: [Phase Plan](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-11/phase-plan.md) | [Readiness Assessment](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-11/readiness-assessment.md) | [Deliverables Checklist](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-11/deliverables-checklist.md) | [Validation Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-11/validation-report.md) | [Completion Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-11/phase-11-completion-report.md) | [Handoff to Phase 12](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-11/handoff-to-phase-12.md)
 - **Phase 12 Package**: [Phase Plan](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-12/phase-plan.md) | [Readiness Assessment](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-12/readiness-assessment.md) | [Deliverables Checklist](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-12/deliverables-checklist.md) | [Validation Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-12/validation-report.md) | [Completion Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-12/phase-12-completion-report.md) | [Handoff to Phase 13](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-12/handoff-to-phase-13.md)
+- **Phase 13 Package**: [Phase Plan](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-13/phase-plan.md) | [Readiness Assessment](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-13/readiness-assessment.md) | [Deliverables Checklist](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-13/deliverables-checklist.md) | [Validation Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-13/validation-report.md) | [Completion Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-13/phase-13-completion-report.md) | [Handoff to Phase 14](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-13/handoff-to-phase-14.md)
 
 ---
 
