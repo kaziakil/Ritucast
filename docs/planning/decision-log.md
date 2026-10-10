@@ -582,6 +582,63 @@ This document records architectural, strategic, and product decisions made throu
 - **Rationale**: Preserves backwards compatibility for extension mobile clients while maintaining strict internal canonical IDs matching official BBS geospatial boundaries.
 - **Downstream Impact**: Implemented in `AgriculturalDataRepository.resolve_upazila_id()`. Ref: [api-endpoints.md](file:///Users/kazi/Projects/RITUCAST/docs/backend/api-endpoints.md).
 
+---
+
+## 12. Phase 11 Frontend Application & User Experience Decisions
+
+---
+
+### DEC-44: SPA / PWA Architecture with Vite 8 and React 19
+- **Date**: 2026-10-10 (Phase 11)
+- **Status**: **Approved**
+- **Context**: Choosing the build system and frontend application runtime to deliver responsive, offline-ready interfaces within client budget constraints (`DEC-09`, `DEC-20`).
+- **Alternatives Considered**:
+  - *Option A*: Next.js / Remix SSR framework.
+  - *Option B*: Create React App / Webpack.
+  - *Option C (Selected)*: **Vite 8 + React 19 SPA**.
+- **Rationale**: Generates ultra-compact static assets (<300kB JS uncompressed, 85kB gzipped); eliminates Node.js server-side runtime costs; provides sub-second HMR for local development; enables zero-latency edge caching.
+- **Downstream Impact**: Implemented in `frontend/` directory with `vite.config.ts`. Ref: [phase-11-frontend-architecture.md](file:///Users/kazi/Projects/RITUCAST/docs/frontend/phase-11-frontend-architecture.md).
+
+---
+
+### DEC-45: Pure Vanilla CSS Custom Properties Over Utility Frameworks
+- **Date**: 2026-10-10 (Phase 11)
+- **Status**: **Approved**
+- **Context**: Deciding on the styling mechanism to implement the visual design system defined in Phase 7 (`DEC-20`).
+- **Alternatives Considered**:
+  - *Option A*: Tailwind CSS v3 or v4.
+  - *Option B*: CSS-in-JS (Styled Components / Emotion).
+  - *Option C (Selected)*: **Vanilla CSS Custom Properties in `frontend/src/index.css`**.
+- **Rationale**: Zero runtime JavaScript overhead; complete control over outdoor sunlight high-contrast color tokens; eliminates external CSS build dependencies; production CSS bundle is only 13.5 kB (3.1 kB gzipped).
+- **Downstream Impact**: Defined in `frontend/src/index.css`. Ref: [design-system.md](file:///Users/kazi/Projects/RITUCAST/docs/frontend/design-system.md).
+
+---
+
+### DEC-46: Client-Side Contextual Gating State Synchronization
+- **Date**: 2026-10-10 (Phase 11)
+- **Status**: **Approved**
+- **Context**: Translating backend `DEC-17` contextual gating into an intuitive, mistake-proof user interaction flow.
+- **Alternatives Considered**:
+  - *Option A*: Multi-step wizard requiring page reloads between location, crop, and stage.
+  - *Option B (Selected)*: **Sticky Context Selection Bar (`ContextSelector.tsx`) Synchronized with Root Application State**.
+  - *Option C*: Allowing free-form queries and displaying backend 400 errors after failed queries.
+- **Rationale**: Immediate visibility of selected Upazila, Crop, and Growth Stage; automatically populates valid phenological stages per crop; prevents invalid or ungated requests from ever reaching the network layer.
+- **Downstream Impact**: Implemented in `frontend/src/components/ContextSelector.tsx`. Ref: [information-architecture.md](file:///Users/kazi/Projects/RITUCAST/docs/frontend/information-architecture.md).
+
+---
+
+### DEC-47: Automated Safety Banner and SAAO Fallback Routing on Advisory Suppression
+- **Date**: 2026-10-10 (Phase 11)
+- **Status**: **Approved**
+- **Context**: Ensuring the UI strictly enforces the `DEC-10` automated suppression policy without confusing farmers or leaving them without guidance.
+- **Alternatives Considered**:
+  - *Option A*: Completely hide the advisory card or display a blank screen.
+  - *Option B*: Render normal advice with a small footnote.
+  - *Option C (Selected)*: **Prominent Amber Fallback Banner Display with SAAO Contact Protocols**.
+- **Rationale**: Replaces actionable pump/harvest directives with clear, plain-language explanation of why advice was suppressed (e.g. NWP ensemble spread $\ge 50\%$ or telemetry $>36\text{h}$ old) and immediately directs the farmer to contact their local Sub-Assistant Agriculture Officer (SAAO).
+- **Downstream Impact**: Implemented in `frontend/src/components/AdvisoryHubView.tsx`. Ref: [backend-integration.md](file:///Users/kazi/Projects/RITUCAST/docs/frontend/backend-integration.md).
+
+
 
 
 

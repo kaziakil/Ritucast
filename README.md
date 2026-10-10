@@ -32,8 +32,9 @@ Ritucast is developed under a strict **18-phase governed engineering lifecycle**
 | **08** | **Data Ingestion & Processing Pipeline** | **Completed (PASS)** |
 | **09** | **Agricultural Analytics & Recommendation Engine** | **Completed (PASS)** |
 | **10** | **Backend API and Service Layer** | **Completed (PASS)** |
-| 11 | Frontend Development (PWA) | *Pending Review (Next)* |
-| 12–18 | Maps through Long-Term Expansion | *Pending* |
+| **11** | **Frontend Application and User Experience** | **Completed (PASS)** |
+| 12 | Maps and Geospatial Visualization Layer | *Pending Review (Next)* |
+| 13–18 | Integration Testing through Expansion | *Pending* |
 
 Full details and phase governance rules can be viewed in the [Master Project Roadmap](file:///Users/kazi/Projects/RITUCAST/docs/planning/roadmap.md).
 
@@ -176,6 +177,22 @@ Full details and phase governance rules can be viewed in the [Master Project Roa
 - [Known Limitations & Scope Boundaries](file:///Users/kazi/Projects/RITUCAST/docs/backend/known-limitations.md): Explicit non-goals (`DEC-06`) and pilot boundaries.
 - [OpenAPI 3.0 Schema Artifact](file:///Users/kazi/Projects/RITUCAST/docs/backend/openapi.json): Auto-generated machine-readable schema.
 
+### Phase 11: Frontend Application and User Experience
+- [Frontend Architecture](file:///Users/kazi/Projects/RITUCAST/docs/frontend/phase-11-frontend-architecture.md): React 19 + TypeScript + Vite architecture, 4-tier taxonomy, and 3G budget.
+- [Information Architecture](file:///Users/kazi/Projects/RITUCAST/docs/frontend/information-architecture.md): Navigation blueprints, sitemap, and operational card hierarchies.
+- [Design System & Tokens](file:///Users/kazi/Projects/RITUCAST/docs/frontend/design-system.md): Vanilla CSS custom properties, high-contrast outdoor tokens, and Bangla typography.
+- [Component Structure](file:///Users/kazi/Projects/RITUCAST/docs/frontend/component-structure.md): Component catalog, props interfaces, and view specifications.
+- [Backend Integration Contract](file:///Users/kazi/Projects/RITUCAST/docs/frontend/backend-integration.md): REST endpoint mapping, query parameters, and envelope unwrapping.
+- [API Client & Error Handling](file:///Users/kazi/Projects/RITUCAST/docs/frontend/api-client-and-error-handling.md): Centralized error parsing, offline detection, and stale data prevention.
+- [Geographic & Temporal Display](file:///Users/kazi/Projects/RITUCAST/docs/frontend/geographic-and-temporal-display.md): BBS GeoCode handling, spatial resolution notices, and BST timezones.
+- [User Workflows](file:///Users/kazi/Projects/RITUCAST/docs/frontend/user-workflows.md): Step-by-step journeys for Barind farmers, Haor SAAOs, and researchers.
+- [Accessibility Compliance](file:///Users/kazi/Projects/RITUCAST/docs/frontend/accessibility.md): WCAG 2.2 AA audit, visible focus rings, ARIA roles, and reduced motion.
+- [Responsive Design](file:///Users/kazi/Projects/RITUCAST/docs/frontend/responsive-design.md): Viewport adaptations, mobile touch targets (48px), and tablet ergonomics.
+- [Visualization Guidelines](file:///Users/kazi/Projects/RITUCAST/docs/frontend/visualization-guidelines.md): Non-exaggerated gauges, QPF rainfall bars, and exclusion of SHAP.
+- [Local Development Guide](file:///Users/kazi/Projects/RITUCAST/docs/frontend/local-development.md): Vite dev server, scripts catalog, and proxy configuration.
+- [Testing & Quality Validation](file:///Users/kazi/Projects/RITUCAST/docs/frontend/testing-and-validation.md): 14 Vitest tests, bundle metrics (88.6 kB gzip), and verification logs.
+- [Known Limitations & Boundaries](file:///Users/kazi/Projects/RITUCAST/docs/frontend/known-limitations.md): Pilot boundaries, deferrals (Maps to Phase 12), and non-goals (`DEC-06`).
+
 ### Planning, Governance & Quality Registers
 - [Agent Operating Instructions (AGENTS.md)](file:///Users/kazi/Projects/RITUCAST/AGENTS.md): Project-wide AI operating principles, scope boundaries, and safety guardrails.
 - [Phase 1–4 Continuity & Readiness Audit](file:///Users/kazi/Projects/RITUCAST/docs/project/phase-1-to-4-continuity-audit.md): Comprehensive pre-Phase 5 audit of artifacts, tests, data, and risks.
@@ -232,6 +249,16 @@ RITUCAST/
 │       ├── advisories.py
 │       ├── risk.py
 │       └── provenance.py
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── services/
+│   │   ├── test/
+│   │   ├── types/
+│   │   ├── App.tsx
+│   │   └── index.css
+│   ├── index.html
+│   └── vite.config.ts
 ├── configs/
 │   └── datasets/
 ├── data/
@@ -258,12 +285,13 @@ RITUCAST/
     ├── design/
     ├── analytics/
     ├── backend/
+    ├── frontend/
     ├── planning/
     └── phases/
         ├── phase-01/
         ├── ...
-        ├── phase-09/
-        └── phase-10/
+        ├── phase-10/
+        └── phase-11/
 ```
 
 ---
