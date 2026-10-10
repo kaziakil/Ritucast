@@ -121,4 +121,87 @@ describe('App Integration', () => {
 
     expect(screen.getByText(/সেচ বন্ধ করার আগে জমির আইল এবং মাটির রস নিজে হাত দিয়ে পরীক্ষা করুন।/)).toBeInTheDocument()
   })
+
+  it('automatically selects Rajshahi, Bogura, Adamdighi, Boro Rice, and Transplanting by default when available', async () => {
+    localStorage.clear()
+
+    const mockAdminUpazilas: UpazilaSummary[] = [
+      {
+        upazila_id: 'BD-50-10-06',
+        name_en: 'Adamdighi',
+        name_bn: 'আদমদিঘী',
+        district_name: 'Bogura',
+        division_name: 'Rajshahi',
+        aez_code: 4,
+        aez_name: 'Karatoya-Bangali Floodplain',
+        centroid: { lat: 24.7833, lon: 89.0333 },
+        primary_risk: 'Groundwater Deficit',
+      },
+      {
+        upazila_id: 'BD-50-20-30',
+        name_en: 'Godagari',
+        name_bn: 'গোদাগাড়ী',
+        district_name: 'Rajshahi',
+        division_name: 'Rajshahi',
+        aez_code: 26,
+        aez_name: 'High Barind Tract',
+        centroid: { lat: 24.4667, lon: 88.3333 },
+        primary_risk: 'Groundwater Deficit / Drought',
+        is_pilot: true,
+      },
+    ]
+
+    const mockCropsWithStages: CropInfo[] = [
+      {
+        crop_id: 'boro_rice',
+        name_en: 'Boro Rice',
+        name_bn: 'বোরো ধান',
+        scientific_name: 'Oryza sativa L.',
+        typical_duration_days: 145,
+        supported_stages: [
+          'Transplanting',
+          'Tillering',
+          'Panicle Initiation',
+          'Booting',
+          'Flowering',
+          'Milking',
+          'Dough',
+          'Maturity',
+        ],
+        calibration_status: 'PILOT_CALIBRATED',
+      },
+    ]
+
+    vi.spyOn(apiClient, 'getUpazilas').mockResolvedValue(mockAdminUpazilas)
+    vi.spyOn(apiClient, 'getCrops').mockResolvedValue(mockCropsWithStages)
+
+    const { container } = render(<App />)
+
+    await waitFor(() => {
+      // 1. Division: Rajshahi
+      const divSelect = container.querySelector('#division-select') as HTMLSelectElement
+      expect(divSelect).toBeInTheDocument()
+      expect(divSelect.value).toBe('Rajshahi')
+
+      // 2. District: Bogura
+      const distSelect = container.querySelector('#district-select') as HTMLSelectElement
+      expect(distSelect).toBeInTheDocument()
+      expect(distSelect.value).toBe('Bogura')
+
+      // 3. Upazila: Adamdighi (BD-50-10-06)
+      const upzSelect = container.querySelector('#upazila-select') as HTMLSelectElement
+      expect(upzSelect).toBeInTheDocument()
+      expect(upzSelect.value).toBe('BD-50-10-06')
+
+      // 4. Crop: Boro Rice (boro_rice)
+      const cropSelect = container.querySelector('#crop-select') as HTMLSelectElement
+      expect(cropSelect).toBeInTheDocument()
+      expect(cropSelect.value).toBe('boro_rice')
+
+      // 5. Stage: Transplanting
+      const stageSelect = container.querySelector('#stage-select') as HTMLSelectElement
+      expect(stageSelect).toBeInTheDocument()
+      expect(stageSelect.value).toBe('Transplanting')
+    })
+  })
 })

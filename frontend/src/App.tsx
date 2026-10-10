@@ -22,6 +22,53 @@ import type {
   ReadinessResponse,
 } from './types/api'
 
+export interface ContextPreferences {
+  division: string
+  district: string
+  upazilaId: string
+  cropId: string
+  stage: string
+}
+
+export const PREFS_STORAGE_KEY = 'ritucast_geo_context_prefs'
+
+export const DEFAULT_CONTEXT_PREFS: ContextPreferences = {
+  division: 'Rajshahi',
+  district: 'Bogura',
+  upazilaId: 'BD-50-10-06', // Adamdighi (আদমদিঘী)
+  cropId: 'boro_rice', // Boro Rice (বোরো ধান)
+  stage: 'Transplanting', // Transplanting
+}
+
+export function getStoredContextPrefs(): ContextPreferences {
+  if (typeof window === 'undefined') return DEFAULT_CONTEXT_PREFS
+  try {
+    const raw = localStorage.getItem(PREFS_STORAGE_KEY)
+    if (!raw) return DEFAULT_CONTEXT_PREFS
+    const parsed = JSON.parse(raw)
+    return {
+      division: parsed.division || DEFAULT_CONTEXT_PREFS.division,
+      district: parsed.district || DEFAULT_CONTEXT_PREFS.district,
+      upazilaId: parsed.upazilaId || DEFAULT_CONTEXT_PREFS.upazilaId,
+      cropId: parsed.cropId || DEFAULT_CONTEXT_PREFS.cropId,
+      stage: parsed.stage || DEFAULT_CONTEXT_PREFS.stage,
+    }
+  } catch {
+    return DEFAULT_CONTEXT_PREFS
+  }
+}
+
+export function saveStoredContextPrefs(prefs: Partial<ContextPreferences>) {
+  if (typeof window === 'undefined') return
+  try {
+    const current = getStoredContextPrefs()
+    const updated = { ...current, ...prefs }
+    localStorage.setItem(PREFS_STORAGE_KEY, JSON.stringify(updated))
+  } catch {
+    // ignore
+  }
+}
+
 export const AppContent: React.FC = () => {
   const { language, t } = useLanguage()
 
@@ -32,19 +79,25 @@ export const AppContent: React.FC = () => {
   const [upazilas, setUpazilas] = useState<UpazilaSummary[]>([])
   const [crops, setCrops] = useState<CropInfo[]>([])
   const [growthStages, setGrowthStages] = useState<string[]>([
+    'Transplanting',
     'Tillering',
+    'Panicle Initiation',
     'Booting',
     'Flowering',
+    'Milking',
     'Dough',
     'Maturity',
   ])
   const [readiness, setReadiness] = useState<ReadinessResponse | null>(null)
   const [loadingReadiness, setLoadingReadiness] = useState<boolean>(true)
 
-  // Selection Context (DEC-17 Gating)
-  const [selectedUpazilaId, setSelectedUpazilaId] = useState<string>('BD-50-20-30')
-  const [selectedCropId, setSelectedCropId] = useState<string>('boro_rice')
-  const [selectedStage, setSelectedStage] = useState<string>('Tillering')
+  // Selection Context (DEC-17 Gating) - Defaults to Rajshahi -> Bogura -> Adamdighi, Boro Rice, Transplanting
+  const initialPrefs = useMemo(() => getStoredContextPrefs(), [])
+  const [selectedDivision, setSelectedDivision] = useState<string>(initialPrefs.division)
+  const [selectedDistrict, setSelectedDistrict] = useState<string>(initialPrefs.district)
+  const [selectedUpazilaId, setSelectedUpazilaId] = useState<string>(initialPrefs.upazilaId)
+  const [selectedCropId, setSelectedCropId] = useState<string>(initialPrefs.cropId)
+  const [selectedStage, setSelectedStage] = useState<string>(initialPrefs.stage)
 
   // Custom Date Range State (defaults dynamically to previous 7 complete days, excluding today)
   const defaultDates = useMemo(() => getDefaultDateRange(), [])
@@ -64,6 +117,54 @@ export const AppContent: React.FC = () => {
   const [loadingData, setLoadingData] = useState<boolean>(false)
   const [dataError, setDataError] = useState<string | null>(null)
 
+  // Handlers for context updates with preference persistence
+  const handleDivisionChange = (div: string) => {
+    setSelectedDivision(div)
+    saveStoredContextPrefs({ division: div })
+  }
+
+  const handleDistrictChange = (dist: string) => {
+    setSelectedDistrict(dist)
+    saveStoredContextPrefs({ district: dist })
+  }
+
+  const handleUpazilaChange = (upzId: string) => {
+    setSelectedUpazilaId(upzId)
+    const upz = upazilas.find((u) => u.upazila_id === upzId)
+    if (upz) {
+      setSelectedDivision(upz.division_name)
+      setSelectedDistrict(upz.district_name)
+      saveStoredContextPrefs({
+        upazilaId: upzId,
+        division: upz.division_name,
+        district: upz.district_name,
+      })
+    } else {
+      saveStoredContextPrefs({ upazilaId: upzId })
+    }
+  }
+
+  const handleCropChange = (cropId: string) => {
+    setSelectedCropId(cropId)
+    const crop = crops.find((c) => c.crop_id === cropId)
+    let nextStage = selectedStage
+    if (crop && crop.supported_stages?.length) {
+      setGrowthStages(crop.supported_stages)
+      if (!crop.supported_stages.includes(selectedStage)) {
+        nextStage = crop.supported_stages.includes(DEFAULT_CONTEXT_PREFS.stage)
+          ? DEFAULT_CONTEXT_PREFS.stage
+          : crop.supported_stages[0]
+        setSelectedStage(nextStage)
+      }
+    }
+    saveStoredContextPrefs({ cropId, stage: nextStage })
+  }
+
+  const handleStageChange = (stage: string) => {
+    setSelectedStage(stage)
+    saveStoredContextPrefs({ stage })
+  }
+
   // 1. Initial Metadata Load: load full national upazila registry and crops catalog
   useEffect(() => {
     let mounted = true
@@ -81,17 +182,37 @@ export const AppContent: React.FC = () => {
 
         if (upzList.status === 'fulfilled' && upzList.value.length > 0) {
           setUpazilas(upzList.value)
-          // Default to first pilot upazila or first item
-          const defaultUpz = upzList.value.find((u) => u.is_pilot) || upzList.value[0]
-          setSelectedUpazilaId(defaultUpz.upazila_id)
+
+          // Prioritize selected/stored upazila if found, then Adamdighi default, then pilot fallback (for mock test environments)
+          const targetUpz =
+            upzList.value.find((u) => u.upazila_id === selectedUpazilaId) ||
+            upzList.value.find((u) => u.upazila_id === DEFAULT_CONTEXT_PREFS.upazilaId) ||
+            upzList.value.find((u) => u.is_pilot) ||
+            upzList.value[0]
+
+          if (targetUpz) {
+            setSelectedUpazilaId(targetUpz.upazila_id)
+            setSelectedDivision(targetUpz.division_name)
+            setSelectedDistrict(targetUpz.district_name)
+          }
         }
 
         if (cropList.status === 'fulfilled' && cropList.value.length > 0) {
           setCrops(cropList.value)
-          setSelectedCropId(cropList.value[0].crop_id)
-          if (cropList.value[0].supported_stages?.length) {
-            setGrowthStages(cropList.value[0].supported_stages)
-            setSelectedStage(cropList.value[0].supported_stages[0])
+          const targetCrop =
+            cropList.value.find((c) => c.crop_id === selectedCropId) ||
+            cropList.value.find((c) => c.crop_id === DEFAULT_CONTEXT_PREFS.cropId) ||
+            cropList.value[0]
+
+          setSelectedCropId(targetCrop.crop_id)
+          if (targetCrop.supported_stages?.length) {
+            setGrowthStages(targetCrop.supported_stages)
+            const targetStage = targetCrop.supported_stages.includes(selectedStage)
+              ? selectedStage
+              : targetCrop.supported_stages.includes(DEFAULT_CONTEXT_PREFS.stage)
+              ? DEFAULT_CONTEXT_PREFS.stage
+              : targetCrop.supported_stages[0]
+            setSelectedStage(targetStage)
           }
         }
 
@@ -110,18 +231,6 @@ export const AppContent: React.FC = () => {
       mounted = false
     }
   }, [])
-
-  // Sync growth stages when crop selection changes
-  const handleCropChange = (cropId: string) => {
-    setSelectedCropId(cropId)
-    const crop = crops.find((c) => c.crop_id === cropId)
-    if (crop && crop.supported_stages?.length) {
-      setGrowthStages(crop.supported_stages)
-      if (!crop.supported_stages.includes(selectedStage)) {
-        setSelectedStage(crop.supported_stages[0])
-      }
-    }
-  }
 
   // 2. Fetch Active Analytical Data using Upazila, Crop, Stage, and Custom Date Range
   const fetchAnalyticalData = useCallback(async () => {
@@ -189,14 +298,18 @@ export const AppContent: React.FC = () => {
       {/* Primary Context Selector (DEC-17 Gating, Cascading Geo, Expanded Crops, Custom Dates) */}
       <ContextSelector
         upazilas={upazilas}
+        selectedDivision={selectedDivision}
+        setSelectedDivision={handleDivisionChange}
+        selectedDistrict={selectedDistrict}
+        setSelectedDistrict={handleDistrictChange}
         selectedUpazilaId={selectedUpazilaId}
-        setSelectedUpazilaId={setSelectedUpazilaId}
+        setSelectedUpazilaId={handleUpazilaChange}
         crops={crops}
         selectedCropId={selectedCropId}
         setSelectedCropId={handleCropChange}
         growthStages={growthStages}
         selectedStage={selectedStage}
-        setSelectedStage={setSelectedStage}
+        setSelectedStage={handleStageChange}
         startDate={startDate}
         setStartDate={setStartDate}
         endDate={endDate}

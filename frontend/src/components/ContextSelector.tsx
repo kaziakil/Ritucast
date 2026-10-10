@@ -51,6 +51,10 @@ export function getDefaultDateRange(): { startDate: string; endDate: string } {
 
 export interface ContextSelectorProps {
   upazilas: UpazilaSummary[]
+  selectedDivision?: string
+  setSelectedDivision?: (division: string) => void
+  selectedDistrict?: string
+  setSelectedDistrict?: (district: string) => void
   selectedUpazilaId: string
   setSelectedUpazilaId: (id: string) => void
   crops: CropInfo[]
@@ -71,6 +75,10 @@ export interface ContextSelectorProps {
 
 export const ContextSelector: React.FC<ContextSelectorProps> = ({
   upazilas,
+  selectedDivision: propSelectedDivision,
+  setSelectedDivision: propSetSelectedDivision,
+  selectedDistrict: propSelectedDistrict,
+  setSelectedDistrict: propSetSelectedDistrict,
   selectedUpazilaId,
   setSelectedUpazilaId,
   crops,
@@ -126,8 +134,31 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
   )
 
   // Cascading Geography Hierarchy: Division -> District -> Upazila
-  const [selectedDivision, setSelectedDivision] = useState<string>('')
-  const [selectedDistrict, setSelectedDistrict] = useState<string>('')
+  const [internalDivision, setInternalDivision] = useState<string>('')
+  const [internalDistrict, setInternalDistrict] = useState<string>('')
+
+  const activeDivision = propSelectedDivision !== undefined ? propSelectedDivision : internalDivision
+  const activeDistrict = propSelectedDistrict !== undefined ? propSelectedDistrict : internalDistrict
+
+  const setDivision = (div: string) => {
+    if (propSetSelectedDivision) propSetSelectedDivision(div)
+    else setInternalDivision(div)
+  }
+
+  const setDistrict = (dist: string) => {
+    if (propSetSelectedDistrict) propSetSelectedDistrict(dist)
+    else setInternalDistrict(dist)
+  }
+
+  // Synchronize division and district with currentUpazila if activeDivision/activeDistrict are uninitialized
+  useEffect(() => {
+    if (!activeDivision && currentUpazila?.division_name) {
+      setDivision(currentUpazila.division_name)
+    }
+    if (!activeDistrict && currentUpazila?.district_name) {
+      setDistrict(currentUpazila.district_name)
+    }
+  }, [currentUpazila, activeDivision, activeDistrict])
 
   // Search State & Dropdown Management
   const [searchQuery, setSearchQuery] = useState<string>('')
@@ -197,11 +228,15 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
     return list
   }, [upazilas])
 
+  // Normalize Bangla characters (e.g. ী -> ি) for resilient search
+  const normBn = (str?: string) => (str ? str.replace(/ী/g, 'ি') : '')
+
   // Filter and score search results
   const searchResults = useMemo<SearchLocationItem[]>(() => {
     const q = searchQuery.trim()
     if (!q) return []
     const lower = q.toLowerCase()
+    const normQ = normBn(q)
 
     const scored = searchableLocations
       .map((item) => {
@@ -209,23 +244,26 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
         const nameEnLower = item.nameEn.toLowerCase()
         const distEnLower = item.districtEn.toLowerCase()
         const divEnLower = item.divisionEn.toLowerCase()
+        const nameBnNorm = normBn(item.nameBn)
+        const distBnNorm = normBn(item.districtBn)
+        const divBnNorm = normBn(item.divisionBn)
 
         // Direct Name Match
-        if (nameEnLower === lower || item.nameBn === q) {
+        if (nameEnLower === lower || item.nameBn === q || nameBnNorm === normQ) {
           score += 100
-        } else if (nameEnLower.startsWith(lower) || item.nameBn.startsWith(q)) {
+        } else if (nameEnLower.startsWith(lower) || item.nameBn.startsWith(q) || nameBnNorm.startsWith(normQ)) {
           score += 80
-        } else if (nameEnLower.includes(lower) || item.nameBn.includes(q)) {
+        } else if (nameEnLower.includes(lower) || item.nameBn.includes(q) || nameBnNorm.includes(normQ)) {
           score += 60
-        } else if (distEnLower.includes(lower) || (item.districtBn && item.districtBn.includes(q))) {
+        } else if (distEnLower.includes(lower) || (item.districtBn && (item.districtBn.includes(q) || distBnNorm.includes(normQ)))) {
           score += 40
-        } else if (divEnLower.includes(lower) || (item.divisionBn && item.divisionBn.includes(q))) {
+        } else if (divEnLower.includes(lower) || (item.divisionBn && (item.divisionBn.includes(q) || divBnNorm.includes(normQ)))) {
           score += 20
         }
 
         if (score > 0) {
           if (item.isPilot) score += 15
-          if (item.type === 'district' && (nameEnLower.startsWith(lower) || item.nameBn.startsWith(q))) {
+          if (item.type === 'district' && (nameEnLower.startsWith(lower) || item.nameBn.startsWith(q) || nameBnNorm.startsWith(normQ))) {
             score += 10
           }
         }
@@ -243,11 +281,11 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
   const handleSelectLocation = (item: SearchLocationItem) => {
     if (item.type === 'upazila' && item.upazilaId) {
       setSelectedUpazilaId(item.upazilaId)
-      setSelectedDivision(item.divisionEn)
-      setSelectedDistrict(item.districtEn)
+      setDivision(item.divisionEn)
+      setDistrict(item.districtEn)
     } else if (item.type === 'district') {
-      setSelectedDivision(item.divisionEn)
-      setSelectedDistrict(item.nameEn)
+      setDivision(item.divisionEn)
+      setDistrict(item.nameEn)
       // Pick pilot upazila in this district or first available
       const targetUpz =
         upazilas.find((u) => u.district_name === item.nameEn && u.is_pilot) ||
@@ -304,50 +342,83 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
   const availableDistricts = useMemo(() => {
     const set = new Set<string>()
     upazilas.forEach((u) => {
-      if (!selectedDivision || u.division_name === selectedDivision) {
+      if (!activeDivision || u.division_name === activeDivision) {
         if (u.district_name) set.add(u.district_name)
       }
     })
     return Array.from(set).sort()
-  }, [upazilas, selectedDivision])
+  }, [upazilas, activeDivision])
 
-  // Extract upazilas belonging to current division and district
-  const filteredUpazilas = useMemo(() => {
-    if (!selectedDivision && !selectedDistrict) {
+  // Ensure all upazilas remain available while prioritizing those in the selected division and district
+  const displayUpazilas = useMemo(() => {
+    if (!activeDivision && !activeDistrict) {
       return upazilas
     }
 
-    return upazilas.filter((u) => {
-      const matchesDiv = !selectedDivision || u.division_name === selectedDivision
-      const matchesDist = !selectedDistrict || u.district_name === selectedDistrict
+    const matching = upazilas.filter((u) => {
+      const matchesDiv = !activeDivision || u.division_name === activeDivision
+      const matchesDist = !activeDistrict || u.district_name === activeDistrict
       return matchesDiv && matchesDist
     })
-  }, [upazilas, selectedDivision, selectedDistrict])
 
-  // Ensure currentUpazila is always available in the options
-  const displayUpazilas = useMemo(() => {
-    if (currentUpazila && !filteredUpazilas.some((u) => u.upazila_id === currentUpazila.upazila_id)) {
-      return [currentUpazila, ...filteredUpazilas]
-    }
-    return filteredUpazilas
-  }, [filteredUpazilas, currentUpazila])
+    const nonMatching = upazilas.filter(
+      (u) => !matching.some((m) => m.upazila_id === u.upazila_id)
+    )
+
+    return [...matching, ...nonMatching]
+  }, [upazilas, activeDivision, activeDistrict])
 
   // Handle Division Selection
   const onDivisionChange = (divName: string) => {
-    setSelectedDivision(divName)
-    const firstDist = upazilas.find((u) => u.division_name === divName)?.district_name || ''
-    setSelectedDistrict(firstDist)
-    const firstUpz = upazilas.find((u) => u.division_name === divName && u.district_name === firstDist)
-    if (firstUpz) setSelectedUpazilaId(firstUpz.upazila_id)
+    setDivision(divName)
+    if (!divName) {
+      setDistrict('')
+      return
+    }
+    // Check if current district is valid in this division
+    const districtStillValid = upazilas.some(
+      (u) => u.division_name === divName && u.district_name === activeDistrict
+    )
+    if (!districtStillValid) {
+      const firstDist = upazilas.find((u) => u.division_name === divName)?.district_name || ''
+      setDistrict(firstDist)
+      const firstUpz = upazilas.find(
+        (u) => u.division_name === divName && u.district_name === firstDist
+      )
+      if (firstUpz) setSelectedUpazilaId(firstUpz.upazila_id)
+    } else {
+      // Current district is valid; verify if current upazila is still valid
+      const upzStillValid = upazilas.some(
+        (u) => u.division_name === divName && u.district_name === activeDistrict && u.upazila_id === selectedUpazilaId
+      )
+      if (!upzStillValid) {
+        const firstUpz = upazilas.find(
+          (u) => u.division_name === divName && u.district_name === activeDistrict
+        )
+        if (firstUpz) setSelectedUpazilaId(firstUpz.upazila_id)
+      }
+    }
   }
 
   // Handle District Selection
   const onDistrictChange = (distName: string) => {
-    setSelectedDistrict(distName)
-    const firstUpz = upazilas.find(
-      (u) => (!selectedDivision || u.division_name === selectedDivision) && u.district_name === distName
+    setDistrict(distName)
+    if (!distName) return
+
+    // Ensure Division is synced if not matching
+    const matchedDiv = upazilas.find((u) => u.district_name === distName)?.division_name
+    if (matchedDiv && matchedDiv !== activeDivision) {
+      setDivision(matchedDiv)
+    }
+
+    // Verify if current upazila is in this district
+    const upzStillValid = upazilas.some(
+      (u) => u.district_name === distName && u.upazila_id === selectedUpazilaId
     )
-    if (firstUpz) setSelectedUpazilaId(firstUpz.upazila_id)
+    if (!upzStillValid) {
+      const firstUpz = upazilas.find((u) => u.district_name === distName)
+      if (firstUpz) setSelectedUpazilaId(firstUpz.upazila_id)
+    }
   }
 
   // Crops grouped by Category
@@ -575,7 +646,7 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
             <select
               id="division-select"
               className="form-select"
-              value={selectedDivision}
+              value={activeDivision}
               onChange={(e) => onDivisionChange(e.target.value)}
             >
               <option value="">{t('all_divisions')}</option>
@@ -596,7 +667,7 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
             <select
               id="district-select"
               className="form-select"
-              value={selectedDistrict}
+              value={activeDistrict}
               onChange={(e) => onDistrictChange(e.target.value)}
             >
               <option value="">{t('select_district')}</option>
@@ -622,8 +693,8 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
                 setSelectedUpazilaId(e.target.value)
                 const upz = upazilas.find((u) => u.upazila_id === e.target.value)
                 if (upz) {
-                  setSelectedDivision(upz.division_name)
-                  setSelectedDistrict(upz.district_name)
+                  setDivision(upz.division_name)
+                  setDistrict(upz.district_name)
                 }
               }}
             >
