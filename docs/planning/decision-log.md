@@ -528,6 +528,61 @@ This document records architectural, strategic, and product decisions made throu
 - **Rationale**: Catchment rain provides 48h advance warning; river rate of rise confirms incoming flood wave surge; proximity to danger level gauges levee freeboard.
 - **Downstream Impact**: Governs `HaorFloodIndexCalculator` and triggers `RULE-FLD-01`. Ref: [haor_flood_index.py](file:///Users/kazi/Projects/RITUCAST/analytics/indicators/haor_flood_index.py).
 
+---
+
+## 11. Phase 10 Backend API & Service Layer Decisions
+
+---
+
+### DEC-40: Adoption of FastAPI and Pydantic v2 for Asynchronous Service Layer
+- **Date**: 2026-10-10 (Phase 10)
+- **Status**: **Approved**
+- **Context**: Choosing the API delivery framework to expose Phase 9 analytics to mobile PWAs and extension workers.
+- **Alternatives Considered**:
+  - *Option A*: Flask or Django REST Framework.
+  - *Option B*: Express.js/Node.js requiring inter-process communication with Python analytics.
+  - *Option C (Selected)*: **FastAPI + Pydantic v2**.
+- **Rationale**: Direct in-process execution of Phase 9 Python calculators without IPC overhead; native asynchronous request handling; automatic OpenAPI 3.0 specification generation; strict schema validation.
+- **Downstream Impact**: Defined structure of `api/` package and routers. Ref: [phase-10-backend-architecture.md](file:///Users/kazi/Projects/RITUCAST/docs/backend/phase-10-backend-architecture.md).
+
+---
+
+### DEC-41: In-Memory Caching for Processed Parquet Tables and Metadata
+- **Date**: 2026-10-10 (Phase 10)
+- **Status**: **Approved**
+- **Context**: Deciding how the API loads Parquet feature tables without inducing repeated disk I/O on every HTTP request.
+- **Alternatives Considered**:
+  - *Option A*: Query Parquet files from disk on every incoming request.
+  - *Option B*: Introduce Redis or PostgreSQL infrastructure prematurely.
+  - *Option C (Selected)*: **In-Memory Caching in `AgriculturalDataRepository`**.
+- **Rationale**: Processed tables for pilot Upazilas occupy under 3MB total heap memory; in-memory caching keeps query latency below 20ms and avoids external infrastructure dependencies for MVP.
+- **Downstream Impact**: Governs `AgriculturalDataRepository` caching in `api/data_access/repository.py`. Ref: [performance-and-resource-management.md](file:///Users/kazi/Projects/RITUCAST/docs/backend/performance-and-resource-management.md).
+
+---
+
+### DEC-42: Centralized Error Translation into Immutable Error Envelopes
+- **Date**: 2026-10-10 (Phase 10)
+- **Status**: **Approved**
+- **Context**: Ensuring consistent, secure client error reporting without leaking raw stack traces, file paths, or framework internals.
+- **Alternatives Considered**:
+  - *Option A*: Default FastAPI/Starlette error format.
+  - *Option B (Selected)*: **Centralized Error Translation Middleware (`api/middleware/error_handlers.py`)**.
+- **Rationale**: Guarantees all errors (400, 404, 422, 500) return uniform JSON with `status: "error"`, machine-readable `code`, human-readable `message`, and ISO `timestamp_utc`.
+- **Downstream Impact**: Enforced across all routers and verified in test suite. Ref: [request-validation-and-errors.md](file:///Users/kazi/Projects/RITUCAST/docs/backend/request-validation-and-errors.md).
+
+---
+
+### DEC-43: Upazila Administrative Code Canonicalization and Shorthand Alias Support
+- **Date**: 2026-10-10 (Phase 10)
+- **Status**: **Approved**
+- **Context**: Field extensions and previous phases used both shorthand codes (e.g. `BD-50-28`, `BD-60-90`) and official 8-digit BBS codes (e.g. `BD-50-20-30`, `BD-60-90-89`).
+- **Alternatives Considered**:
+  - *Option A*: Reject all shorthand codes with HTTP 404.
+  - *Option B (Selected)*: **Transparent Upazila Identifier Canonicalization in Data Access Layer**.
+- **Rationale**: Preserves backwards compatibility for extension mobile clients while maintaining strict internal canonical IDs matching official BBS geospatial boundaries.
+- **Downstream Impact**: Implemented in `AgriculturalDataRepository.resolve_upazila_id()`. Ref: [api-endpoints.md](file:///Users/kazi/Projects/RITUCAST/docs/backend/api-endpoints.md).
+
+
 
 
 

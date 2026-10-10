@@ -31,8 +31,9 @@ Ritucast is developed under a strict **18-phase governed engineering lifecycle**
 | **07** | **Visual Design and Design System** | **Completed (PASS)** |
 | **08** | **Data Ingestion & Processing Pipeline** | **Completed (PASS)** |
 | **09** | **Agricultural Analytics & Recommendation Engine** | **Completed (PASS)** |
-| 10 | Backend and API Development | *Pending Review (Next)* |
-| 11–18 | Frontend through Long-Term Expansion | *Pending* |
+| **10** | **Backend API and Service Layer** | **Completed (PASS)** |
+| 11 | Frontend Development (PWA) | *Pending Review (Next)* |
+| 12–18 | Maps through Long-Term Expansion | *Pending* |
 
 Full details and phase governance rules can be viewed in the [Master Project Roadmap](file:///Users/kazi/Projects/RITUCAST/docs/planning/roadmap.md).
 
@@ -162,12 +163,25 @@ Full details and phase governance rules can be viewed in the [Master Project Roa
 - [Analytics Testing Strategy](file:///Users/kazi/Projects/RITUCAST/docs/analytics/analytics-testing-strategy.md): Unit, rule, benchmark, and integration test specifications.
 - [Reproducibility & Performance](file:///Users/kazi/Projects/RITUCAST/docs/analytics/reproducibility-and-performance.md): Deterministic execution, $<50\text{ms}$ latency, and $<35\text{MB}$ memory footprint.
 
+### Phase 10: Backend API and Service Layer
+- [Backend Architecture](file:///Users/kazi/Projects/RITUCAST/docs/backend/phase-10-backend-architecture.md): FastAPI modular design, repository pattern, and service boundaries.
+- [API Specification](file:///Users/kazi/Projects/RITUCAST/docs/backend/api-specification.md): REST protocols, base URLs, 4-tier separation, and safety rules.
+- [API Endpoints Catalog](file:///Users/kazi/Projects/RITUCAST/docs/backend/api-endpoints.md): Full contracts for all 11 endpoints with request/response examples.
+- [Request Validation & Error Handling](file:///Users/kazi/Projects/RITUCAST/docs/backend/request-validation-and-errors.md): Centralized error translation and immutable envelopes.
+- [Security & Configuration Guide](file:///Users/kazi/Projects/RITUCAST/docs/backend/security-and-configuration.md): Pydantic settings, CORS origin restrictions, and threat model.
+- [Performance & Resource Management](file:///Users/kazi/Projects/RITUCAST/docs/backend/performance-and-resource-management.md): In-memory caching, latency benchmarks (<20ms), and 3G budget.
+- [Local Development Guide](file:///Users/kazi/Projects/RITUCAST/docs/backend/local-development.md): Uvicorn commands, curl examples, and testing instructions.
+- [Phase 9 Integration Contract](file:///Users/kazi/Projects/RITUCAST/docs/backend/phase-9-integration-contract.md): Verification contract with Phase 9 analytics engine.
+- [Data Provenance & Quality Guide](file:///Users/kazi/Projects/RITUCAST/docs/backend/data-provenance-and-quality.md): Upstream dataset freshness and physical bound audits.
+- [Known Limitations & Scope Boundaries](file:///Users/kazi/Projects/RITUCAST/docs/backend/known-limitations.md): Explicit non-goals (`DEC-06`) and pilot boundaries.
+- [OpenAPI 3.0 Schema Artifact](file:///Users/kazi/Projects/RITUCAST/docs/backend/openapi.json): Auto-generated machine-readable schema.
+
 ### Planning, Governance & Quality Registers
 - [Agent Operating Instructions (AGENTS.md)](file:///Users/kazi/Projects/RITUCAST/AGENTS.md): Project-wide AI operating principles, scope boundaries, and safety guardrails.
 - [Phase 1–4 Continuity & Readiness Audit](file:///Users/kazi/Projects/RITUCAST/docs/project/phase-1-to-4-continuity-audit.md): Comprehensive pre-Phase 5 audit of artifacts, tests, data, and risks.
-- [Assumptions Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/assumptions-register.md): Tracked assumptions with verification paths (updated with ASM-16).
-- [Risk Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/risk-register.md): 34 prioritized risks with mitigations (updated with RSK-32 through RSK-34).
-- [Decision Log](file:///Users/kazi/Projects/RITUCAST/docs/planning/decision-log.md): Architectural decisions log (updated with DEC-36 through DEC-39).
+- [Assumptions Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/assumptions-register.md): Tracked assumptions with verification paths (updated with ASM-17).
+- [Risk Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/risk-register.md): 37 prioritized risks with mitigations (updated with RSK-35 through RSK-37).
+- [Decision Log](file:///Users/kazi/Projects/RITUCAST/docs/planning/decision-log.md): Architectural decisions log (updated with DEC-40 through DEC-43).
 - [Master Project Roadmap](file:///Users/kazi/Projects/RITUCAST/docs/planning/roadmap.md): 18-phase lifecycle status.
 
 ### Phase Execution Packages
@@ -180,6 +194,7 @@ Full details and phase governance rules can be viewed in the [Master Project Roa
 - **Phase 07 Package**: [Phase Plan](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-07/phase-plan.md) | [Readiness Assessment](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-07/readiness-assessment.md) | [Deliverables Checklist](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-07/deliverables-checklist.md) | [Validation Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-07/validation-report.md) | [Handoff to Phase 8](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-07/handoff-to-phase-08.md)
 - **Phase 08 Package**: [Phase Plan](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-08/phase-plan.md) | [Readiness Assessment](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-08/readiness-assessment.md) | [Deliverables Checklist](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-08/deliverables-checklist.md) | [Validation Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-08/validation-report.md) | [Handoff to Phase 9](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-08/handoff-to-phase-09.md)
 - **Phase 09 Package**: [Phase Plan](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-09/phase-plan.md) | [Readiness Assessment](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-09/readiness-assessment.md) | [Deliverables Checklist](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-09/deliverables-checklist.md) | [Validation Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-09/validation-report.md) | [Handoff to Phase 10](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-09/handoff-to-phase-10.md)
+- **Phase 10 Package**: [Phase Plan](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-10/phase-plan.md) | [Readiness Assessment](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-10/readiness-assessment.md) | [Deliverables Checklist](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-10/deliverables-checklist.md) | [Validation Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-10/validation-report.md) | [Completion Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-10/phase-10-completion-report.md) | [Handoff to Phase 11](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-10/handoff-to-phase-11.md)
 
 ---
 
@@ -191,44 +206,47 @@ RITUCAST/
 ├── AGENTS.md
 ├── .editorconfig
 ├── .gitignore
+├── api/
+│   ├── config.py
+│   ├── dependencies.py
+│   ├── main.py
+│   ├── data_access/
+│   │   └── repository.py
+│   ├── middleware/
+│   │   └── error_handlers.py
+│   ├── routers/
+│   │   ├── health.py
+│   │   ├── geo.py
+│   │   ├── metadata.py
+│   │   ├── weather.py
+│   │   ├── water_balance.py
+│   │   ├── flood_hazard.py
+│   │   ├── advisories.py
+│   │   ├── risk.py
+│   │   └── provenance.py
+│   └── schemas/
+│       ├── common.py
+│       ├── geo.py
+│       ├── metadata.py
+│       ├── indicators.py
+│       ├── advisories.py
+│       ├── risk.py
+│       └── provenance.py
 ├── configs/
 │   └── datasets/
-│       ├── dataset_sources.json
-│       ├── pilot_zones.json
-│       └── validation_thresholds.json
 ├── data/
 │   ├── sample/
-│   │   ├── bangladesh_pilot_upazilas.geojson
-│   │   ├── brri_phenology_boro.json
-│   │   ├── bwdb_gauge_sample.json
-│   │   ├── gpm_imerg_sample.json
-│   │   ├── nasa_power_sample.json
-│   │   ├── open_meteo_sample.json
-│   │   ├── sentinel1_metadata_sample.json
-│   │   └── smap_sample.json
 │   └── processed/
-│       └── manifests/
 ├── analytics/
-│   ├── contracts/
-│   ├── descriptive/
-│   ├── indicators/
-│   ├── rules/
-│   ├── engine/
-│   └── evaluation/
 ├── pipelines/
-│   ├── common/
-│   ├── ingestion/
-│   ├── validation/
-│   ├── processing/
-│   ├── orchestrator.py
-│   └── requirements.txt
 ├── tests/
 │   ├── unit/
 │   ├── spatial/
 │   ├── temporal/
 │   ├── failure/
 │   ├── integration/
-│   └── analytics/
+│   ├── analytics/
+│   └── api/
 └── docs/
     ├── project/
     ├── product/
@@ -239,12 +257,13 @@ RITUCAST/
     ├── ux/
     ├── design/
     ├── analytics/
+    ├── backend/
     ├── planning/
     └── phases/
         ├── phase-01/
         ├── ...
-        ├── phase-08/
-        └── phase-09/
+        ├── phase-09/
+        └── phase-10/
 ```
 
 ---
@@ -254,3 +273,4 @@ RITUCAST/
 1. **Disciplined Phase Execution**: No execution of subsequent phases without formal quality gate review.
 2. **Scientific Transparency**: Clear separation of empirical observations, forecast models, and agronomic advisories.
 3. **Data Protection**: Large raw datasets, satellite imagery caches, and secrets are excluded from Git via `.gitignore`.
+
