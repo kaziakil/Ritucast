@@ -475,6 +475,60 @@ This document records architectural, strategic, and product decisions made throu
 - **Rationale**: Provides tamper-evident data provenance, guarantees bit-level reproducibility, and establishes institutional accountability.
 - **Downstream Impact**: Governs Phase 8 provenance ledger and Phase 10 API attribution headers. Ref: [provenance-and-versioning.md](file:///Users/kazi/Projects/RITUCAST/docs/data/provenance-and-versioning.md).
 
+---
+
+## 10. Phase 9 Agricultural Analytics & Recommendation Decisions
+
+---
+
+### DEC-36: Physical Deterministic Modeling over Supervised Machine Learning in MCP
+- **Date**: 2026-10-10 (Phase 9)
+- **Status**: **Approved**
+- **Context**: Deciding whether to train black-box supervised machine learning models (e.g. gradient boosted trees predicting yields or soil moisture) versus deterministic physical models (FAO-56 Penman-Monteith, USDA-SCS water balance).
+- **Alternatives Considered**:
+  - *Option A*: Train supervised XGBoost model on coarse historical BBS Upazila yields and satellite NDVI.
+  - *Option B (Selected)*: **Strict Disqualification of Supervised ML in Favor of Calibrated Physical Thermodynamics**. Ground all advisories in validated physical conservation laws (FAO-56 $ET_0$, root-zone depletion $D_t$, BWDB hydraulic danger proximity).
+- **Rationale**: BBS yield data lacks micro-plot variance and parcel ground truth (`DEC-06`). Fitting black-box ML models to coarse remote sensing generates spurious correlations and hallucinations under climate extremes, destroying farmer trust.
+- **Downstream Impact**: Formally locks Phase 9 analytical architecture; directs Phase 10 API design to serve physical parameters and auditable rules. Ref: [method-selection-and-rationale.md](file:///Users/kazi/Projects/RITUCAST/docs/analytics/method-selection-and-rationale.md).
+
+---
+
+### DEC-37: Piecewise Linear $K_c$ Knot Interpolation for Continuous Crop Water Demand
+- **Date**: 2026-10-10 (Phase 9)
+- **Status**: **Approved**
+- **Context**: Boro rice transpiration changes continuously as the canopy develops. Discrete step-wise jumps between stages cause unnatural spikes in daily crop water demand ($ET_c$).
+- **Alternatives Considered**:
+  - *Option A*: Discrete step-function assigning constant $K_c$ per stage.
+  - *Option B (Selected)*: **Piecewise Linear Interpolation across 5 Phenological Knots**. Day 1 (1.10), Day 40 (1.15), Day 75 (1.30), Day 100 (1.30), Day 145 (0.65).
+- **Rationale**: Smooths daily water consumption curves, prevents artificial irrigation trigger jitter, and accurately captures canopy closure dynamics.
+- **Downstream Impact**: Governs `CropWaterDemandCalculator` in `analytics/indicators/crop_water_demand.py`. Ref: [environmental-indicators.md](file:///Users/kazi/Projects/RITUCAST/docs/analytics/environmental-indicators.md).
+
+---
+
+### DEC-38: USDA Soil Conservation Service Method for Root-Zone Infiltration Invariance
+- **Date**: 2026-10-10 (Phase 9)
+- **Status**: **Approved**
+- **Context**: Raw precipitation cannot be added directly to root-zone moisture; light rains evaporate immediately from crop canopies, while extreme cloudbursts run off bunded paddy spillways.
+- **Alternatives Considered**:
+  - *Option A*: Assume 100% of rain infiltrates into soil ($P_{\text{eff}} = P$).
+  - *Option B (Selected)*: **Calibrated USDA-SCS Effective Precipitation Curve**. Rain $\le 3.0\text{mm}$ provides $0\text{mm}$ infiltration; moderate rains follow $(P \times (125 - 0.2P))/125$; extreme storms cap infiltration at spillway crest.
+- **Rationale**: Prevents underestimation of soil moisture deficit following drizzle, and prevents overestimation following torrential storms.
+- **Downstream Impact**: Standardizes water balance calculation in `SoilWaterDeficitCalculator`. Ref: [soil_water_deficit.py](file:///Users/kazi/Projects/RITUCAST/analytics/indicators/soil_water_deficit.py).
+
+---
+
+### DEC-39: Normalized Multi-Factor Transboundary Haor Flood Index Weighting
+- **Date**: 2026-10-10 (Phase 9)
+- **Status**: **Approved**
+- **Context**: Haor flash floods are non-linear transboundary events driven by Meghalaya rainfall, Surma river baseflow, and rapid surge rates. Relying on a single proxy creates catastrophic false negatives or false alarms.
+- **Alternatives Considered**:
+  - *Option A*: Rely solely on local river gauge danger level ($H \ge DL$).
+  - *Option B*: Rely solely on upstream Meghalaya rainfall forecasts.
+  - *Option C (Selected)*: **Coupled 4-Factor Weighted Composite Index ($I_{\text{flood}} \in [0, 1]$)**. Weights: Catchment Rain ($w_1=0.35$), River Danger Proximity ($w_2=0.30$), River Rate of Rise ($w_3=0.20$), and Inundation Fraction ($w_4=0.15$).
+- **Rationale**: Catchment rain provides 48h advance warning; river rate of rise confirms incoming flood wave surge; proximity to danger level gauges levee freeboard.
+- **Downstream Impact**: Governs `HaorFloodIndexCalculator` and triggers `RULE-FLD-01`. Ref: [haor_flood_index.py](file:///Users/kazi/Projects/RITUCAST/analytics/indicators/haor_flood_index.py).
+
+
 
 
 
