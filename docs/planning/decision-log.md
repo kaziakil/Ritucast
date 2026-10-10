@@ -419,6 +419,63 @@ This document records architectural, strategic, and product decisions made throu
 - **Rationale**: Delivers high-clarity visual cues for sighted users in the field while guaranteeing 100% programmatic accessibility and automated screen-reader parsing.
 - **Downstream Impact**: Directs Phase 7 visualization guidelines, Phase 11 accessible chart components, and Phase 12 interactive graphics. Ref: [data-visualization-guidelines.md](file:///Users/kazi/Projects/RITUCAST/docs/design/data-visualization-guidelines.md), [accessibility-standards.md](file:///Users/kazi/Projects/RITUCAST/docs/design/accessibility-standards.md).
 
+---
+
+## 9. Phase 8 Data Ingestion & Processing Pipeline Decisions
+
+---
+
+### DEC-32: Direct Parquet Feature Serialization over Intermediate Relational Dumping
+- **Date**: 2026-10-10 (Phase 8)
+- **Status**: **Approved**
+- **Context**: Passing large numerical weather time series through multi-table relational SQL writes during batch ETL introduces high I/O latency, connection pooling bottlenecks, and schema migration fragility before scientific features are even validated.
+- **Alternatives Considered**:
+  - *Option A*: Direct write into PostGIS relational tables (`weather_daily`, `hydrology_readings`) during raw ETL.
+  - *Option B*: Flat CSV file dumping.
+  - *Option C (Selected)*: **Direct Columnar Parquet Serialization (`pyarrow` engine, `snappy` compression)**. Processed feature tables are serialized directly into immutable Parquet files in `data/processed/`, which are subsequently ingested or queried by downstream analytics and database seeders.
+- **Rationale**: Reduces disk footprint by $80\%$, achieves $10\times$ faster scan speeds for Phase 9 vectorized mathematical modeling, preserves strong data types, and guarantees portable offline testing.
+- **Downstream Impact**: Governs Phase 8 storage conventions and Phase 9 input loading. Ref: [storage-and-file-conventions.md](file:///Users/kazi/Projects/RITUCAST/docs/data/storage-and-file-conventions.md), [feature-preparation-specification.md](file:///Users/kazi/Projects/RITUCAST/docs/data/feature-preparation-specification.md).
+
+---
+
+### DEC-33: Centroid Extraction for Coarse Grids without False Micro-Interpolation
+- **Date**: 2026-10-10 (Phase 8)
+- **Status**: **Approved**
+- **Context**: NASA POWER ($0.5^\circ$, ~50km), Open-Meteo ($0.25^\circ$, ~28km), and SMAP (9km) have spatial resolutions larger than individual Upazilas or agricultural parcels. Falsely upscaling these grids via bilinear interpolation gives farmers an illusion of plot-specific micro-precision (`RSK-03`).
+- **Alternatives Considered**:
+  - *Option A*: High-resolution bilinear/kriging interpolation to 100m grid.
+  - *Option B*: Nearest-neighbor boundary rasterization.
+  - *Option C (Selected)*: **Point Sampling at Administrative Centroids with Explicit Spatial Resolution Metadata**. Records sample the grid value at the verified Upazila centroid and attach a mandatory `spatial_resolution_km` tag.
+- **Rationale**: Upholds scientific integrity (`NFR-SCI-01`), avoids fabricated sub-acre precision, and remains transparent about observational limits.
+- **Downstream Impact**: Governs Phase 8 spatial processing and Phase 9/10 API metadata responses. Ref: [spatial-processing-specification.md](file:///Users/kazi/Projects/RITUCAST/docs/data/spatial-processing-specification.md).
+
+---
+
+### DEC-34: Deterministic Rolling Climatology Windows
+- **Date**: 2026-10-10 (Phase 8)
+- **Status**: **Approved**
+- **Context**: Haor flash-flood early warnings and Barind soil water balance rely on multi-day cumulative precipitation ($P_{\text{cum}}$). Ad-hoc calculations in web handlers risk inconsistent window definitions and data leakage.
+- **Alternatives Considered**:
+  - *Option A*: Dynamic SQL `SUM() OVER (PARTITION BY upazila ORDER BY date ROWS BETWEEN 6 PRECEDING AND CURRENT ROW)` on each API request.
+  - *Option B*: Pre-computing rolling windows inside Phase 9 analytics engine.
+  - *Option C (Selected)*: **Pipeline-Level Pre-Computation of Rolling Windows (24h, 48h, 7d)**. Computed during temporal processing and stored directly in the Parquet feature tables (`catchment_rainfall_daily.parquet`).
+- **Rationale**: Eliminates runtime calculation overhead, prevents future data leakage during hindcasting, and standardizes hazard triggers across all modules.
+- **Downstream Impact**: Directly feeds Phase 9 `IDX-FLD-01` and `RULE-IRR-01`. Ref: [temporal-processing-specification.md](file:///Users/kazi/Projects/RITUCAST/docs/data/temporal-processing-specification.md).
+
+---
+
+### DEC-35: Immutable Cryptographic Run Manifests with SHA-256 Hashes
+- **Date**: 2026-10-10 (Phase 8)
+- **Status**: **Approved**
+- **Context**: Agricultural intelligence platforms require verifiable scientific provenance. If an advisory is audited following an unexpected crop damage event, engineers must know the exact input data, Git commit, and validation outcomes that generated the advice.
+- **Alternatives Considered**:
+  - *Option A*: Transient console logging only.
+  - *Option B*: Database log table with no file-level cryptographic hashes.
+  - *Option C (Selected)*: **Permanent JSON Run Manifests (`data/processed/manifests/<run_id>.json`) with SHA-256 Checksums**. Captures execution UUID, Git commit, parameter inputs, dataset records counts, and bit-level file hashes.
+- **Rationale**: Provides tamper-evident data provenance, guarantees bit-level reproducibility, and establishes institutional accountability.
+- **Downstream Impact**: Governs Phase 8 provenance ledger and Phase 10 API attribution headers. Ref: [provenance-and-versioning.md](file:///Users/kazi/Projects/RITUCAST/docs/data/provenance-and-versioning.md).
+
+
 
 
 
