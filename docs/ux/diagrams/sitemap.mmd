@@ -1,0 +1,39 @@
+graph TD
+    classDef initial fill:#2E7D32,stroke:#1B5E20,stroke-width:2px,color:#fff;
+    classDef modal fill:#1565C0,stroke:#0D47A1,stroke-width:2px,color:#fff;
+    classDef subpage fill:#37474F,stroke:#263238,stroke-width:1px,color:#fff;
+    classDef future fill:#757575,stroke:#616161,stroke-width:1px,stroke-dasharray: 5 5,color:#fff;
+
+    Root["/ (App Entry Point)"]:::initial --> Onboarding["/onboarding (First Visit Location Pick)"]:::modal
+    Root --> Overview["PAGE-01: /advisory (আজকের পরামর্শ)"]:::initial
+    Root --> Weather["PAGE-02: /weather (আবহাওয়া ও পূর্বাভাস)"]:::initial
+    Root --> Regional{"Agro-Zone Check"}
+    Root --> Map["PAGE-04: /map (মানচিত্র ও বিশ্লেষণ)"]:::initial
+    Root --> Help["PAGE-05: /help (সাহায্য ও তথ্যসূত্র)"]:::initial
+
+    Regional -->|Barind Upazila| Soil["PAGE-03A: /soil-irrigation (মাটি ও সেচ)"]:::initial
+    Regional -->|Haor Upazila| Flood["PAGE-03B: /flood-hazard (বন্যা ও প্লাবন)"]:::initial
+
+    %% Modals & Overlays
+    Overview -.-> LocModal["Modal: Location & Crop Stage Selector"]:::modal
+    Overview -.-> ShareModal["Modal: WhatsApp Advisory Share Sheet"]:::modal
+    Overview -.-> ExplainModal["Drawer: কেন এই পরামর্শ? (Reasoning & Freshness)"]:::modal
+
+    %% Detail Views
+    Weather --> WDetail1["Sub-View: বর্তমান পর্যবেক্ষণ (Observations)"]:::subpage
+    Weather --> WDetail2["Sub-View: ৪৮ ঘণ্টা বৃষ্টিপাত (48h Rain Forecast)"]:::subpage
+    Weather --> WDetail3["Sub-View: ৭ দিনের আবহাওয়া ধারা (Weekly Trend)"]:::subpage
+
+    Soil --> SDetail1["Drawer: এডব্লিউডি (AWD) পাইপ পরীক্ষা নির্দেশিকা"]:::subpage
+    Soil --> SDetail2["Sub-View: সেচ খরচ সাশ্রয় হিসাব"]:::subpage
+
+    Flood --> FDetail1["Sub-View: মেঘালয় ক্যাচমেন্ট বৃষ্টিপাত বিশদ"]:::subpage
+    Flood --> FDetail2["Sub-View: সুরমা নদীর পানি বৃদ্ধির হার"]:::subpage
+
+    Help --> HDetail1["Sub-Page: /help/sources (উৎস ও সার্ভার স্থিতি)"]:::subpage
+    Help --> HDetail2["Sub-Page: /help/glossary (কৃষি পরিভাষাকোষ)"]:::subpage
+    Help --> HDetail3["Sub-Page: /help/contacts (ডিএই উপসহকারী কৃষি কর্মকর্তা তালিকা)"]:::subpage
+
+    %% Future Pages
+    Root -.-> HistoricalTrends["/trends (ঐতিহাসিক বছরভিত্তিক তুলনা)"]:::future
+    Root -.-> MultiBlockAdmin["/admin/upazila (ইউএও ব্লক সারসংক্ষেপ)"]:::future
