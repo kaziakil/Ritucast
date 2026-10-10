@@ -1,0 +1,184 @@
+name: Release & Continuous Delivery
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      version_tag:
+        description: 'Release version tag (e.g. v1.0.0)'
+        required: true
+        default: 'v1.0.0'
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  verify-and-package:
+    name: Verify & Package Release Artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install backend dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+
+      - name: Run Backend Test Suite
+        run: |
+          pytest -m "not smoke" -q
+
+      - name: Extract OpenAPI 3.0 Specification
+        run: |
+          python -c "import json; from api.main import app; print(json.dumps(app.openapi(), indent=2))" > openapi.json
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install Frontend Dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Build Production Frontend Assets
+        working-directory: ./frontend
+        run: npm run build
+        env:
+          VITE_API_BASE_URL: "https://api.ritucast.app"
+
+      - name: Package Release Tarball
+        run: |
+          RELEASE_TAG="${{ github.ref_name || inputs.version_tag }}"
+          tar -czf "ritucast-${RELEASE_TAG}.tar.gz" \
+            api/ analytics/ pipelines/ data/ configs/ deploy/ \
+            requirements.txt requirements-dev.txt Dockerfile docker-compose.yml \
+            openapi.json frontend/dist/ CHANGELOG.md README.md
+
+      - name: Upload Release Archive Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-archive
+          path: ritucast-*.tar.gz
+          retention-days: 30
+
+      - name: Upload OpenAPI Schema Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: openapi-schema
+          path: openapi.json
+          retention-days: 30
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Ritucast ${{ github.ref_name }}"
+          body_path: CHANGELOG.md
+          files: |
+            ritucast-*.tar.gz
+            openapi.json
+
+  build-and-publish-containers:
+    name: Build & Publish Container Images
+    needs: [verify-and-package]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v4
+
+      - name: Check GCP Deployment Credentials
+        id: gcp-check
+        run: |
+          if [ -n "${{ secrets.GCP_PROJECT_ID }}" ] && [ -n "${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}" ]; then
+            echo "configured=true" >> $GITHUB_OUTPUT
+          else
+            echo "configured=false" >> $GITHUB_OUTPUT
+            echo "GCP deployment credentials not configured. Skipping remote image push."
+          fi
+
+      - name: Authenticate to Google Cloud
+        if: steps.gcp-check.outputs.configured == 'true'
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Set up Google Cloud SDK
+        if: steps.gcp-check.outputs.configured == 'true'
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Set up Docker Buildx
+        uses: actions/setup-buildx-action@v3
+
+      - name: Configure Docker for Artifact Registry
+        if: steps.gcp-check.outputs.configured == 'true'
+        run: |
+          gcloud auth configure-docker asia-south1-docker.pkg.dev --quiet
+
+      - name: Build and Push Images
+        if: steps.gcp-check.outputs.configured == 'true'
+        run: |
+          PROJECT_ID="${{ secrets.GCP_PROJECT_ID }}"
+          TAG="${{ github.ref_name || inputs.version_tag }}"
+          COMMIT_SHA="$(git rev-parse --short HEAD)"
+          
+          # Backend
+          docker build -t "asia-south1-docker.pkg.dev/${PROJECT_ID}/ritucast/backend:${TAG}" \
+                       -t "asia-south1-docker.pkg.dev/${PROJECT_ID}/ritucast/backend:${COMMIT_SHA}" \
+                       -t "asia-south1-docker.pkg.dev/${PROJECT_ID}/ritucast/backend:latest" \
+                       -f deploy/docker/Dockerfile.backend .
+          docker push "asia-south1-docker.pkg.dev/${PROJECT_ID}/ritucast/backend:${TAG}"
+          docker push "asia-south1-docker.pkg.dev/${PROJECT_ID}/ritucast/backend:latest"
+
+          # Frontend
+          docker build --build-arg VITE_API_BASE_URL="https://api.ritucast.app" \
+                       -t "asia-south1-docker.pkg.dev/${PROJECT_ID}/ritucast/frontend:${TAG}" \
+                       -t "asia-south1-docker.pkg.dev/${PROJECT_ID}/ritucast/frontend:${COMMIT_SHA}" \
+                       -t "asia-south1-docker.pkg.dev/${PROJECT_ID}/ritucast/frontend:latest" \
+                       -f deploy/docker/Dockerfile.frontend .
+          docker push "asia-south1-docker.pkg.dev/${PROJECT_ID}/ritucast/frontend:${TAG}"
+          docker push "asia-south1-docker.pkg.dev/${PROJECT_ID}/ritucast/frontend:latest"
+
+  deploy-production:
+    name: Deploy to Production (Approval Gated)
+    needs: [build-and-publish-containers]
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://ritucast.app
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v4
+
+      - name: Check Deployment Readiness
+        id: deploy-check
+        run: |
+          if [ -n "${{ secrets.GCP_PROJECT_ID }}" ]; then
+            echo "can_deploy=true" >> $GITHUB_OUTPUT
+          else
+            echo "can_deploy=false" >> $GITHUB_OUTPUT
+            echo "GCP_PROJECT_ID not set. Deployment prepared but paused."
+          fi
+
+      - name: Execute Production Rollout via deploy.sh
+        if: steps.deploy-check.outputs.can_deploy == 'true'
+        run: |
+          export GCP_PROJECT_ID="${{ secrets.GCP_PROJECT_ID }}"
+          export GCP_REGION="${{ secrets.GCP_REGION || 'asia-south1' }}"
+          ./deploy/cloudrun/deploy.sh

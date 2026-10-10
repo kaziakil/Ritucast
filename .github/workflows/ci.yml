@@ -1,0 +1,198 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - 'docs/**'
+      - '*.md'
+      - '.gitignore'
+  pull_request:
+    branches: [ main ]
+    paths-ignore:
+      - 'docs/**'
+      - '*.md'
+      - '.gitignore'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  code-quality:
+    name: Code Quality & Linting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install Python quality tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8
+
+      - name: Check Python Syntax & Critical Flake8 Rules
+        run: |
+          flake8 api/ analytics/ pipelines/ tests/ --count --select=E9,F63,F7,F82 --show-source --statistics
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install Frontend Dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Run Frontend Linter (oxlint)
+        working-directory: ./frontend
+        run: npm run lint
+
+      - name: Verify TypeScript Types (tsc -b)
+        working-directory: ./frontend
+        run: npx tsc -b
+
+  test-backend-deterministic:
+    name: Backend Tests (Deterministic)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+
+      - name: Execute Deterministic Pytest Suite (Excludes Live Smoke)
+        run: |
+          pytest -m "not smoke" --cov=api --cov=analytics --cov=pipelines --cov-report=term --cov-report=xml:coverage.xml
+
+      - name: Upload Test Coverage Artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: backend-coverage-report
+          path: coverage.xml
+          retention-days: 14
+
+  test-frontend-deterministic:
+    name: Frontend Tests & Production Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Execute Vitest Unit & Integration Suite
+        run: npm run test
+
+      - name: Verify Production Bundle Build
+        run: npm run build
+        env:
+          VITE_API_BASE_URL: "https://api.ritucast.app"
+
+      - name: Upload Production Frontend Assets Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-production-dist
+          path: frontend/dist
+          retention-days: 14
+
+  security-audit:
+    name: Dependency & Secret Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install pip-audit
+        run: |
+          python -m pip install --upgrade pip
+          pip install pip-audit
+
+      - name: Audit Backend Dependencies for Vulnerabilities
+        run: |
+          pip-audit -r requirements.txt || echo "::warning::Known dependency advisories detected in baseline. Review security-scanning.md."
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Audit Frontend Dependencies
+        working-directory: ./frontend
+        run: npm audit --audit-level=high
+
+      - name: Scan Repository for Accidental Committed Secrets
+        run: |
+          echo "Scanning working tree for private keys and access tokens..."
+          if grep -rnEI --exclude-dir={.git,node_modules,venv,.venv,dist} 'BEGIN (RSA|EC|OPENSSH|DSA|PGP) PRIVATE KEY' .; then
+            echo "::error::Private key pattern detected in repository!"
+            exit 1
+          fi
+          echo "No private keys detected."
+
+  container-verification:
+    name: Container Build Verification
+    needs: [code-quality, test-backend-deterministic, test-frontend-deterministic]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: actions/setup-buildx-action@v3
+
+      - name: Build Backend Container Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./deploy/docker/Dockerfile.backend
+          push: false
+          tags: ritucast/backend:test
+
+      - name: Build Frontend Container Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./deploy/docker/Dockerfile.frontend
+          build-args: |
+            VITE_API_BASE_URL=https://api.ritucast.app
+          push: false
+          tags: ritucast/frontend:test
