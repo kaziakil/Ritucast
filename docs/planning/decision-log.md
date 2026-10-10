@@ -816,6 +816,38 @@ This document records architectural, strategic, and product decisions made throu
 - **Rationale**: Prioritizes farmer safety, maintains trust in agricultural extension, and prevents avoidable crop failure from micro-climatic divergences.
 - **Downstream Impact**: Formulated in [`docs/responsible-ai/agricultural-recommendation-safeguards.md`](file:///Users/kazi/Projects/RITUCAST/docs/responsible-ai/agricultural-recommendation-safeguards.md) and verified in [`tests/api/test_security_hardening.py`](file:///Users/kazi/Projects/RITUCAST/tests/api/test_security_hardening.py).
 
+---
+
+### DEC-62: Mandatory Bypass Link (SC 2.4.1) & Enforced 48px Touch Targets
+- **Date**: 2026-10-10 (Phase 16)
+- **Status**: **Approved**
+- **Context**: Rural smallholders operating budget Android smartphones with coarse touch inputs in outdoor fields, as well as keyboard/screen-reader users navigating repeated navigation headers.
+- **Alternatives Considered**:
+  - *Option A*: Maintain desktop-scaled padding and rely on browser default focus flow.
+  - *Option B (Selected)*: **Implement explicit `.skip-to-content` link targeting `#main-content` and enforce `min-height: var(--touch-target-min)` (48px) on all interactive touch items**.
+- **Rationale**: Meets WCAG 2.1 SC 2.4.1 (Bypass Blocks) and SC 2.5.5 (Target Size), eliminating navigation friction for keyboard assistive technology and preventing mis-taps on rural mobile touchscreens.
+- **Downstream Impact**: Implemented in [`frontend/src/App.tsx`](file:///Users/kazi/Projects/RITUCAST/frontend/src/App.tsx) and [`frontend/src/index.css`](file:///Users/kazi/Projects/RITUCAST/frontend/src/index.css). Verified in [`frontend/src/test/uat_accessibility.test.tsx`](file:///Users/kazi/Projects/RITUCAST/frontend/src/test/uat_accessibility.test.tsx).
+
+---
+
+### DEC-63: Assistive Screen-Reader ARIA Semantic Announcements
+- **Date**: 2026-10-10 (Phase 16)
+- **Status**: **Approved**
+- **Context**: When farmers or SAAOs change geographic Upazilas or encounter offline network errors, dynamic DOM updates must be communicated clearly to assistive technologies.
+- **Decision Taken**: Standardize dynamic announcements by applying `aria-live="polite"` to the Context Selector risk banner, `role="alert"` + `aria-live="assertive"` to all analytical view error boxes, and keyboard event handlers (`Enter`/`Space`) with `aria-label` to brand navigation elements.
+- **Rationale**: Adheres to WCAG 2.1 SC 4.1.3 (Status Messages) and SC 2.1.1 (Keyboard), ensuring non-sighted or low-vision extension workers receive immediate status feedback.
+- **Downstream Impact**: Implemented in [`ContextSelector.tsx`](file:///Users/kazi/Projects/RITUCAST/frontend/src/components/ContextSelector.tsx), [`Header.tsx`](file:///Users/kazi/Projects/RITUCAST/frontend/src/components/Header.tsx), and analytical views. Verified in [`frontend/src/test/uat_accessibility.test.tsx`](file:///Users/kazi/Projects/RITUCAST/frontend/src/test/uat_accessibility.test.tsx).
+
+---
+
+### DEC-64: Structured Dual-Zone Field Evaluation & Agricultural Validation Protocol
+- **Date**: 2026-10-10 (Phase 16)
+- **Status**: **Approved**
+- **Context**: Transitioning Ritucast from lab verification to active rural testbeds requires a formal operational trial structure and quantitative statistical ground-truthing framework.
+- **Decision Taken**: Author formal field deployment protocols for 50 Lead Farmers and 8 SAAOs across Barind and Haor testbeds, coupled with statistical benchmarks (RMSE $\le 0.65\text{ mm/day}$, POD $\ge 85\%$, FAR $\le 20\%$) against BMD, BWDB, and BRRI field lysimeters.
+- **Rationale**: Bridges Phase 16 usability acceptance with Phase 17 scientific and agricultural validation, ensuring structured, safe, and measurable field trials.
+- **Downstream Impact**: Codified in [`docs/uat/field-readiness-assessment.md`](file:///Users/kazi/Projects/RITUCAST/docs/uat/field-readiness-assessment.md) and [`docs/uat/agricultural-validation-protocol.md`](file:///Users/kazi/Projects/RITUCAST/docs/uat/agricultural-validation-protocol.md).
+
 
 
 

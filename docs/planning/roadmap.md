@@ -29,8 +29,8 @@ The Ritucast platform is developed across an 18-phase structured engineering lif
 | **13** | **Deployment Architecture and Production Readiness** | Serverless containerization (Cloud Run), multi-stage Dockerfiles, NGINX Alpine SPA, docker-compose orchestration, Knative manifests, CI/CD pipeline, and 18 deployment specifications. | **Completed** | 2026-10-10 | **PASS** |
 | **14** | **CI/CD Automation and Release Management** | Automated GitHub Actions CI/CD workflows, deterministic vs. live smoke isolation, release packaging, container tagging, and approval-gated delivery. | **Completed** | 2026-10-10 | **PASS** |
 | **15** | **Security, Privacy, and Responsible Agricultural Intelligence** | Baseline security audit, STRIDE threat model, OWASP security headers, client rate limiting, payload size limits, path traversal guards, data privacy minimization, and responsible AI safeguards. | **Completed** | 2026-10-10 | **PASS** |
-| **16** | **Usability, Accessibility & Performance** | Field testing with SAAOs, 3G performance tuning, bundle size minimization (<1.5MB). | **Pending** | Next Phase | Not Started |
-| **17** | **Scientific & Agricultural Validation** | Correlation analysis with BMD rain gauges, BWDB flood logs, and BRRI field crop stages. | **Pending** | Scheduled | Not Started |
+| **16** | **Usability, Accessibility & Performance** | Field testing with SAAOs, 3G performance tuning, bundle size minimization (<1.5MB), WCAG 2.1 AA accessibility, and 6 UAT journeys. | **Completed** | 2026-10-10 | **PASS** |
+| **17** | **Scientific & Agricultural Validation** | Correlation analysis with BMD rain gauges, BWDB flood logs, and BRRI field crop stages. | **Pending** | Next Phase | Not Started |
 | **18** | **User Feedback & Iterative Improvement** | Pilot deployment in Barind and Haor zones; farmer feedback collection and heuristic tuning. | **Pending** | Scheduled | Not Started |
 
 ---
@@ -52,7 +52,8 @@ The Ritucast platform is developed across an 18-phase structured engineering lif
 - **Phase 13 (Deployment Architecture and Production Readiness)**: Completed 2026-10-10. Serverless containerization (Cloud Run), multi-stage Dockerfile.backend (UID 10001) & Dockerfile.frontend (NGINX Alpine), bundled Parquet data architecture (<110KB, DEC-52), docker-compose orchestration, Knative manifests, automated deploy.sh, GitHub Actions CI/CD workflow, 18 deployment specifications, and 6 phase governance records. Quality Gate: **PASS**.
 - **Phase 14 (CI/CD Automation and Release Management)**: Completed 2026-10-10. Automated GitHub Actions CI workflow (ci.yml) with 5 quality gates, daily live upstream smoke testing (live-data-smoke.yml), SemVer release delivery (release.yml) with approval gate, pytest marker registration, .flake8 config, CHANGELOG.md, 11 CI/CD specifications, and 5 release specifications. Quality Gate: **PASS**.
 - **Phase 15 (Security, Privacy, and Responsible Agricultural Intelligence)**: Completed 2026-10-10. Baseline security audit, STRIDE threat model, OWASP defensive headers middleware, sliding-window client rate limiting, payload byte limiting (1MB), path traversal guards, non-PII data inventory, dataset licensing review, DEC-17 contextual gating, DEC-10 suppression enforcement, anti-overconfidence standards, 11 automated security tests (104 total Python tests), and 4 frontend security tests (21 total Vitest tests) verified. Quality Gate: **PASS**.
-- **Next Transition**: Awaiting formal project lead review to trigger **Phase 16**.
+- **Phase 16 (Usability, Accessibility & Performance)**: Completed 2026-10-10. 6 end-to-end UAT journeys, WCAG 2.1 AA daylight-resilient contrast, 48px touch targets, skip-to-content link, keyboard/screen-reader landmarks, field readiness assessment for SAAOs & Lead Farmers, agricultural validation protocol, 88.8 kB gzip production bundle (<6% of 1.5MB budget), 11 automated UAT tests (32 total Vitest tests), and 0 open defects verified. Quality Gate: **PASS**.
+- **Next Transition**: Awaiting formal project lead review to trigger **Phase 17**.
 
 
 
