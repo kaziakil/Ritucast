@@ -83,6 +83,8 @@ Full details and phase governance rules can be viewed in the [Master Project Roa
 - [Research Gaps Register](file:///Users/kazi/Projects/RITUCAST/docs/science/research-gaps.md): Catalog of 5 open scientific uncertainties with assigned roadmap phases and fallback plans.
 
 ### Planning, Governance & Quality Registers
+- [Agent Operating Instructions (AGENTS.md)](file:///Users/kazi/Projects/RITUCAST/AGENTS.md): Project-wide AI operating principles, scope boundaries, and safety guardrails.
+- [Phase 1–4 Continuity & Readiness Audit](file:///Users/kazi/Projects/RITUCAST/docs/project/phase-1-to-4-continuity-audit.md): Comprehensive pre-Phase 5 audit of artifacts, tests, data, and risks.
 - [Assumptions Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/assumptions-register.md): Tracked assumptions with verification paths (updated with ASM-04/07/11).
 - [Risk Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/risk-register.md): 18 prioritized risks with mitigations (updated with RSK-15 through RSK-18).
 - [Decision Log](file:///Users/kazi/Projects/RITUCAST/docs/planning/decision-log.md): Architectural decisions log (updated with DEC-15 through DEC-18).
