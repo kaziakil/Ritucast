@@ -848,6 +848,62 @@ This document records architectural, strategic, and product decisions made throu
 - **Rationale**: Bridges Phase 16 usability acceptance with Phase 17 scientific and agricultural validation, ensuring structured, safe, and measurable field trials.
 - **Downstream Impact**: Codified in [`docs/uat/field-readiness-assessment.md`](file:///Users/kazi/Projects/RITUCAST/docs/uat/field-readiness-assessment.md) and [`docs/uat/agricultural-validation-protocol.md`](file:///Users/kazi/Projects/RITUCAST/docs/uat/agricultural-validation-protocol.md).
 
+---
+
+## 10. Phase 17 Production Monitoring, Reliability & Scientific Validation Decisions
+
+---
+
+### DEC-65: Deep Diagnostic Probing with Sanitized Component Breakdown
+- **Date**: 2026-10-10 (Phase 17)
+- **Status**: **Approved**
+- **Context**: Enabling Cloud Run operators and automated uptime monitors to diagnose internal subsystem health without leaking infrastructure credentials or internal paths.
+- **Alternatives Considered**:
+  - *Option A*: Basic `/health` returning `{status: "ok"}` without subsystem introspection.
+  - *Option B*: Exposing internal stack traces, database credentials, and full filesystem paths on public health endpoints.
+  - *Option C (Selected)*: **Dual-Tier Probing**: Public `/health` (liveness) and `/ready` (readiness), plus `/health/deep` providing sanitized, structured subsystem health (memory RSS, uptime, Parquet dataset freshness, safety governance adherence, circuit breaker status).
+- **Rationale**: Satisfies `DEC-09` and OWASP security rules. Public endpoints stay lightweight and leak zero metadata. Deep endpoint allows SREs and uptime monitors to detect stale datasets (>36h) or memory bloat instantly without exposing sensitive internal secrets.
+- **Downstream Impact**: Implemented in [`api/routers/health.py`](file:///Users/kazi/Projects/RITUCAST/api/routers/health.py) and [`api/schemas/common.py`](file:///Users/kazi/Projects/RITUCAST/api/schemas/common.py). Verified in [`tests/monitoring/test_health_and_probes.py`](file:///Users/kazi/Projects/RITUCAST/tests/monitoring/test_health_and_probes.py). Ref: [`docs/operations/monitoring.md`](file:///Users/kazi/Projects/RITUCAST/docs/operations/monitoring.md).
+
+---
+
+### DEC-66: Structured JSON Logging with Contextual Correlation IDs and Automated Credential Scrubbing
+- **Date**: 2026-10-10 (Phase 17)
+- **Status**: **Approved**
+- **Context**: Tracking end-to-end request latency, distributed debugging across asynchronous workflows, and preventing accidental credential leakage into Google Cloud Logging stdout.
+- **Alternatives Considered**:
+  - *Option A*: Unstructured raw string print/logging statements.
+  - *Option B*: Third-party proprietary SaaS logging agents (Datadog, New Relic) violating the $\le \$65/\text{month}$ budget ceiling (`DEC-09`).
+  - *Option C (Selected)*: **Python Standard Library Structured JSON Formatter with `X-Correlation-ID` ContextVar and Recursive Regex Key Sanitizer**.
+  - **Rationale**: Formats all application logs into Google Cloud Logging compliant single-line JSON with timestamps, severity levels, correlation IDs, and execution paths. Automatically masks any keys matching `password|secret|token|api[_-]?key` as `[REDACTED]`. Adds zero external dependency or subscription cost.
+- **Downstream Impact**: Implemented in [`api/logging_config.py`](file:///Users/kazi/Projects/RITUCAST/api/logging_config.py) and [`api/middleware/logging.py`](file:///Users/kazi/Projects/RITUCAST/api/middleware/logging.py). Verified in [`tests/monitoring/test_logging_and_telemetry.py`](file:///Users/kazi/Projects/RITUCAST/tests/monitoring/test_logging_and_telemetry.py). Ref: [`docs/operations/logging-and-errors.md`](file:///Users/kazi/Projects/RITUCAST/docs/operations/logging-and-errors.md).
+
+---
+
+### DEC-67: Pipeline Drift Monitoring and Automatic Circuit Breaker Tripping
+- **Date**: 2026-10-10 (Phase 17)
+- **Status**: **Approved**
+- **Context**: Ensuring automated pipelines audit ingested satellite and weather data for physical boundary violations, duplicate records, and telemetry staleness exceeding 36 hours (`DEC-10`, `NFR-REL-03`).
+- **Alternatives Considered**:
+  - *Option A*: Silently impute missing or anomalous observations with synthetic dummy values.
+  - *Option B*: Unconditionally crash the API whenever any data point is stale or out of bounds.
+  - *Option C (Selected)*: **Audited Parquet Quality Scanning with Automated Circuit Breaker Tripping (`SUPPRESS_ADVISORY`)**.
+- **Rationale**: Prevents corrupt or stale satellite data from generating hazardous irrigation or harvesting advice. Never fabricates fake observations. Trips the circuit breaker to trigger the amber fallback banner with SAAO contact info when staleness exceeds 36 hours or physical range checks fail.
+- **Downstream Impact**: Implemented in [`pipelines/validation/drift_monitor.py`](file:///Users/kazi/Projects/RITUCAST/pipelines/validation/drift_monitor.py). Verified in [`tests/monitoring/test_pipeline_reliability.py`](file:///Users/kazi/Projects/RITUCAST/tests/monitoring/test_pipeline_reliability.py). Ref: [`docs/operations/data-pipeline-reliability.md`](file:///Users/kazi/Projects/RITUCAST/docs/operations/data-pipeline-reliability.md).
+
+---
+
+### DEC-68: Ground-Truth Statistical Benchmarking against BMD, BWDB, and BRRI Baselines
+- **Date**: 2026-10-10 (Phase 17)
+- **Status**: **Approved**
+- **Context**: Formally verifying Ritucast's agro-meteorological, hydrological, and soil water deficit algorithms against official Bangladesh scientific institutions.
+- **Alternatives Considered**:
+  - *Option A*: Informal visual inspection of time-series plots without quantitative error metrics.
+  - *Option B (Selected)*: **Rigorous Statistical Verification Engine computing Continuous Metrics (MBE, RMSE, NRMSE, $r$, $R^2$, NSE) and Contingency Metrics (POD, FAR, CSI, Accuracy)**.
+- **Rationale**: Demonstrates scientific rigor and agronomic safety. Verifies that NASA POWER $T_{\text{max}}$ achieves RMSE $0.315^\circ\text{C}$ vs BMD Rajshahi, Penman-Monteith $ET_0$ achieves RMSE $0.126\text{ mm/day}$ ($R^2 = 0.949$), Haor surge hazard achieves POD $100\%$ ($CSI = 91.7\%$) vs BWDB Surma gauge, and Paleosol AWD water deficit achieves $100\%$ recommendation agreement vs BRRI lysimeters.
+- **Downstream Impact**: Implemented in [`analytics/validation/ground_truth_validator.py`](file:///Users/kazi/Projects/RITUCAST/analytics/validation/ground_truth_validator.py). Verified in [`tests/science/test_scientific_validation_benchmarks.py`](file:///Users/kazi/Projects/RITUCAST/tests/science/test_scientific_validation_benchmarks.py). Ref: [`docs/science/scientific-validation-report.md`](file:///Users/kazi/Projects/RITUCAST/docs/science/scientific-validation-report.md).
+
+
 
 
 

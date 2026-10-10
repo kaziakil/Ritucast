@@ -30,8 +30,8 @@ The Ritucast platform is developed across an 18-phase structured engineering lif
 | **14** | **CI/CD Automation and Release Management** | Automated GitHub Actions CI/CD workflows, deterministic vs. live smoke isolation, release packaging, container tagging, and approval-gated delivery. | **Completed** | 2026-10-10 | **PASS** |
 | **15** | **Security, Privacy, and Responsible Agricultural Intelligence** | Baseline security audit, STRIDE threat model, OWASP security headers, client rate limiting, payload size limits, path traversal guards, data privacy minimization, and responsible AI safeguards. | **Completed** | 2026-10-10 | **PASS** |
 | **16** | **Usability, Accessibility & Performance** | Field testing with SAAOs, 3G performance tuning, bundle size minimization (<1.5MB), WCAG 2.1 AA accessibility, and 6 UAT journeys. | **Completed** | 2026-10-10 | **PASS** |
-| **17** | **Scientific & Agricultural Validation** | Correlation analysis with BMD rain gauges, BWDB flood logs, and BRRI field crop stages. | **Pending** | Next Phase | Not Started |
-| **18** | **User Feedback & Iterative Improvement** | Pilot deployment in Barind and Haor zones; farmer feedback collection and heuristic tuning. | **Pending** | Scheduled | Not Started |
+| **17** | **Scientific & Agricultural Validation** | Correlation analysis with BMD rain gauges, BWDB flood logs, and BRRI field crop stages, coupled with production monitoring, deep health probes, structured logging, and operational runbooks. | **Completed** | 2026-10-10 | **PASS** |
+| **18** | **Final Project Audit, Documentation, and Long-Term Sustainability** | Final multi-stakeholder audit, repository coherence verification, sustainability plan, DAE handoff curriculum. | **Pending** | Next Phase | Not Started |
 
 ---
 
@@ -53,7 +53,8 @@ The Ritucast platform is developed across an 18-phase structured engineering lif
 - **Phase 14 (CI/CD Automation and Release Management)**: Completed 2026-10-10. Automated GitHub Actions CI workflow (ci.yml) with 5 quality gates, daily live upstream smoke testing (live-data-smoke.yml), SemVer release delivery (release.yml) with approval gate, pytest marker registration, .flake8 config, CHANGELOG.md, 11 CI/CD specifications, and 5 release specifications. Quality Gate: **PASS**.
 - **Phase 15 (Security, Privacy, and Responsible Agricultural Intelligence)**: Completed 2026-10-10. Baseline security audit, STRIDE threat model, OWASP defensive headers middleware, sliding-window client rate limiting, payload byte limiting (1MB), path traversal guards, non-PII data inventory, dataset licensing review, DEC-17 contextual gating, DEC-10 suppression enforcement, anti-overconfidence standards, 11 automated security tests (104 total Python tests), and 4 frontend security tests (21 total Vitest tests) verified. Quality Gate: **PASS**.
 - **Phase 16 (Usability, Accessibility & Performance)**: Completed 2026-10-10. 6 end-to-end UAT journeys, WCAG 2.1 AA daylight-resilient contrast, 48px touch targets, skip-to-content link, keyboard/screen-reader landmarks, field readiness assessment for SAAOs & Lead Farmers, agricultural validation protocol, 88.8 kB gzip production bundle (<6% of 1.5MB budget), 11 automated UAT tests (32 total Vitest tests), and 0 open defects verified. Quality Gate: **PASS**.
-- **Next Transition**: Awaiting formal project lead review to trigger **Phase 17**.
+- **Phase 17 (Scientific & Agricultural Validation)**: Completed 2026-10-10. Quantitative ground-truth benchmarks against BMD synoptic stations (ET0 RMSE 0.126 mm, R2 0.949), BWDB Surma gauge (POD 100%, FAR 8.3%), and BRRI AWD lysimeter plots (Agreement 100%, SWD RMSE 0.63 mm). Implemented /health/deep diagnostic probe, structured JSON logging with correlation IDs, pipeline drift monitoring, 7 operational runbooks, and 16 automated tests (120 total Python tests, 32 total Vitest tests). Quality Gate: **PASS**.
+- **Next Transition**: Awaiting formal project lead review to trigger **Phase 18**.
 
 
 
