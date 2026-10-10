@@ -721,6 +721,59 @@ This document records architectural, strategic, and product decisions made throu
 - **Rationale**: Gzip level 6 compresses the production bundle to $220.65\text{kB}$ ($<15\%$ of budget). NGINX alpine runtime consumes $<6\text{MB}$ memory. Dual-port listening enables out-of-the-box operation across local testing (port 80/3000) and Cloud Run (port 8080). Injects strict CSP, HSTS, X-Frame-Options, and X-Content-Type-Options headers.
 - **Downstream Impact**: Informs `deploy/docker/Dockerfile.frontend` and `deploy/docker/nginx.conf`. Ref: [containerization.md](file:///Users/kazi/Projects/RITUCAST/docs/deployment/containerization.md).
 
+---
+
+### DEC-54: Separation of Deterministic Test Execution from Live Smoke Tests
+- **Date**: 2026-10-10 (Phase 14)
+- **Status**: **Approved**
+- **Context**: Preventing flakiness in routine pull-request CI jobs caused by transient third-party public satellite and weather API outages (NASA POWER, Open-Meteo).
+- **Alternatives Considered**:
+  - *Option A*: Run live network tests on every pull request.
+  - *Option B*: Completely delete all live external API tests.
+  - *Option C (Selected)*: **Explicit Separation via Pytest Markers (`pytest.ini`)**.
+- **Rationale**: Routinely running `pytest -m "not smoke"` executes all 93 deterministic unit, feature, and integration tests in $<5\text{ seconds}$ using offline fixtures. Live external tests (`@pytest.mark.smoke`) run independently in a daily scheduled workflow (`live-data-smoke.yml`), providing telemetry on upstream data contracts without blocking active development.
+- **Downstream Impact**: Implemented in `pytest.ini`, `ci.yml`, and `live-data-smoke.yml`. Ref: [deterministic-and-live-data-tests.md](file:///Users/kazi/Projects/RITUCAST/docs/ci-cd/deterministic-and-live-data-tests.md).
+
+---
+
+### DEC-55: Modular Three-Workflow GitHub Actions CI/CD Architecture
+- **Date**: 2026-10-10 (Phase 14)
+- **Status**: **Approved**
+- **Context**: Structuring automated GitHub Actions workflows to maintain clean separation of concerns between code integration, upstream telemetry, and release delivery.
+- **Alternatives Considered**:
+  - *Option A*: Single monolithic CI/CD workflow with multiple conditional `if` blocks.
+  - *Option B*: Complex nested reusable workflows and external action packages.
+  - *Option C (Selected)*: **Three Dedicated Workflows**: `ci.yml` (PRs & pushes), `live-data-smoke.yml` (Daily cron), and `release.yml` (Tag-driven CD).
+- **Rationale**: Isolates failures clearly; provides distinct trigger matrices; prevents release logic from polluting pull request evaluation; enforces path-based filtering to skip heavy builds on documentation-only updates.
+- **Downstream Impact**: Implemented in `.github/workflows/`. Ref: [phase-14-cicd-architecture.md](file:///Users/kazi/Projects/RITUCAST/docs/ci-cd/phase-14-cicd-architecture.md).
+
+---
+
+### DEC-56: Semantic Versioning 2.0.0 & Release Archive Bundling with Introspected OpenAPI Schemas
+- **Date**: 2026-10-10 (Phase 14)
+- **Status**: **Approved**
+- **Context**: Managing version milestones and artifact preparation for external extension partners and automated deployments.
+- **Alternatives Considered**:
+  - *Option A*: Date-based versioning (`2026.10.10`).
+  - *Option B*: Git commit SHA-only tagging without semantic version tags.
+  - *Option C (Selected)*: **SemVer 2.0.0 (`vX.Y.Z`) with Release Tarballs (`.tar.gz`) and Introspected OpenAPI 3.0 JSON**.
+- **Rationale**: SemVer communicates breaking API schema or mathematical rule changes unambiguously. Packaging `.tar.gz` and extracting canonical `openapi.json` directly from the FastAPI application guarantees reproducible offline inspection for agricultural partners.
+- **Downstream Impact**: Implemented in `CHANGELOG.md` and `release.yml`. Ref: [versioning-strategy.md](file:///Users/kazi/Projects/RITUCAST/docs/releases/versioning-strategy.md) and [release-artifacts.md](file:///Users/kazi/Projects/RITUCAST/docs/releases/release-artifacts.md).
+
+---
+
+### DEC-57: Approval-Gated Continuous Delivery with GitHub Environment Protection
+- **Date**: 2026-10-10 (Phase 14)
+- **Status**: **Approved**
+- **Context**: Enforcing safety governance before releasing updates to production Google Cloud Run instances.
+- **Alternatives Considered**:
+  - *Option A*: Fully automated, unreviewed continuous deployment on every merge to `main`.
+  - *Option B*: Fully manual deployment via individual developer laptops.
+  - *Option C (Selected)*: **Continuous Delivery with GitHub Actions `production` Environment Approval Gate**.
+- **Rationale**: Prevents accidental deployments; guarantees that a human release engineer reviews the release notes and validation reports before production rollout; maintains an immutable deployment audit log.
+- **Downstream Impact**: Implemented in `release.yml`. Ref: [deployment-workflow.md](file:///Users/kazi/Projects/RITUCAST/docs/ci-cd/deployment-workflow.md).
+
+
 
 
 
