@@ -30,7 +30,7 @@ export const WeatherFeedView: React.FC<WeatherFeedViewProps> = ({
 
   if (error) {
     return (
-      <div className="error-box">
+      <div className="error-box" role="alert" aria-live="assertive">
         <CloudLightning size={40} style={{ margin: '0 auto 12px' }} />
         <h3 className="error-title">আবহাওয়া তথ্য লোড করা যায়নি</h3>
         <p>{error}</p>

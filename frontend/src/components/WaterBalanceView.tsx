@@ -29,7 +29,7 @@ export const WaterBalanceView: React.FC<WaterBalanceViewProps> = ({
 
   if (error) {
     return (
-      <div className="error-box">
+      <div className="error-box" role="alert" aria-live="assertive">
         <Droplets size={40} style={{ margin: '0 auto 12px' }} />
         <h3 className="error-title">মাটির আর্দ্রতা ও বাষ্পীভবন তথ্য পাওয়া যায়নি</h3>
         <p>{error}</p>

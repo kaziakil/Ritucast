@@ -142,6 +142,11 @@ export const App: React.FC = () => {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      {/* Skip to Main Content Link (WCAG 2.1 SC 2.4.1) */}
+      <a href="#main-content" className="skip-to-content">
+        মূল বিষয়বস্তুতে সরাসরি প্রবেশ (Skip to main content)
+      </a>
+
       {/* App Header */}
       <Header
         activeTab={activeTab}
@@ -166,7 +171,12 @@ export const App: React.FC = () => {
       />
 
       {/* Main Content Workspace */}
-      <main className="app-container" style={{ flex: 1, paddingBottom: 'var(--spacing-3xl)' }}>
+      <main
+        id="main-content"
+        className="app-container"
+        tabIndex={-1}
+        style={{ flex: 1, paddingBottom: 'var(--spacing-3xl)' }}
+      >
         {activeTab === 'advisories' && (
           <AdvisoryHubView
             advisory={advisory}

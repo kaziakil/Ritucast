@@ -29,7 +29,7 @@ export const FloodHazardView: React.FC<FloodHazardViewProps> = ({
 
   if (error) {
     return (
-      <div className="error-box">
+      <div className="error-box" role="alert" aria-live="assertive">
         <Waves size={40} style={{ margin: '0 auto 12px' }} />
         <h3 className="error-title">বন্যা ঝুঁকি নির্দেশক পাওয়া যায়নি</h3>
         <p>{error}</p>

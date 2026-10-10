@@ -38,7 +38,7 @@ export const AdvisoryHubView: React.FC<AdvisoryHubViewProps> = ({
 
   if (error) {
     return (
-      <div className="error-box">
+      <div className="error-box" role="alert" aria-live="assertive">
         <AlertOctagon size={40} style={{ margin: '0 auto 12px' }} />
         <h3 className="error-title">পরামর্শ লোড করা সম্ভব হয়নি</h3>
         <p>{error}</p>

@@ -24,7 +24,7 @@ export const ProvenanceView: React.FC<ProvenanceViewProps> = ({
 
   if (error) {
     return (
-      <div className="error-box">
+      <div className="error-box" role="alert" aria-live="assertive">
         <FileText size={40} style={{ margin: '0 auto 12px' }} />
         <h3 className="error-title">তথ্যসূত্র ও স্বচ্ছতা বিবরণী লোড করা যায়নি</h3>
         <p>{error}</p>

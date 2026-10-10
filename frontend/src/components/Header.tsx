@@ -21,7 +21,19 @@ export const Header: React.FC<HeaderProps> = ({
     <header className="app-header">
       <div className="app-container">
         <div className="header-inner">
-          <div className="brand-logo" onClick={() => setActiveTab('advisories')} role="button" tabIndex={0}>
+          <div
+            className="brand-logo"
+            onClick={() => setActiveTab('advisories')}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                setActiveTab('advisories')
+              }
+            }}
+            role="button"
+            tabIndex={0}
+            aria-label="ঋতুকেস্ট হোমপেইজে যান"
+          >
             <Sprout size={28} color="var(--primitive-green-700)" />
             <span>ঋতুকেস্ট <span style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)', fontWeight: 500 }}>Ritucast</span></span>
           </div>

@@ -125,6 +125,7 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
               className="btn btn-primary"
               onClick={onRefresh}
               disabled={loading}
+              aria-busy={loading}
               style={{ width: '100%', minWidth: '160px' }}
               aria-label="হালনাগাদ তথ্য আনুন"
             >
@@ -136,6 +137,7 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
 
         {/* Selected Zone Pill and Contextual Status */}
         <div
+          aria-live="polite"
           style={{
             marginTop: 'var(--spacing-md)',
             display: 'flex',
