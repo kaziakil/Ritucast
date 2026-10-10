@@ -23,8 +23,9 @@ Ritucast is developed under a strict **18-phase governed engineering lifecycle**
 | Current Phase | Phase Name | Status |
 | :---: | :--- | :---: |
 | **01** | **Project Discovery and Problem Definition** | **Completed (PASS)** |
-| 02 | Requirements and Product Strategy | *Pending Review* |
-| 03–18 | Dataset Validation through Long-Term Expansion | *Pending* |
+| **02** | **Requirements and Product Strategy** | **Completed (PASS)** |
+| 03 | Dataset Research and Validation | *Pending Review* |
+| 04–18 | Agricultural Knowledge through Long-Term Expansion | *Pending* |
 
 Full details and phase governance rules can be viewed in the [Master Project Roadmap](file:///Users/kazi/Projects/RITUCAST/docs/planning/roadmap.md).
 
@@ -32,9 +33,7 @@ Full details and phase governance rules can be viewed in the [Master Project Roa
 
 ## 3. Project Documentation Index
 
-The complete Phase 1 Project Discovery and Problem Definition deliverables are organized as follows:
-
-### Strategic & Product Baseline
+### Phase 1: Strategic & Discovery Baseline
 - [Project Overview](file:///Users/kazi/Projects/RITUCAST/docs/project/project-overview.md): Executive summary, purpose, and concept.
 - [Problem Definition & Ranked Inventory](file:///Users/kazi/Projects/RITUCAST/docs/project/problem-definition.md): Evidence-based assessment of candidate problems.
 - [Target User Analysis](file:///Users/kazi/Projects/RITUCAST/docs/project/target-users.md): Multi-segment evaluation, dual-anchor model (SAAOs + Lead Farmers).
@@ -44,18 +43,29 @@ The complete Phase 1 Project Discovery and Problem Definition deliverables are o
 - [Success Metrics Framework](file:///Users/kazi/Projects/RITUCAST/docs/project/success-metrics.md): 4-tier measurement pyramid from tech to agronomic impact.
 - [Long-Term Product Direction](file:///Users/kazi/Projects/RITUCAST/docs/project/long-term-direction.md): 3 strategic horizons and future expansion areas.
 
-### Planning & Governance
-- [Assumptions Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/assumptions-register.md): 8 tracked assumptions with upgrade criteria.
-- [Risk Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/risk-register.md): 10 prioritized risks across product, data, science, tech, and adoption.
-- [Decision Log](file:///Users/kazi/Projects/RITUCAST/docs/planning/decision-log.md): Architectural decisions and trade-offs.
+### Phase 2: Product Strategy & User Journeys
+- [Product Strategy](file:///Users/kazi/Projects/RITUCAST/docs/product/product-strategy.md): Strategic parameters, competitive differentiation, 5-stage value chain.
+- [User Needs & Critical Journeys](file:///Users/kazi/Projects/RITUCAST/docs/product/user-needs-and-journeys.md): 3 detailed personas, 4 JTBDs, and 4 end-to-end user journeys.
+- [Initial Release Strategy](file:///Users/kazi/Projects/RITUCAST/docs/product/release-strategy.md): Minimum Complete Product (MCP) scope, staged evolution timeline, and 5 release gates.
+- [Success Measurement Plan](file:///Users/kazi/Projects/RITUCAST/docs/product/success-measurement-plan.md): Operational metrics across 5 categories with baseline protocols.
+
+### Phase 2: Product Requirements & Technical Specifications
+- [Product Requirements Document (PRD)](file:///Users/kazi/Projects/RITUCAST/docs/requirements/product-requirements.md): Complete PRD with 15 functional requirements with stable IDs.
+- [Non-Functional Requirements (NFR)](file:///Users/kazi/Projects/RITUCAST/docs/requirements/nonfunctional-requirements.md): 19 NFRs across usability, accessibility, performance, reliability, and security.
+- [Feature Prioritization Matrix](file:///Users/kazi/Projects/RITUCAST/docs/requirements/feature-prioritization.md): 5-tier classification framework and 16-feature master matrix.
+- [Requirements Traceability Matrix (RTM)](file:///Users/kazi/Projects/RITUCAST/docs/requirements/requirements-traceability.md): End-to-end traceability mapping problems to requirements and tests.
+- [Product-Level Data Requirements](file:///Users/kazi/Projects/RITUCAST/docs/requirements/data-requirements.md): Specifications across 5 categories (`DR-MET`, `DR-PCP`, `DR-SMC`, `DR-SAR`, `DR-AGR`).
+- [Recommendation Quality & Scientific Safety](file:///Users/kazi/Projects/RITUCAST/docs/requirements/recommendation-quality-and-safety.md): 4-tier taxonomy, suppression conditions, and anti-overconfidence rules.
+
+### Planning, Governance & Quality Registers
+- [Assumptions Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/assumptions-register.md): 10 tracked assumptions with verification paths (updated with ASM-09, ASM-10).
+- [Risk Register](file:///Users/kazi/Projects/RITUCAST/docs/planning/risk-register.md): 12 prioritized risks with mitigations (updated with RSK-11, RSK-12).
+- [Decision Log](file:///Users/kazi/Projects/RITUCAST/docs/planning/decision-log.md): Architectural decisions log (updated with DEC-07 through DEC-10).
 - [Master Project Roadmap](file:///Users/kazi/Projects/RITUCAST/docs/planning/roadmap.md): 18-phase lifecycle status.
 
-### Phase 1 Execution & Quality Assurance
-- [Phase 1 Plan](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-01/phase-plan.md): Objectives and boundaries.
-- [Research Notes & Citations](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-01/research-notes.md): Evidence base from BBS, DAE, BMD, BWDB, BRRI, FAO, NASA.
-- [Deliverables Checklist](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-01/deliverables-checklist.md): 15 deliverables & 17 criteria audit.
-- [Phase 1 Validation Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-01/validation-report.md): Formal quality gate audit (**PASS**).
-- [Handoff to Phase 2](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-01/handoff-to-phase-02.md): Handoff package for Requirements and Product Strategy.
+### Phase Execution Packages
+- **Phase 01 Package**: [Phase Plan](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-01/phase-plan.md) | [Research Notes](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-01/research-notes.md) | [Deliverables Checklist](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-01/deliverables-checklist.md) | [Validation Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-01/validation-report.md) | [Handoff to Phase 2](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-01/handoff-to-phase-02.md)
+- **Phase 02 Package**: [Phase Plan](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-02/phase-plan.md) | [Readiness Assessment](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-02/readiness-assessment.md) | [Deliverables Checklist](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-02/deliverables-checklist.md) | [Validation Report](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-02/validation-report.md) | [Handoff to Phase 3](file:///Users/kazi/Projects/RITUCAST/docs/phases/phase-02/handoff-to-phase-03.md)
 
 ---
 
@@ -75,18 +85,36 @@ RITUCAST/
 │   │   ├── geographic-agricultural-scope.md
 │   │   ├── success-metrics.md
 │   │   └── long-term-direction.md
+│   ├── product/
+│   │   ├── product-strategy.md
+│   │   ├── user-needs-and-journeys.md
+│   │   ├── release-strategy.md
+│   │   └── success-measurement-plan.md
+│   ├── requirements/
+│   │   ├── product-requirements.md
+│   │   ├── nonfunctional-requirements.md
+│   │   ├── feature-prioritization.md
+│   │   ├── requirements-traceability.md
+│   │   ├── data-requirements.md
+│   │   └── recommendation-quality-and-safety.md
 │   ├── planning/
 │   │   ├── assumptions-register.md
 │   │   ├── risk-register.md
 │   │   ├── decision-log.md
 │   │   └── roadmap.md
 │   └── phases/
-│       └── phase-01/
+│       ├── phase-01/
+│       │   ├── phase-plan.md
+│       │   ├── research-notes.md
+│       │   ├── deliverables-checklist.md
+│       │   ├── validation-report.md
+│       │   └── handoff-to-phase-02.md
+│       └── phase-02/
 │           ├── phase-plan.md
-│           ├── research-notes.md
+│           ├── readiness-assessment.md
 │           ├── deliverables-checklist.md
 │           ├── validation-report.md
-│           └── handoff-to-phase-02.md
+│           └── handoff-to-phase-03.md
 ```
 
 ---
