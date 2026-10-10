@@ -46,6 +46,10 @@ export interface TranslationDictionary {
   upazila_label: string
   upazila_field_label: string
   search_placeholder: string
+  search_no_results: string
+  search_type_upazila: string
+  search_type_district: string
+  search_hint: string
   all_divisions: string
   select_division: string
   select_district: string
@@ -236,6 +240,10 @@ export const translations: Record<Language, TranslationDictionary> = {
     upazila_label: 'উপজেলা (পাইলট অঞ্চল):',
     upazila_field_label: 'উপজেলা:',
     search_placeholder: 'উপজেলা বা জেলা অনুসন্ধান করুন...',
+    search_no_results: 'কোনো উপজেলা বা জেলা পাওয়া যায়নি',
+    search_type_upazila: 'উপজেলা',
+    search_type_district: 'জেলা',
+    search_hint: 'বাছাই করতে ↑ / ↓ চাপুন, নির্বাচন করতে Enter, বন্ধ করতে Esc',
     all_divisions: 'সকল বিভাগ (৮টি)',
     select_division: 'বিভাগ নির্বাচন করুন',
     select_district: 'জেলা নির্বাচন করুন',
@@ -430,6 +438,10 @@ export const translations: Record<Language, TranslationDictionary> = {
     upazila_label: 'Upazila (Pilot Region):',
     upazila_field_label: 'Upazila:',
     search_placeholder: 'Search Upazila or District...',
+    search_no_results: 'No matching upazila or district found',
+    search_type_upazila: 'Upazila',
+    search_type_district: 'District',
+    search_hint: 'Use ↑ / ↓ to navigate, Enter to select, Esc to close',
     all_divisions: 'All Divisions (8)',
     select_division: 'Select Division',
     select_district: 'Select District',

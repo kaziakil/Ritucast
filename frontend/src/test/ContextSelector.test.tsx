@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, within } from '@testing-library/react'
 import { ContextSelector } from '../components/ContextSelector'
 import type { UpazilaSummary, CropInfo } from '../types/api'
 
@@ -93,5 +93,138 @@ describe('ContextSelector Component', () => {
     const refreshBtn = screen.getByRole('button', { name: /হালনাগাদ/ })
     fireEvent.click(refreshBtn)
     expect(handleRefresh).toHaveBeenCalledTimes(1)
+  })
+
+  it('searches upazilas using English and Bangla queries and displays autocomplete dropdown', () => {
+    const handleUpazilaChange = vi.fn()
+
+    render(
+      <ContextSelector
+        upazilas={mockUpazilas}
+        selectedUpazilaId="BD-50-20-30"
+        setSelectedUpazilaId={handleUpazilaChange}
+        crops={mockCrops}
+        selectedCropId="boro_rice"
+        setSelectedCropId={vi.fn()}
+        growthStages={['Tillering']}
+        selectedStage="Tillering"
+        setSelectedStage={vi.fn()}
+        onRefresh={vi.fn()}
+        loading={false}
+      />
+    )
+
+    const searchInput = screen.getByPlaceholderText(/অনুসন্ধান করুন/i)
+
+    // English search (case-insensitive)
+    fireEvent.change(searchInput, { target: { value: 'tahir' } })
+    const listbox = screen.getByRole('listbox')
+    expect(listbox).toBeInTheDocument()
+    const tahirOption = within(listbox).getByText(/Tahirpur/i)
+    expect(tahirOption).toBeInTheDocument()
+
+    // Select Tahirpur from dropdown
+    fireEvent.click(tahirOption)
+    expect(handleUpazilaChange).toHaveBeenCalledWith('BD-60-90-86')
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument()
+
+    // Bangla search
+    fireEvent.change(searchInput, { target: { value: 'গোদাগাড়ী' } })
+    const listboxBn = screen.getByRole('listbox')
+    expect(listboxBn).toBeInTheDocument()
+    expect(within(listboxBn).getByText(/গোদাগাড়ী/i)).toBeInTheDocument()
+  })
+
+  it('searches districts and updates upazila when district result is selected', () => {
+    const handleUpazilaChange = vi.fn()
+
+    const { container } = render(
+      <ContextSelector
+        upazilas={mockUpazilas}
+        selectedUpazilaId="BD-50-20-30"
+        setSelectedUpazilaId={handleUpazilaChange}
+        crops={mockCrops}
+        selectedCropId="boro_rice"
+        setSelectedCropId={vi.fn()}
+        growthStages={['Tillering']}
+        selectedStage="Tillering"
+        setSelectedStage={vi.fn()}
+        onRefresh={vi.fn()}
+        loading={false}
+      />
+    )
+
+    const searchInput = screen.getByPlaceholderText(/অনুসন্ধান করুন/i)
+    fireEvent.change(searchInput, { target: { value: 'Sunamganj' } })
+
+    // Verify district match item exists inside listbox
+    const districtItem = container.querySelector('#search-item-dist-Sunamganj') as HTMLElement
+    expect(districtItem).toBeInTheDocument()
+
+    fireEvent.click(districtItem)
+    expect(handleUpazilaChange).toHaveBeenCalledWith('BD-60-90-86')
+  })
+
+  it('supports keyboard navigation (ArrowDown, Enter, Escape) in search results', () => {
+    const handleUpazilaChange = vi.fn()
+
+    render(
+      <ContextSelector
+        upazilas={mockUpazilas}
+        selectedUpazilaId="BD-50-20-30"
+        setSelectedUpazilaId={handleUpazilaChange}
+        crops={mockCrops}
+        selectedCropId="boro_rice"
+        setSelectedCropId={vi.fn()}
+        growthStages={['Tillering']}
+        selectedStage="Tillering"
+        setSelectedStage={vi.fn()}
+        onRefresh={vi.fn()}
+        loading={false}
+      />
+    )
+
+    const searchInput = screen.getByPlaceholderText(/অনুসন্ধান করুন/i)
+    fireEvent.change(searchInput, { target: { value: 'tahir' } })
+
+    // Arrow down and press Enter to select
+    fireEvent.keyDown(searchInput, { key: 'ArrowDown' })
+    fireEvent.keyDown(searchInput, { key: 'Enter' })
+    expect(handleUpazilaChange).toHaveBeenCalledWith('BD-60-90-86')
+
+    // Escape closes dropdown
+    fireEvent.change(searchInput, { target: { value: 'godagari' } })
+    expect(screen.getByRole('listbox')).toBeInTheDocument()
+    fireEvent.keyDown(searchInput, { key: 'Escape' })
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument()
+  })
+
+  it('displays empty results notice when no matching location found and clears with X button', () => {
+    render(
+      <ContextSelector
+        upazilas={mockUpazilas}
+        selectedUpazilaId="BD-50-20-30"
+        setSelectedUpazilaId={vi.fn()}
+        crops={mockCrops}
+        selectedCropId="boro_rice"
+        setSelectedCropId={vi.fn()}
+        growthStages={['Tillering']}
+        selectedStage="Tillering"
+        setSelectedStage={vi.fn()}
+        onRefresh={vi.fn()}
+        loading={false}
+      />
+    )
+
+    const searchInput = screen.getByPlaceholderText(/অনুসন্ধান করুন/i)
+    fireEvent.change(searchInput, { target: { value: 'NonExistentLocation' } })
+
+    expect(screen.getByText('কোনো উপজেলা বা জেলা পাওয়া যায়নি')).toBeInTheDocument()
+
+    // Clear button
+    const clearBtn = screen.getByRole('button', { name: /মুছুন/i })
+    fireEvent.click(clearBtn)
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument()
+    expect(searchInput).toHaveValue('')
   })
 })

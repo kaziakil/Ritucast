@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState, useMemo, useEffect, useRef } from 'react'
 import {
   MapPin,
   Wheat,
@@ -14,6 +14,20 @@ import {
 import type { UpazilaSummary, CropInfo } from '../types/api'
 import { useLanguage } from '../context/LanguageContext'
 import { STAGE_TRANSLATIONS } from '../i18n/translations'
+
+export interface SearchLocationItem {
+  id: string
+  type: 'upazila' | 'district'
+  nameEn: string
+  nameBn: string
+  divisionEn: string
+  divisionBn?: string
+  districtEn: string
+  districtBn?: string
+  upazilaId?: string
+  isPilot?: boolean
+  aezName?: string
+}
 
 export function getDefaultDateRange(): { startDate: string; endDate: string } {
   const now = new Date()
@@ -114,8 +128,168 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
   // Cascading Geography Hierarchy: Division -> District -> Upazila
   const [selectedDivision, setSelectedDivision] = useState<string>('')
   const [selectedDistrict, setSelectedDistrict] = useState<string>('')
+
+  // Search State & Dropdown Management
   const [searchQuery, setSearchQuery] = useState<string>('')
-  const [isSearchActive, setIsSearchActive] = useState<boolean>(false)
+  const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState<boolean>(false)
+  const [highlightedIndex, setHighlightedIndex] = useState<number>(0)
+  const searchContainerRef = useRef<HTMLDivElement>(null)
+
+  // Click-outside listener to dismiss search dropdown
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(e.target as Node)) {
+        setIsSearchDropdownOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleOutsideClick)
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick)
+    }
+  }, [])
+
+  // Build searchable index of all 495 upazilas and 64 districts
+  const searchableLocations = useMemo<SearchLocationItem[]>(() => {
+    const list: SearchLocationItem[] = []
+    const districtMap = new Map<string, { nameEn: string; nameBn: string; divisionEn: string; divisionBn?: string }>()
+
+    upazilas.forEach((u) => {
+      // 1. Index Upazila
+      list.push({
+        id: `upz-${u.upazila_id}`,
+        type: 'upazila',
+        nameEn: u.name_en,
+        nameBn: u.name_bn,
+        divisionEn: u.division_name,
+        divisionBn: u.division_name_bn,
+        districtEn: u.district_name,
+        districtBn: u.district_name_bn,
+        upazilaId: u.upazila_id,
+        isPilot: u.is_pilot,
+        aezName: u.aez_name,
+      })
+
+      // 2. Accumulate District
+      if (u.district_name && !districtMap.has(u.district_name)) {
+        districtMap.set(u.district_name, {
+          nameEn: u.district_name,
+          nameBn: u.district_name_bn || u.district_name,
+          divisionEn: u.division_name,
+          divisionBn: u.division_name_bn,
+        })
+      }
+    })
+
+    // 3. Index Districts
+    districtMap.forEach((dist) => {
+      list.push({
+        id: `dist-${dist.nameEn}`,
+        type: 'district',
+        nameEn: dist.nameEn,
+        nameBn: dist.nameBn,
+        divisionEn: dist.divisionEn,
+        divisionBn: dist.divisionBn,
+        districtEn: dist.nameEn,
+        districtBn: dist.nameBn,
+      })
+    })
+
+    return list
+  }, [upazilas])
+
+  // Filter and score search results
+  const searchResults = useMemo<SearchLocationItem[]>(() => {
+    const q = searchQuery.trim()
+    if (!q) return []
+    const lower = q.toLowerCase()
+
+    const scored = searchableLocations
+      .map((item) => {
+        let score = 0
+        const nameEnLower = item.nameEn.toLowerCase()
+        const distEnLower = item.districtEn.toLowerCase()
+        const divEnLower = item.divisionEn.toLowerCase()
+
+        // Direct Name Match
+        if (nameEnLower === lower || item.nameBn === q) {
+          score += 100
+        } else if (nameEnLower.startsWith(lower) || item.nameBn.startsWith(q)) {
+          score += 80
+        } else if (nameEnLower.includes(lower) || item.nameBn.includes(q)) {
+          score += 60
+        } else if (distEnLower.includes(lower) || (item.districtBn && item.districtBn.includes(q))) {
+          score += 40
+        } else if (divEnLower.includes(lower) || (item.divisionBn && item.divisionBn.includes(q))) {
+          score += 20
+        }
+
+        if (score > 0) {
+          if (item.isPilot) score += 15
+          if (item.type === 'district' && (nameEnLower.startsWith(lower) || item.nameBn.startsWith(q))) {
+            score += 10
+          }
+        }
+
+        return { item, score }
+      })
+      .filter((res) => res.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .map((res) => res.item)
+
+    return scored.slice(0, 10)
+  }, [searchableLocations, searchQuery])
+
+  // Handle Location Selection from Search Result
+  const handleSelectLocation = (item: SearchLocationItem) => {
+    if (item.type === 'upazila' && item.upazilaId) {
+      setSelectedUpazilaId(item.upazilaId)
+      setSelectedDivision(item.divisionEn)
+      setSelectedDistrict(item.districtEn)
+    } else if (item.type === 'district') {
+      setSelectedDivision(item.divisionEn)
+      setSelectedDistrict(item.nameEn)
+      // Pick pilot upazila in this district or first available
+      const targetUpz =
+        upazilas.find((u) => u.district_name === item.nameEn && u.is_pilot) ||
+        upazilas.find((u) => u.district_name === item.nameEn)
+      if (targetUpz) {
+        setSelectedUpazilaId(targetUpz.upazila_id)
+      }
+    }
+    setSearchQuery('')
+    setIsSearchDropdownOpen(false)
+    setHighlightedIndex(0)
+  }
+
+  // Keyboard navigation within search input
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!isSearchDropdownOpen && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
+      if (searchQuery.trim().length > 0) {
+        setIsSearchDropdownOpen(true)
+      }
+      return
+    }
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      if (searchResults.length > 0) {
+        setHighlightedIndex((prev) => (prev + 1) % searchResults.length)
+      }
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      if (searchResults.length > 0) {
+        setHighlightedIndex((prev) => (prev <= 0 ? searchResults.length - 1 : prev - 1))
+      }
+    } else if (e.key === 'Enter') {
+      e.preventDefault()
+      if (searchResults.length > 0 && searchResults[highlightedIndex]) {
+        handleSelectLocation(searchResults[highlightedIndex])
+      }
+    } else if (e.key === 'Escape') {
+      e.preventDefault()
+      setIsSearchDropdownOpen(false)
+    }
+  }
 
   // Extract unique divisions from upazilas list
   const availableDivisions = useMemo(() => {
@@ -139,17 +313,6 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
 
   // Extract upazilas belonging to current division and district
   const filteredUpazilas = useMemo(() => {
-    if (searchQuery.trim().length > 0) {
-      const q = searchQuery.trim().toLowerCase()
-      return upazilas.filter(
-        (u) =>
-          u.name_en.toLowerCase().includes(q) ||
-          u.name_bn.toLowerCase().includes(q) ||
-          u.district_name.toLowerCase().includes(q) ||
-          (u.district_name_bn && u.district_name_bn.toLowerCase().includes(q))
-      )
-    }
-
     if (!selectedDivision && !selectedDistrict) {
       return upazilas
     }
@@ -159,7 +322,7 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
       const matchesDist = !selectedDistrict || u.district_name === selectedDistrict
       return matchesDiv && matchesDist
     })
-  }, [upazilas, selectedDivision, selectedDistrict, searchQuery])
+  }, [upazilas, selectedDivision, selectedDistrict])
 
   // Ensure currentUpazila is always available in the options
   const displayUpazilas = useMemo(() => {
@@ -172,10 +335,8 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
   // Handle Division Selection
   const onDivisionChange = (divName: string) => {
     setSelectedDivision(divName)
-    // Find first district in this division
     const firstDist = upazilas.find((u) => u.division_name === divName)?.district_name || ''
     setSelectedDistrict(firstDist)
-    // Find first upazila
     const firstUpz = upazilas.find((u) => u.division_name === divName && u.district_name === firstDist)
     if (firstUpz) setSelectedUpazilaId(firstUpz.upazila_id)
   }
@@ -280,18 +441,28 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
         {/* TOP ROW: Quick Search & Active Context Meta Group */}
         <div className="context-top-bar">
           {/* Quick Search across all 64 districts & 495 upazilas */}
-          <div className="context-search-container">
+          <div className="context-search-container" ref={searchContainerRef}>
             <div className="context-search-input-box">
               <Search size={16} className="context-search-icon" aria-hidden="true" />
               <input
                 type="text"
+                role="combobox"
+                aria-expanded={isSearchDropdownOpen}
+                aria-haspopup="listbox"
+                aria-autocomplete="list"
+                aria-controls="location-search-listbox"
                 className="context-search-input"
                 placeholder={t('search_placeholder')}
                 value={searchQuery}
+                onFocus={() => {
+                  if (searchQuery.trim().length > 0) setIsSearchDropdownOpen(true)
+                }}
                 onChange={(e) => {
                   setSearchQuery(e.target.value)
-                  setIsSearchActive(e.target.value.trim().length > 0)
+                  setIsSearchDropdownOpen(e.target.value.trim().length > 0)
+                  setHighlightedIndex(0)
                 }}
+                onKeyDown={handleSearchKeyDown}
                 aria-label={language === 'en' ? 'Search locations' : 'অবস্থান অনুসন্ধান'}
               />
               {searchQuery && (
@@ -299,13 +470,81 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
                   type="button"
                   onClick={() => {
                     setSearchQuery('')
-                    setIsSearchActive(false)
+                    setIsSearchDropdownOpen(false)
                   }}
                   className="context-search-clear"
                   aria-label={t('clear_search')}
                 >
                   <X size={14} />
                 </button>
+              )}
+
+              {/* Floating Autocomplete Dropdown List */}
+              {isSearchDropdownOpen && searchQuery.trim().length > 0 && (
+                <div
+                  id="location-search-listbox"
+                  role="listbox"
+                  className="search-autocomplete-dropdown"
+                >
+                  {searchResults.length > 0 ? (
+                    searchResults.map((item, idx) => (
+                      <div
+                        key={item.id}
+                        role="option"
+                        id={`search-item-${item.id}`}
+                        aria-selected={idx === highlightedIndex}
+                        className={`search-result-item ${idx === highlightedIndex ? 'highlighted' : ''}`}
+                        onClick={() => handleSelectLocation(item)}
+                        onMouseEnter={() => setHighlightedIndex(idx)}
+                      >
+                        <div className="search-result-primary">
+                          <span className="search-result-name">
+                            {language === 'en' ? item.nameEn : item.nameBn}{' '}
+                            <span className="search-result-subname" style={{ fontWeight: 400, opacity: 0.85, fontSize: '0.9em' }}>
+                              ({language === 'en' ? item.nameBn : item.nameEn})
+                            </span>
+                          </span>
+                          {item.type === 'upazila' ? (
+                            <span className="search-type-badge upazila">
+                              {t('search_type_upazila')}
+                            </span>
+                          ) : (
+                            <span className="search-type-badge district">
+                              {t('search_type_district')}
+                            </span>
+                          )}
+                          {item.isPilot && (
+                            <span className="search-pilot-badge">
+                              ★ {t('pilot_badge')}
+                            </span>
+                          )}
+                        </div>
+                        <div className="search-result-secondary">
+                          {item.type === 'upazila' ? (
+                            <span>
+                              {language === 'en'
+                                ? `${item.districtEn}, ${item.divisionEn}`
+                                : `${item.districtBn || item.districtEn}, ${item.divisionBn || item.divisionEn}`}
+                            </span>
+                          ) : (
+                            <span>
+                              {language === 'en'
+                                ? `Division: ${item.divisionEn}`
+                                : `বিভাগ: ${item.divisionBn || item.divisionEn}`}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="search-no-results">
+                      {t('search_no_results')}
+                    </div>
+                  )}
+                  <div className="search-dropdown-footer">
+                    <span>{t('search_hint')}</span>
+                  </div>
+                </div>
               )}
             </div>
           </div>
@@ -338,7 +577,6 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
               className="form-select"
               value={selectedDivision}
               onChange={(e) => onDivisionChange(e.target.value)}
-              disabled={isSearchActive}
             >
               <option value="">{t('all_divisions')}</option>
               {availableDivisions.map((div) => (
@@ -360,7 +598,6 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
               className="form-select"
               value={selectedDistrict}
               onChange={(e) => onDistrictChange(e.target.value)}
-              disabled={isSearchActive}
             >
               <option value="">{t('select_district')}</option>
               {availableDistricts.map((dist) => (
@@ -514,11 +751,12 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
             </div>
 
             {/* Date Presets Buttons */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-              <span style={{ fontSize: 'var(--font-size-caption)', color: 'var(--color-text-secondary)', fontWeight: 500 }}>
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <span className="form-label" style={{ fontSize: 'var(--font-size-caption)' }}>
+                <Clock size={12} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} />
                 {t('date_range_label')}
               </span>
-              <div className="context-preset-group">
+              <div className="context-preset-container">
                 <button
                   type="button"
                   className="context-preset-chip"

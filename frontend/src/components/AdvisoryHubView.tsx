@@ -99,65 +99,70 @@ export const AdvisoryHubView: React.FC<AdvisoryHubViewProps> = ({
         </div>
 
         {/* Headline & Body */}
-        <h2 style={{ fontSize: '1.35rem', marginBottom: 'var(--spacing-sm)', color: 'var(--color-text-primary)' }}>
+        <h2 className="advisory-hero-title">
           {rec.headline_bn}
         </h2>
-        <p style={{ fontSize: '1.05rem', lineHeight: 1.6, color: 'var(--color-text-primary)' }}>
+        <p className="advisory-hero-body">
           {rec.body_bn}
         </p>
 
-        {/* Action Directives Checklist */}
-        {rec.action_items_bn && rec.action_items_bn.length > 0 && (
-          <div style={{ marginTop: 'var(--spacing-md)' }}>
-            <strong style={{ fontSize: 'var(--font-size-body)', color: 'var(--color-text-primary)' }}>
-              {t('action_items_heading')}
-            </strong>
-            <ul style={{ listStyle: 'none', marginTop: 'var(--spacing-xs)', paddingLeft: 0 }}>
-              {rec.action_items_bn.map((item, idx) => (
-                <li
-                  key={idx}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    gap: 'var(--spacing-sm)',
-                    marginBottom: 'var(--spacing-xs)',
-                    fontSize: 'var(--font-size-body)',
-                  }}
-                >
-                  <CheckCircle size={18} color="var(--primitive-green-700)" style={{ flexShrink: 0, marginTop: 3 }} />
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {/* Economic / Technical Rationale Breakdown */}
-        {rec.rationale_breakdown && (
-          <div
-            style={{
-              backgroundColor: 'var(--color-bg-subtle)',
-              border: '1px solid var(--color-border-default)',
-              borderRadius: 'var(--radius-md)',
-              padding: 'var(--spacing-md)',
-              marginTop: 'var(--spacing-md)',
-              fontSize: 'var(--font-size-caption)',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4, fontWeight: 600 }}>
-              <Sparkles size={16} color="var(--primitive-green-800)" />
-              <span>{t('rationale_heading')}</span>
+        {/* Structured Content Grid: Action Directives & Technical Rationale */}
+        <div className="advisory-content-layout">
+          {/* Action Directives Checklist */}
+          {rec.action_items_bn && rec.action_items_bn.length > 0 && (
+            <div className="advisory-actions-panel">
+              <strong style={{ fontSize: 'var(--font-size-body)', color: 'var(--color-text-primary)', display: 'block', marginBottom: 'var(--spacing-xs)' }}>
+                {t('action_items_heading')}
+              </strong>
+              <ul style={{ listStyle: 'none', margin: 0, paddingLeft: 0 }}>
+                {rec.action_items_bn.map((item, idx) => (
+                  <li
+                    key={idx}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      gap: 'var(--spacing-sm)',
+                      marginBottom: 'var(--spacing-xs)',
+                      fontSize: 'var(--font-size-body)',
+                    }}
+                  >
+                    <CheckCircle size={18} color="var(--primitive-green-700)" style={{ flexShrink: 0, marginTop: 3 }} />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <p style={{ margin: 0, color: 'var(--color-text-secondary)' }}>
-              {rec.rationale_breakdown.scientific_basis}
-            </p>
-            {rec.rationale_breakdown.pumping_savings_est_bdt && (
-              <p style={{ margin: '4px 0 0', fontWeight: 600, color: 'var(--color-brand-primary)' }}>
-                {t('pumping_savings_prefix')} {rec.rationale_breakdown.pumping_savings_est_bdt}
+          )}
+
+          {/* Economic / Technical Rationale Breakdown */}
+          {rec.rationale_breakdown && (
+            <div
+              className="advisory-rationale-panel"
+              style={{
+                backgroundColor: 'var(--color-bg-subtle)',
+                border: '1px solid var(--color-border-default)',
+                borderRadius: 'var(--radius-md)',
+                padding: 'var(--spacing-md)',
+                fontSize: 'var(--font-size-caption)',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6, fontWeight: 600 }}>
+                <Sparkles size={16} color="var(--primitive-green-800)" />
+                <span>{t('rationale_heading')}</span>
+              </div>
+              <p style={{ margin: 0, color: 'var(--color-text-secondary)', lineHeight: 1.5 }}>
+                {rec.rationale_breakdown.scientific_basis}
               </p>
-            )}
-          </div>
-        )}
+              {rec.rationale_breakdown.pumping_savings_est_bdt && (
+                <div style={{ marginTop: 'var(--spacing-sm)', padding: '4px 8px', backgroundColor: 'rgba(34, 197, 94, 0.12)', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(34, 197, 94, 0.25)' }}>
+                  <p style={{ margin: 0, fontWeight: 600, color: 'var(--primitive-green-900)' }}>
+                    {t('pumping_savings_prefix')} {rec.rationale_breakdown.pumping_savings_est_bdt}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
 
         {/* Mandatory Field Inspection Disclaimer (AGENTS.md) */}
         <div className="field-verification-box">
