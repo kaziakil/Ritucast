@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { Header } from './components/Header'
-import { ContextSelector } from './components/ContextSelector'
+import { ContextSelector, getDefaultDateRange } from './components/ContextSelector'
 import { AdvisoryHubView } from './components/AdvisoryHubView'
 import { WeatherFeedView } from './components/WeatherFeedView'
 import { WaterBalanceView } from './components/WaterBalanceView'
@@ -46,6 +46,12 @@ export const AppContent: React.FC = () => {
   const [selectedCropId, setSelectedCropId] = useState<string>('boro_rice')
   const [selectedStage, setSelectedStage] = useState<string>('Tillering')
 
+  // Custom Date Range State (defaults dynamically to previous 7 complete days, excluding today)
+  const defaultDates = useMemo(() => getDefaultDateRange(), [])
+  const [startDate, setStartDate] = useState<string>(defaultDates.startDate)
+  const [endDate, setEndDate] = useState<string>(defaultDates.endDate)
+  const [plantingDate, setPlantingDate] = useState<string>('')
+
   // Analytical Data States
   const [advisory, setAdvisory] = useState<AdvisoryResponse | null>(null)
   const [risk, setRisk] = useState<RiskEvaluationResponse | null>(null)
@@ -58,7 +64,7 @@ export const AppContent: React.FC = () => {
   const [loadingData, setLoadingData] = useState<boolean>(false)
   const [dataError, setDataError] = useState<string | null>(null)
 
-  // 1. Initial Metadata Load
+  // 1. Initial Metadata Load: load full national upazila registry and crops catalog
   useEffect(() => {
     let mounted = true
 
@@ -66,7 +72,7 @@ export const AppContent: React.FC = () => {
       try {
         setLoadingReadiness(true)
         const [upzList, cropList, readyRes] = await Promise.allSettled([
-          apiClient.getUpazilas(),
+          apiClient.getUpazilas(true), // Request all 495 upazilas across Bangladesh
           apiClient.getCrops(),
           apiClient.getReadiness(),
         ])
@@ -75,7 +81,9 @@ export const AppContent: React.FC = () => {
 
         if (upzList.status === 'fulfilled' && upzList.value.length > 0) {
           setUpazilas(upzList.value)
-          setSelectedUpazilaId(upzList.value[0].upazila_id)
+          // Default to first pilot upazila or first item
+          const defaultUpz = upzList.value.find((u) => u.is_pilot) || upzList.value[0]
+          setSelectedUpazilaId(defaultUpz.upazila_id)
         }
 
         if (cropList.status === 'fulfilled' && cropList.value.length > 0) {
@@ -103,7 +111,19 @@ export const AppContent: React.FC = () => {
     }
   }, [])
 
-  // 2. Fetch Active Analytical Data
+  // Sync growth stages when crop selection changes
+  const handleCropChange = (cropId: string) => {
+    setSelectedCropId(cropId)
+    const crop = crops.find((c) => c.crop_id === cropId)
+    if (crop && crop.supported_stages?.length) {
+      setGrowthStages(crop.supported_stages)
+      if (!crop.supported_stages.includes(selectedStage)) {
+        setSelectedStage(crop.supported_stages[0])
+      }
+    }
+  }
+
+  // 2. Fetch Active Analytical Data using Upazila, Crop, Stage, and Custom Date Range
   const fetchAnalyticalData = useCallback(async () => {
     if (!selectedUpazilaId || !selectedCropId || !selectedStage) return
 
@@ -112,10 +132,10 @@ export const AppContent: React.FC = () => {
 
     try {
       const [advRes, riskRes, wxRes, wbRes, fldRes, provRes] = await Promise.allSettled([
-        apiClient.getAdvisories(selectedUpazilaId, selectedCropId, selectedStage),
+        apiClient.getAdvisories(selectedUpazilaId, selectedCropId, selectedStage, startDate, endDate),
         apiClient.evaluateRisk(selectedUpazilaId, selectedCropId, selectedStage),
-        apiClient.getWeather(selectedUpazilaId),
-        apiClient.getWaterBalance(selectedUpazilaId, selectedCropId, selectedStage),
+        apiClient.getWeather(selectedUpazilaId, startDate, endDate),
+        apiClient.getWaterBalance(selectedUpazilaId, selectedCropId, selectedStage, startDate, endDate),
         apiClient.getFloodHazard(selectedUpazilaId),
         apiClient.getProvenance(),
       ])
@@ -144,7 +164,7 @@ export const AppContent: React.FC = () => {
     } finally {
       setLoadingData(false)
     }
-  }, [selectedUpazilaId, selectedCropId, selectedStage, language])
+  }, [selectedUpazilaId, selectedCropId, selectedStage, startDate, endDate, language])
 
   // Trigger analysis when context changes
   useEffect(() => {
@@ -166,17 +186,23 @@ export const AppContent: React.FC = () => {
         loadingReadiness={loadingReadiness}
       />
 
-      {/* Primary Context Selector (DEC-17 Gating) */}
+      {/* Primary Context Selector (DEC-17 Gating, Cascading Geo, Expanded Crops, Custom Dates) */}
       <ContextSelector
         upazilas={upazilas}
         selectedUpazilaId={selectedUpazilaId}
         setSelectedUpazilaId={setSelectedUpazilaId}
         crops={crops}
         selectedCropId={selectedCropId}
-        setSelectedCropId={setSelectedCropId}
+        setSelectedCropId={handleCropChange}
         growthStages={growthStages}
         selectedStage={selectedStage}
         setSelectedStage={setSelectedStage}
+        startDate={startDate}
+        setStartDate={setStartDate}
+        endDate={endDate}
+        setEndDate={setEndDate}
+        plantingDate={plantingDate}
+        setPlantingDate={setPlantingDate}
         onRefresh={fetchAnalyticalData}
         loading={loadingData}
       />

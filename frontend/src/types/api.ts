@@ -17,13 +17,61 @@ export interface UpazilaSummary {
   aez_name: string;
   centroid: CentroidCoord;
   primary_risk: string;
+  district_id?: string;
+  division_id?: string;
+  district_name_bn?: string;
+  division_name_bn?: string;
+  is_pilot?: boolean;
+}
+
+export interface UpazilaHierarchyItem {
+  id: string;
+  upazila_id: string;
+  name_en: string;
+  name_bn: string;
+  district_id: string;
+  division_id: string;
+  lat: number;
+  lon: number;
+  is_pilot?: boolean;
+}
+
+export interface DistrictHierarchyItem {
+  id: string;
+  district_id: string;
+  division_id: string;
+  name_en: string;
+  name_bn: string;
+  aez_code: number;
+  aez_name: string;
+  primary_risk: string;
+  upazilas: UpazilaHierarchyItem[];
+}
+
+export interface DivisionHierarchyItem {
+  id: string;
+  division_id: string;
+  name_en: string;
+  name_bn: string;
+  districts: DistrictHierarchyItem[];
+}
+
+export interface GeoHierarchyData {
+  metadata: {
+    total_divisions: number;
+    total_districts: number;
+    total_upazilas: number;
+  };
+  divisions: DivisionHierarchyItem[];
+  districts_flat?: Record<string, any>;
+  upazilas_flat?: Record<string, UpazilaSummary>;
 }
 
 export interface UpazilaDetail extends UpazilaSummary {
-  area_sq_km: number;
-  unions_count: number;
-  elevation_m: number;
-  calibrated_crops: string[];
+  area_sq_km?: number;
+  unions_count?: number;
+  elevation_m?: number;
+  calibrated_crops?: string[];
 }
 
 export interface CropInfo {
@@ -31,9 +79,15 @@ export interface CropInfo {
   name_en: string;
   name_bn: string;
   scientific_name: string;
+  category?: string;
+  category_en?: string;
+  category_bn?: string;
   typical_duration_days: number;
   supported_stages: string[];
   calibration_status: string;
+  primary_season?: string;
+  kc_mid?: number;
+  analytical_support_description?: string;
 }
 
 export interface SeasonInfo {
@@ -179,6 +233,13 @@ export interface AdvisoryResponse {
   tier_4_recommendation: Tier4RecommendationDetail;
   all_cards?: any[];
   provenance: Record<string, any>;
+  analysis_period?: {
+    start_date: string;
+    end_date: string;
+    period_days: number;
+    reporting_latency_note_bn?: string;
+    reporting_latency_note_en?: string;
+  };
 }
 
 export interface PhysicalHazardAssessment {

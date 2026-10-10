@@ -1,12 +1,14 @@
 """Mandatory Contextual Gating Middleware (DEC-17).
 
 Ensures that no recommendation card can ever be emitted without verified confirmation of:
-1. Administrative Upazila.
+1. Administrative Upazila (across authorized testbeds and recognized Bangladesh administrative hierarchy).
 2. Active Crop.
-3. Active Phenological Growth Stage.
+3. Active Phenological Growth Stage or Analysis Time Window.
 """
 
-from typing import List, Optional, Tuple
+import json
+from pathlib import Path
+from typing import List, Optional, Tuple, Set, Dict
 from analytics.contracts.advisory_schemas import ContextGatePayload
 
 
@@ -26,8 +28,55 @@ class ContextGator:
         "BD-60-90-89": "Tahirpur",
     }
 
-    # Approved initial crop focus
-    VALID_CROPS = {"BORO RICE", "BORO", "RICE"}
+    # Extended registry of recognized Bangladesh Upazilas
+    _ALL_RECOGNIZED_UPAZILAS: Optional[Dict[str, str]] = None
+
+    # Supported and calibrated crops in Bangladesh
+    VALID_CROPS: Set[str] = {
+        "BORO RICE", "BORO", "RICE",
+        "AMAN RICE", "T. AMAN RICE", "AMAN", "T AMAN", "ROPA AMAN",
+        "AUS RICE", "AUS",
+        "WHEAT",
+        "MAIZE", "CORN",
+        "JUTE",
+        "POTATO",
+        "SWEET POTATO",
+        "LENTIL", "MASUR",
+        "MUNGBEAN", "MOOG",
+        "CHICKPEA", "CHHOLA",
+        "BLACKGRAM", "MASHKALAI",
+        "MUSTARD", "SARISHA",
+        "GROUNDNUT", "CHINABADAM", "PEANUT",
+        "SESAME", "TIL",
+        "SUNFLOWER", "SURJAMUKHI",
+        "TOMATO",
+        "ONION", "PEYAJ",
+        "BRINJAL", "EGGPLANT", "BEGUN",
+        "CHILI", "CHILLI", "MORICH",
+        "CABBAGE", "CAULIFLOWER", "CABBAGE & CAULIFLOWER",
+        "MANGO", "AAM",
+        "BANANA", "KOLA",
+        "WATERMELON", "TORMUZ",
+    }
+
+    @classmethod
+    def _load_recognized_upazilas(cls) -> Dict[str, str]:
+        if cls._ALL_RECOGNIZED_UPAZILAS is not None:
+            return cls._ALL_RECOGNIZED_UPAZILAS
+
+        registry = dict(cls.VALID_PILOT_UPAZILAS)
+        hierarchy_file = Path("/Users/kazi/Projects/RITUCAST/data/processed/bangladesh_admin_hierarchy.json")
+        if hierarchy_file.exists():
+            try:
+                with open(hierarchy_file, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    flat = data.get("upazilas_flat", {})
+                    for uid, meta in flat.items():
+                        registry[uid] = meta.get("name_en", uid)
+            except Exception:
+                pass
+        cls._ALL_RECOGNIZED_UPAZILAS = registry
+        return registry
 
     @classmethod
     def validate_context(
@@ -45,13 +94,15 @@ class ContextGator:
         if not upazila_id or not str(upazila_id).strip():
             return False, "Gate 1 Failed: Administrative Upazila identifier is missing.", None
         clean_upazila = str(upazila_id).strip()
-        if clean_upazila not in cls.VALID_PILOT_UPAZILAS:
-            return False, f"Gate 1 Failed: Upazila '{clean_upazila}' is outside approved pilot testbeds.", None
+        
+        all_upazilas = cls._load_recognized_upazilas()
+        if clean_upazila not in all_upazilas:
+            return False, f"Gate 1 Failed: Upazila '{clean_upazila}' is outside approved pilot testbeds or recognized administrative registry.", None
 
         # 2. Active Crop check
         if not crop_name or not str(crop_name).strip():
             return False, "Gate 2 Failed: Active crop name is missing.", None
-        clean_crop = str(crop_name).strip().upper()
+        clean_crop = str(crop_name).strip().upper().replace("_", " ")
         if clean_crop not in cls.VALID_CROPS:
             return False, f"Gate 2 Failed: Crop '{crop_name}' is not currently calibrated in pilot scope.", None
 

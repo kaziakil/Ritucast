@@ -24,14 +24,16 @@ def get_upazila_advisories(
     upazila_id: str = Path(..., description="Target Upazila code (e.g. BD-50-20-30 or shorthand BD-50-28)"),
     crop: str = Query(..., description="Active crop identifier (e.g. boro_rice, boro)"),
     stage: str = Query(..., description="Active phenological growth stage (e.g. vegetative_tillering, flowering, dough)"),
+    start_date: Optional[str] = Query(None, description="Start date for custom analysis period (YYYY-MM-DD)"),
+    end_date: Optional[str] = Query(None, description="End date for custom analysis period (YYYY-MM-DD)"),
     repo: AgriculturalDataRepository = Depends(get_repository),
 ) -> AdvisoryResponse:
     """Evaluate and retrieve 4-tier agricultural decision support."""
     canonical_id = repo.resolve_upazila_id(upazila_id)
-    if not repo.is_pilot_upazila(canonical_id):
+    if not repo.is_known_upazila(canonical_id):
         raise HTTPException(
             status_code=404,
-            detail=f"Upazila '{upazila_id}' not found or outside active pilot testbeds.",
+            detail=f"Upazila '{upazila_id}' not found or outside active testbeds and national registry.",
         )
 
     if not crop.strip() or not stage.strip():
@@ -41,6 +43,8 @@ def get_upazila_advisories(
         upazila_id=canonical_id,
         crop=crop,
         stage=stage,
+        start_date=start_date,
+        end_date=end_date,
     )
     if not result:
         raise HTTPException(
@@ -65,16 +69,18 @@ def evaluate_custom_advisories(
 ) -> AdvisoryResponse:
     """Evaluate advisory rules for a custom scenario."""
     canonical_id = repo.resolve_upazila_id(payload.upazila_id)
-    if not repo.is_pilot_upazila(canonical_id):
+    if not repo.is_known_upazila(canonical_id):
         raise HTTPException(
             status_code=404,
-            detail=f"Upazila '{payload.upazila_id}' not found or outside active pilot testbeds.",
+            detail=f"Upazila '{payload.upazila_id}' not found or outside active testbeds and national registry.",
         )
 
     result = repo.evaluate_advisories(
         upazila_id=canonical_id,
         crop=payload.crop_name,
         stage=payload.growth_stage,
+        start_date=payload.start_date,
+        end_date=payload.end_date,
         custom_inputs=payload.inputs,
         data_timestamp_utc=payload.data_timestamp_utc,
         ensemble_spread_pct=payload.ensemble_spread_pct,

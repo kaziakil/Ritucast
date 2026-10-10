@@ -1,6 +1,7 @@
 """Weather feed endpoint exposing Tier 1 sensor observations and Tier 3 NWP forecasts."""
 
-from fastapi import APIRouter, Depends, HTTPException, Path
+from typing import Optional
+from fastapi import APIRouter, Depends, HTTPException, Path, Query
 from api.dependencies import get_repository
 from api.data_access.repository import AgriculturalDataRepository
 from api.schemas.indicators import WeatherFeedResponse
@@ -19,10 +20,12 @@ router = APIRouter(prefix="/api/v1/upazilas", tags=["Weather Observations & Fore
 )
 def get_upazila_weather(
     upazila_id: str = Path(..., description="Target Upazila code (e.g. BD-50-20-30 or shorthand BD-50-28)"),
+    start_date: Optional[str] = Query(None, description="Start date for custom analysis window (YYYY-MM-DD)"),
+    end_date: Optional[str] = Query(None, description="End date for custom analysis window (YYYY-MM-DD)"),
     repo: AgriculturalDataRepository = Depends(get_repository),
 ) -> WeatherFeedResponse:
     """Fetch weather observation and forecast feed."""
-    feed = repo.get_weather_feed(upazila_id)
+    feed = repo.get_weather_feed(upazila_id, start_date=start_date, end_date=end_date)
     if not feed:
         raise HTTPException(
             status_code=404,

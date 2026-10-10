@@ -82,6 +82,30 @@ class AgriculturalDataRepository:
         self.sample_dir = Path(sample_dir) if sample_dir is not None else settings.SAMPLE_DIR
         self.recommendation_engine = AgriculturalRecommendationEngine()
         self._cache: Dict[str, Any] = {}
+        
+        # Load administrative boundary hierarchy (8 divisions, 64 districts, 495 upazilas)
+        self.hierarchy_data: Dict[str, Any] = {}
+        self.upazilas_flat: Dict[str, Any] = {}
+        self.districts_flat: Dict[str, Any] = {}
+        hierarchy_file = Path("/Users/kazi/Projects/RITUCAST/data/processed/bangladesh_admin_hierarchy.json")
+        if hierarchy_file.exists():
+            try:
+                with open(hierarchy_file, "r", encoding="utf-8") as f:
+                    self.hierarchy_data = json.load(f)
+                    self.upazilas_flat = self.hierarchy_data.get("upazilas_flat", {})
+                    self.districts_flat = self.hierarchy_data.get("districts_flat", {})
+            except Exception:
+                pass
+
+        # Load expanded crops catalog (24 crops across 7 categories)
+        self.crops_catalog: List[Dict[str, Any]] = []
+        crops_file = Path("/Users/kazi/Projects/RITUCAST/data/processed/crops_catalog.json")
+        if crops_file.exists():
+            try:
+                with open(crops_file, "r", encoding="utf-8") as f:
+                    self.crops_catalog = json.load(f)
+            except Exception:
+                pass
 
     def resolve_upazila_id(self, upazila_id: str) -> str:
         """Resolve shorthand or alias ID to canonical BBS Upazila code."""
@@ -93,49 +117,136 @@ class AgriculturalDataRepository:
         canonical_id = self.resolve_upazila_id(upazila_id)
         return canonical_id in self.PILOT_UPAZILAS_META
 
-    def get_all_upazilas(self) -> List[UpazilaSummary]:
-        """Return list of authorized pilot Upazilas."""
+    def is_known_upazila(self, upazila_id: str) -> bool:
+        """Check if Upazila ID belongs to pilot testbeds or national administrative registry."""
+        canonical_id = self.resolve_upazila_id(upazila_id)
+        return canonical_id in self.PILOT_UPAZILAS_META or canonical_id in self.upazilas_flat
+
+    def get_all_upazilas(self, include_all: bool = False) -> List[UpazilaSummary]:
+        """Return list of Upazilas. If include_all is False, returns the 4 pilot testbeds."""
+        if not include_all:
+            summaries = []
+            for uid, meta in self.PILOT_UPAZILAS_META.items():
+                summaries.append(
+                    UpazilaSummary(
+                        upazila_id=uid,
+                        name_en=meta["name_en"],
+                        name_bn=meta["name_bn"],
+                        district_name=meta["district_name"],
+                        division_name=meta["division_name"],
+                        aez_code=meta["aez_code"],
+                        aez_name=meta["aez_name"],
+                        centroid=CentroidCoord(lat=meta["centroid"]["lat"], lon=meta["centroid"]["lon"]),
+                        primary_risk=meta["primary_risk"],
+                        is_pilot=True,
+                    )
+                )
+            return summaries
+
+        # Full national registry (495 upazilas)
         summaries = []
-        for uid, meta in self.PILOT_UPAZILAS_META.items():
+        for uid, u in self.upazilas_flat.items():
+            is_pilot = uid in self.PILOT_UPAZILAS_META
             summaries.append(
                 UpazilaSummary(
                     upazila_id=uid,
-                    name_en=meta["name_en"],
-                    name_bn=meta["name_bn"],
-                    district_name=meta["district_name"],
-                    division_name=meta["division_name"],
-                    aez_code=meta["aez_code"],
-                    aez_name=meta["aez_name"],
-                    centroid=CentroidCoord(lat=meta["centroid"]["lat"], lon=meta["centroid"]["lon"]),
-                    primary_risk=meta["primary_risk"],
+                    name_en=u["name_en"],
+                    name_bn=u["name_bn"],
+                    district_id=u.get("district_id"),
+                    district_name=u.get("district_name_en", ""),
+                    district_name_bn=u.get("district_name_bn"),
+                    division_id=u.get("division_id"),
+                    division_name=u.get("division_name_en", ""),
+                    division_name_bn=u.get("division_name_bn"),
+                    aez_code=u.get("aez_code", 0),
+                    aez_name=u.get("aez_name", ""),
+                    centroid=CentroidCoord(lat=u["centroid"]["lat"], lon=u["centroid"]["lon"]),
+                    primary_risk=u.get("primary_risk", "DROUGHT_IRRIGATION"),
+                    is_pilot=is_pilot,
                 )
             )
         return summaries
 
-    def get_upazila_detail(self, upazila_id: str) -> Optional[UpazilaDetail]:
-        """Return detailed metadata for a single Upazila."""
-        canonical_id = self.resolve_upazila_id(upazila_id)
-        if canonical_id not in self.PILOT_UPAZILAS_META:
-            return None
+    def get_geo_hierarchy(self) -> Dict[str, Any]:
+        """Return full administrative hierarchy (8 Divisions -> 64 Districts -> 495 Upazilas)."""
+        return self.hierarchy_data
 
-        meta = self.PILOT_UPAZILAS_META[canonical_id]
-        return UpazilaDetail(
-            upazila_id=canonical_id,
-            name_en=meta["name_en"],
-            name_bn=meta["name_bn"],
-            district_name=meta["district_name"],
-            division_name=meta["division_name"],
-            aez_code=meta["aez_code"],
-            aez_name=meta["aez_name"],
-            centroid=CentroidCoord(lat=meta["centroid"]["lat"], lon=meta["centroid"]["lon"]),
-            primary_risk=meta["primary_risk"],
-            area_sq_km=meta.get("area_sq_km"),
-            calibrated_crops=meta.get("calibrated_crops", []),
-            geometry_type="Polygon",
-        )
+    def get_divisions(self) -> List[Dict[str, Any]]:
+        """Return list of all 8 administrative divisions."""
+        divisions = []
+        for div in self.hierarchy_data.get("divisions", []):
+            divisions.append({
+                "division_id": div["division_id"],
+                "name_en": div["name_en"],
+                "name_bn": div["name_bn"],
+                "district_count": len(div.get("districts", [])),
+                "upazila_count": sum(len(d.get("upazilas", [])) for d in div.get("districts", [])),
+            })
+        return divisions
+
+    def get_districts(self, division_id: Optional[str] = None) -> List[Dict[str, Any]]:
+        """Return list of districts, optionally filtered by division_id."""
+        districts = []
+        for dist_id, dist in self.districts_flat.items():
+            if division_id and dist.get("division_id") != division_id:
+                continue
+            districts.append(dist)
+        return districts
+
+    def get_upazilas_by_district(self, district_id: str) -> List[Dict[str, Any]]:
+        """Return upazilas belonging to a specific district."""
+        return [u for u in self.upazilas_flat.values() if u.get("district_id") == district_id]
+
+    def get_upazila_detail(self, upazila_id: str) -> Optional[UpazilaDetail]:
+        """Return detailed metadata for an Upazila (pilot or national registry)."""
+        canonical_id = self.resolve_upazila_id(upazila_id)
+        if canonical_id in self.PILOT_UPAZILAS_META:
+            meta = self.PILOT_UPAZILAS_META[canonical_id]
+            return UpazilaDetail(
+                upazila_id=canonical_id,
+                name_en=meta["name_en"],
+                name_bn=meta["name_bn"],
+                district_name=meta["district_name"],
+                division_name=meta["division_name"],
+                aez_code=meta["aez_code"],
+                aez_name=meta["aez_name"],
+                centroid=CentroidCoord(lat=meta["centroid"]["lat"], lon=meta["centroid"]["lon"]),
+                primary_risk=meta["primary_risk"],
+                area_sq_km=meta.get("area_sq_km"),
+                calibrated_crops=meta.get("calibrated_crops", []),
+                geometry_type="Polygon",
+                is_pilot=True,
+            )
+
+        if canonical_id in self.upazilas_flat:
+            u = self.upazilas_flat[canonical_id]
+            return UpazilaDetail(
+                upazila_id=canonical_id,
+                name_en=u["name_en"],
+                name_bn=u["name_bn"],
+                district_id=u.get("district_id"),
+                district_name=u.get("district_name_en", ""),
+                district_name_bn=u.get("district_name_bn"),
+                division_id=u.get("division_id"),
+                division_name=u.get("division_name_en", ""),
+                division_name_bn=u.get("division_name_bn"),
+                aez_code=u.get("aez_code", 0),
+                aez_name=u.get("aez_name", ""),
+                centroid=CentroidCoord(lat=u["centroid"]["lat"], lon=u["centroid"]["lon"]),
+                primary_risk=u.get("primary_risk", "DROUGHT_IRRIGATION"),
+                area_sq_km=None,
+                calibrated_crops=["Boro Rice", "T. Aman Rice", "Aus Rice", "Wheat", "Maize", "Potato", "Lentil", "Mustard"],
+                geometry_type="Polygon",
+                is_pilot=False,
+            )
+
+        return None
 
     def get_crops(self) -> List[CropInfo]:
-        """Return calibrated crops catalog."""
+        """Return crops catalog supporting all 24 calibrated and supported agricultural crops."""
+        if self.crops_catalog:
+            return [CropInfo(**c) for c in self.crops_catalog]
+
         return [
             CropInfo(
                 crop_id="boro_rice",
@@ -211,19 +322,24 @@ class AgriculturalDataRepository:
         self._cache[cache_key] = df
         return df
 
-    def get_weather_feed(self, upazila_id: str) -> Optional[Dict[str, Any]]:
+    def get_weather_feed(
+        self,
+        upazila_id: str,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+    ) -> Optional[Dict[str, Any]]:
         """Construct Tier 1 observations and Tier 3 forecasts for an Upazila."""
         canonical_id = self.resolve_upazila_id(upazila_id)
-        if not self.is_pilot_upazila(canonical_id):
+        if not self.is_known_upazila(canonical_id):
             return None
 
-        meta = self.PILOT_UPAZILAS_META[canonical_id]
+        meta = self.PILOT_UPAZILAS_META.get(canonical_id) or self.upazilas_flat.get(canonical_id, {})
         df_met = self.load_parquet_table("meteorology_daily_upazila.parquet")
         df_fcst = self.load_parquet_table("forecast_hourly_pilot.parquet")
 
         # Tier 1 observations
         yesterday_obs = {
-            "date": "2026-03-15",
+            "date": end_date or "2026-03-15",
             "temp_max_c": 32.4,
             "temp_min_c": 21.0,
             "solar_radiation_mj_m2": 21.5,
@@ -270,8 +386,14 @@ class AgriculturalDataRepository:
 
         return {
             "upazila_id": canonical_id,
-            "name_bn": meta["name_bn"],
+            "name_bn": meta.get("name_bn", ""),
             "timezone": "Asia/Dhaka",
+            "analysis_period": {
+                "start_date": start_date or "2026-10-03",
+                "end_date": end_date or "2026-10-09",
+                "reporting_latency_note_bn": "কৃষি আবহাওয়া ও স্যাটেলাইট উপাত্ত ২৪-৪৮ ঘণ্টা প্রক্রিয়াকরণ বিলম্বযুক্ত; বিগত ৭টি পূর্ণাঙ্গ দিনের রেকর্ড সংযুক্ত।",
+                "reporting_latency_note_en": "Gridded meteorological and satellite data have a 24-48h processing latency; reporting covers completed 7-day period.",
+            },
             "tier_1_observations": {
                 "source": "NASA POWER / BMD Gridded",
                 "updated_at_bst": "2026-03-15T09:00:00+06:00",
@@ -285,16 +407,23 @@ class AgriculturalDataRepository:
             },
         }
 
-    def get_water_balance(self, upazila_id: str, crop: str, stage: str) -> Optional[Dict[str, Any]]:
+    def get_water_balance(
+        self,
+        upazila_id: str,
+        crop: str,
+        stage: str,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+    ) -> Optional[Dict[str, Any]]:
         """Calculate and return Tier 2 water balance indicators."""
         canonical_id = self.resolve_upazila_id(upazila_id)
-        if not self.is_pilot_upazila(canonical_id):
+        if not self.is_known_upazila(canonical_id):
             return None
 
         # Execute Phase 9 algorithms
         et0_res = PenmanMonteithCalculator.calculate_et0(
             upazila_id=canonical_id,
-            date_str="2026-03-15",
+            date_str=end_date or "2026-03-15",
             t_max_c=32.4,
             t_min_c=21.0,
             rh_mean_pct=58.0,
@@ -304,7 +433,7 @@ class AgriculturalDataRepository:
 
         etc_res = CropWaterDemandCalculator.calculate_etc(
             upazila_id=canonical_id,
-            date_str="2026-03-15",
+            date_str=end_date or "2026-03-15",
             et0_mm_day=et0_res.et0_mm_day,
             crop_name=crop,
             growth_stage=stage,
@@ -312,7 +441,7 @@ class AgriculturalDataRepository:
 
         swd_res = SoilWaterDeficitCalculator.step_daily_water_balance(
             upazila_id=canonical_id,
-            date_str="2026-03-15",
+            date_str=end_date or "2026-03-15",
             d_prev_mm=12.0,
             etc_mm=etc_res.etc_mm_day,
             precip_mm=0.0,
@@ -437,6 +566,8 @@ class AgriculturalDataRepository:
         upazila_id: str,
         crop: str,
         stage: str,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
         custom_inputs: Optional[Dict[str, Any]] = None,
         data_timestamp_utc: Optional[str] = None,
         ensemble_spread_pct: Optional[float] = None,
@@ -444,10 +575,10 @@ class AgriculturalDataRepository:
     ) -> Optional[Dict[str, Any]]:
         """Evaluate Phase 9 advisory rules and build 4-tier decision support envelope."""
         canonical_id = self.resolve_upazila_id(upazila_id)
-        if not self.is_pilot_upazila(canonical_id):
+        if not self.is_known_upazila(canonical_id):
             return None
 
-        meta = self.PILOT_UPAZILAS_META[canonical_id]
+        meta = self.PILOT_UPAZILAS_META.get(canonical_id) or self.upazilas_flat.get(canonical_id, {})
         
         # Normalize crop name for Phase 9 ContextGator (accepts 'Boro Rice', 'BORO', etc.)
         crop_clean = crop.strip().replace("_", " ")
@@ -626,12 +757,19 @@ class AgriculturalDataRepository:
 
         return {
             "upazila_id": canonical_id,
-            "upazila_name_bn": meta["name_bn"],
+            "upazila_name_bn": meta.get("name_bn", ""),
             "crop_id": crop_id,
             "crop_name_bn": crop_bn,
             "growth_stage": growth_stage,
             "growth_stage_bn": growth_stage_bn,
             "generated_at_bst": "2026-10-10T14:30:00+06:00",
+            "analysis_period": {
+                "start_date": start_date or "2026-10-03",
+                "end_date": end_date or "2026-10-09",
+                "period_days": 7,
+                "reporting_latency_note_bn": "কৃষি আবহাওয়া ও স্যাটেলাইট উপাত্ত ২৪-৪৮ ঘণ্টা প্রক্রিয়াকরণ বিলম্বযুক্ত; বিগত ৭টি পূর্ণাঙ্গ দিনের পর্যবেক্ষণ অন্তর্ভুক্ত।",
+                "reporting_latency_note_en": "Gridded meteorological and satellite data have a 24-48h processing latency; reporting covers completed 7-day period.",
+            },
             "tier_1_observations": tier_1,
             "tier_2_indicators": tier_2,
             "tier_3_predictions": tier_3,

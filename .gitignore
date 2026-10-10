@@ -46,7 +46,9 @@ yarn-error.log*
 
 # Large geospatial and satellite datasets (Do not track in git)
 data/raw/
-data/processed/
+data/processed/*
+!data/processed/bangladesh_admin_hierarchy.json
+!data/processed/crops_catalog.json
 data/interim/
 data/cache/
 *.nc

@@ -70,8 +70,25 @@ export const apiClient = {
     return request<ReadinessResponse>('/ready')
   },
 
-  getUpazilas: async (): Promise<UpazilaSummary[]> => {
-    const res = await request<{ status: string; count: number; data: UpazilaSummary[] }>('/api/v1/upazilas')
+  getUpazilas: async (all: boolean = false): Promise<UpazilaSummary[]> => {
+    const endpoint = all ? '/api/v1/upazilas?all=true' : '/api/v1/upazilas'
+    const res = await request<{ status: string; count: number; data: UpazilaSummary[] }>(endpoint)
+    return res.data
+  },
+
+  getGeoHierarchy: async (): Promise<any> => {
+    const res = await request<{ status: string; data: any }>('/api/v1/geo/hierarchy')
+    return res.data
+  },
+
+  getDivisions: async (): Promise<any[]> => {
+    const res = await request<{ status: string; count: number; data: any[] }>('/api/v1/geo/divisions')
+    return res.data
+  },
+
+  getDistricts: async (divisionId?: string): Promise<any[]> => {
+    const url = divisionId ? `/api/v1/geo/districts?division_id=${divisionId}` : '/api/v1/geo/districts'
+    const res = await request<{ status: string; count: number; data: any[] }>(url)
     return res.data
   },
 
@@ -90,12 +107,24 @@ export const apiClient = {
     return res.data
   },
 
-  getWeather: async (upazilaId: string): Promise<WeatherFeedResponse> => {
-    return request<WeatherFeedResponse>(`/api/v1/upazilas/${upazilaId}/weather`)
+  getWeather: async (upazilaId: string, startDate?: string, endDate?: string): Promise<WeatherFeedResponse> => {
+    const params = new URLSearchParams()
+    if (startDate) params.append('start_date', startDate)
+    if (endDate) params.append('end_date', endDate)
+    const qs = params.toString() ? `?${params.toString()}` : ''
+    return request<WeatherFeedResponse>(`/api/v1/upazilas/${upazilaId}/weather${qs}`)
   },
 
-  getWaterBalance: async (upazilaId: string, crop: string, stage: string): Promise<WaterBalanceResponse> => {
+  getWaterBalance: async (
+    upazilaId: string,
+    crop: string,
+    stage: string,
+    startDate?: string,
+    endDate?: string
+  ): Promise<WaterBalanceResponse> => {
     const params = new URLSearchParams({ crop, stage })
+    if (startDate) params.append('start_date', startDate)
+    if (endDate) params.append('end_date', endDate)
     return request<WaterBalanceResponse>(`/api/v1/upazilas/${upazilaId}/water-balance?${params.toString()}`)
   },
 
@@ -103,8 +132,16 @@ export const apiClient = {
     return request<FloodHazardResponse>(`/api/v1/upazilas/${upazilaId}/flood-hazard`)
   },
 
-  getAdvisories: async (upazilaId: string, crop: string, stage: string): Promise<AdvisoryResponse> => {
+  getAdvisories: async (
+    upazilaId: string,
+    crop: string,
+    stage: string,
+    startDate?: string,
+    endDate?: string
+  ): Promise<AdvisoryResponse> => {
     const params = new URLSearchParams({ crop, stage })
+    if (startDate) params.append('start_date', startDate)
+    if (endDate) params.append('end_date', endDate)
     return request<AdvisoryResponse>(`/api/v1/upazilas/${upazilaId}/advisories?${params.toString()}`)
   },
 

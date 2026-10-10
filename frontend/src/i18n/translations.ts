@@ -39,8 +39,45 @@ export interface TranslationDictionary {
 
   // Context Selector
   context_section_label: string
+  division_label: string
+  district_label: string
   upazila_label: string
+  upazila_field_label: string
+  search_placeholder: string
+  all_divisions: string
+  select_division: string
+  select_district: string
+  select_upazila: string
+  search_filter_active: string
+  clear_search: string
+  pilot_badge: string
+  national_badge: string
+  upazila_count_suffix: string
   crop_label: string
+  crop_calibrated_badge: string
+  crop_regional_badge: string
+  crop_category_all: string
+  crop_category_cereals: string
+  crop_category_cash: string
+  crop_category_tubers: string
+  crop_category_pulses: string
+  crop_category_oilseeds: string
+  crop_category_vegetables: string
+  crop_category_fruits: string
+  date_range_label: string
+  start_date_label: string
+  end_date_label: string
+  date_preset_7d: string
+  date_preset_14d: string
+  date_preset_30d: string
+  date_default_notice: string
+  date_latency_notice: string
+  date_err_start_after_end: string
+  date_err_future: string
+  planting_date_label: string
+  planting_date_hint: string
+  growth_stage_manual: string
+  growth_stage_derived: string
   stage_label: string
   refresh_btn: string
   refresh_loading: string
@@ -190,8 +227,45 @@ export const translations: Record<Language, TranslationDictionary> = {
 
     // Context Selector
     context_section_label: 'Context Selection',
+    division_label: 'বিভাগ:',
+    district_label: 'জেলা:',
     upazila_label: 'উপজেলা (পাইলট অঞ্চল):',
+    upazila_field_label: 'উপজেলা:',
+    search_placeholder: 'উপজেলা বা জেলা অনুসন্ধান করুন...',
+    all_divisions: 'সকল বিভাগ (৮টি)',
+    select_division: 'বিভাগ নির্বাচন করুন',
+    select_district: 'জেলা নির্বাচন করুন',
+    select_upazila: 'উপজেলা নির্বাচন করুন',
+    search_filter_active: 'অনুসন্ধানের ফলাফল',
+    clear_search: 'মুছুন',
+    pilot_badge: 'পাইলট টেস্টবেড',
+    national_badge: 'জাতীয় কভারেজ',
+    upazila_count_suffix: 'টি উপজেলা',
     crop_label: 'ফসল (ক্যালিব্রেটেড):',
+    crop_calibrated_badge: 'পূর্ণাঙ্গ ক্যালিব্রেশন',
+    crop_regional_badge: 'আঞ্চলিক সহায়তা',
+    crop_category_all: 'সকল ফসল',
+    crop_category_cereals: 'দানাশস্য',
+    crop_category_cash: 'অর্থকরী ফসল',
+    crop_category_tubers: 'কন্দজাতীয় ফসল',
+    crop_category_pulses: 'ডাল ফসল',
+    crop_category_oilseeds: 'তৈলবীজ',
+    crop_category_vegetables: 'শাকসবজি',
+    crop_category_fruits: 'ফলমূল',
+    date_range_label: 'বিশ্লেষণ সময়কাল (কাস্টম তারিখ সীমা):',
+    start_date_label: 'শুরুর তারিখ:',
+    end_date_label: 'শেষের তারিখ:',
+    date_preset_7d: 'বিগত ৭ দিন (ডিফল্ট)',
+    date_preset_14d: 'বিগত ১৪ দিন',
+    date_preset_30d: 'বিগত ৩০ দিন',
+    date_default_notice: 'আজকের দিন বাদ দিয়ে বিগত ৭টি পূর্ণাঙ্গ দিনের রেকর্ড ডিফল্ট হিসেবে ধার্য।',
+    date_latency_notice: 'স্যাটেলাইট বৃষ্টিপাত ও কৃষি আবহাওয়া উপাত্ত ২৪-৪৮ ঘণ্টা প্রক্রিয়াকরণ বিলম্বযুক্ত; বিগত পূর্ণাঙ্গ দিনের পর্যবেক্ষণ প্রদর্শিত হচ্ছে।',
+    date_err_start_after_end: 'শুরুর তারিখ শেষের তারিখের চেয়ে পরবর্তী হতে পারবে না।',
+    date_err_future: 'আজ বা ভবিষ্যতের তারিখ নির্বাচন করা যাবে না (কেবল বিগত পূর্ণাঙ্গ দিন প্রযোজ্য)।',
+    planting_date_label: 'বপন / রোপণের তারিখ (ঐচ্ছিক):',
+    planting_date_hint: 'বপনের তারিখ দিলে বৃদ্ধির পর্যায় স্বয়ংক্রিয়ভাবে হিসাব করা হবে।',
+    growth_stage_manual: 'সরাসরি পর্যায় নির্বাচন',
+    growth_stage_derived: 'রোপণ তারিখ থেকে অনুমিত',
     stage_label: 'ফসলের বৃদ্ধির বর্তমান পর্যায় (DEC-17):',
     refresh_btn: 'বিশ্লেষণ হালনাগাদ',
     refresh_loading: 'লোড হচ্ছে...',
@@ -345,8 +419,45 @@ export const translations: Record<Language, TranslationDictionary> = {
 
     // Context Selector
     context_section_label: 'Context Selection',
+    division_label: 'Division:',
+    district_label: 'District:',
     upazila_label: 'Upazila (Pilot Region):',
+    upazila_field_label: 'Upazila:',
+    search_placeholder: 'Search Upazila or District...',
+    all_divisions: 'All Divisions (8)',
+    select_division: 'Select Division',
+    select_district: 'Select District',
+    select_upazila: 'Select Upazila',
+    search_filter_active: 'Search Results',
+    clear_search: 'Clear',
+    pilot_badge: 'Pilot Testbed',
+    national_badge: 'National Coverage',
+    upazila_count_suffix: 'Upazilas',
     crop_label: 'Active Crop (Calibrated):',
+    crop_calibrated_badge: 'Full Calibration',
+    crop_regional_badge: 'Regional Support',
+    crop_category_all: 'All Crops',
+    crop_category_cereals: 'Cereals & Grains',
+    crop_category_cash: 'Cash Crops',
+    crop_category_tubers: 'Tubers & Roots',
+    crop_category_pulses: 'Pulses & Legumes',
+    crop_category_oilseeds: 'Oilseeds',
+    crop_category_vegetables: 'Vegetables',
+    crop_category_fruits: 'Fruits',
+    date_range_label: 'Analysis Time Window (Custom Date Range):',
+    start_date_label: 'Start Date:',
+    end_date_label: 'End Date:',
+    date_preset_7d: 'Previous 7 Days (Default)',
+    date_preset_14d: 'Previous 14 Days',
+    date_preset_30d: 'Previous 30 Days',
+    date_default_notice: 'Defaults to previous seven complete days, excluding today.',
+    date_latency_notice: 'Satellite and gridded meteorological datasets have a 24-48h processing latency; reporting reflects completed days.',
+    date_err_start_after_end: 'Start date cannot be after end date.',
+    date_err_future: 'Future or current dates cannot be selected (historical complete days only).',
+    planting_date_label: 'Planting / Sowing Date (Optional):',
+    planting_date_hint: 'Growth stage will be automatically estimated from planting date.',
+    growth_stage_manual: 'Manual Stage Selection',
+    growth_stage_derived: 'Derived from Planting Date',
     stage_label: 'Crop Growth Stage (DEC-17):',
     refresh_btn: 'Refresh Analysis',
     refresh_loading: 'Loading...',

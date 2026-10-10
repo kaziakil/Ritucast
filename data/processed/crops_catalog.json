@@ -1,0 +1,503 @@
+[
+  {
+    "crop_id": "boro_rice",
+    "name_en": "Boro Rice",
+    "name_bn": "বোরো ধান",
+    "category": "cereals",
+    "category_en": "Cereals & Grains",
+    "category_bn": "দানাশস্য",
+    "scientific_name": "Oryza sativa L.",
+    "typical_duration_days": 145,
+    "calibration_status": "PILOT_CALIBRATED",
+    "primary_season": "Rabi (Winter)",
+    "kc_mid": 1.2,
+    "supported_stages": [
+      "Transplanting",
+      "Tillering",
+      "Panicle Initiation",
+      "Booting",
+      "Flowering",
+      "Milking",
+      "Dough",
+      "Maturity"
+    ],
+    "analytical_support_description": "Full calibration: Daily FAO-56 evapotranspiration, AWD safe drying thresholds, water deficit tracking, and extreme temperature alert rules."
+  },
+  {
+    "crop_id": "aman_rice",
+    "name_en": "T. Aman Rice",
+    "name_bn": "রোপা আমন ধান",
+    "category": "cereals",
+    "category_en": "Cereals & Grains",
+    "category_bn": "দানাশস্য",
+    "scientific_name": "Oryza sativa L.",
+    "typical_duration_days": 135,
+    "calibration_status": "FULL_CALIBRATION",
+    "primary_season": "Kharif-II (Monsoon)",
+    "kc_mid": 1.15,
+    "supported_stages": [
+      "Seedbed",
+      "Transplanting",
+      "Tillering",
+      "Panicle Initiation",
+      "Booting",
+      "Flowering",
+      "Dough",
+      "Maturity"
+    ],
+    "analytical_support_description": "Full calibration: Monsoon water balance, supplemental irrigation advisory, flood submergence monitoring, and terminal drought risk."
+  },
+  {
+    "crop_id": "aus_rice",
+    "name_en": "Aus Rice",
+    "name_bn": "আউশ ধান",
+    "category": "cereals",
+    "category_en": "Cereals & Grains",
+    "category_bn": "দানাশস্য",
+    "scientific_name": "Oryza sativa L.",
+    "typical_duration_days": 110,
+    "calibration_status": "FULL_CALIBRATION",
+    "primary_season": "Kharif-I (Pre-monsoon)",
+    "kc_mid": 1.1,
+    "supported_stages": [
+      "Sowing",
+      "Seedling",
+      "Tillering",
+      "Panicle Initiation",
+      "Flowering",
+      "Dough",
+      "Maturity"
+    ],
+    "analytical_support_description": "Full calibration: Pre-monsoon rainfall utilization, moisture deficit monitoring, and heat stress advisory."
+  },
+  {
+    "crop_id": "wheat",
+    "name_en": "Wheat",
+    "name_bn": "গম",
+    "category": "cereals",
+    "category_en": "Cereals & Grains",
+    "category_bn": "দানাশস্য",
+    "scientific_name": "Triticum aestivum L.",
+    "typical_duration_days": 110,
+    "calibration_status": "FULL_CALIBRATION",
+    "primary_season": "Rabi (Winter)",
+    "kc_mid": 1.15,
+    "supported_stages": [
+      "Crown Root Initiation",
+      "Tillering",
+      "Jointing",
+      "Flowering",
+      "Milking",
+      "Maturity"
+    ],
+    "analytical_support_description": "Full calibration: Critical irrigation stages (CRI, flowering), terminal heat stress forecasting, and soil moisture depletion accounting."
+  },
+  {
+    "crop_id": "maize",
+    "name_en": "Maize",
+    "name_bn": "ভুট্টা",
+    "category": "cereals",
+    "category_en": "Cereals & Grains",
+    "category_bn": "দানাশস্য",
+    "scientific_name": "Zea mays L.",
+    "typical_duration_days": 135,
+    "calibration_status": "FULL_CALIBRATION",
+    "primary_season": "Rabi / Kharif",
+    "kc_mid": 1.2,
+    "supported_stages": [
+      "Emergence",
+      "Knee-high",
+      "Tasseling",
+      "Silking",
+      "Grain Filling",
+      "Maturity"
+    ],
+    "analytical_support_description": "Full calibration: Deep root-zone water balance (0.8m), drought sensitivity at silking, and rainfall logging advisory."
+  },
+  {
+    "crop_id": "jute",
+    "name_en": "Jute (Toshas/Deshi)",
+    "name_bn": "পাট",
+    "category": "cash_crops",
+    "category_en": "Cash & Fiber Crops",
+    "category_bn": "অর্থকরী ফসল",
+    "scientific_name": "Corchorus olitorius / capsularis",
+    "typical_duration_days": 120,
+    "calibration_status": "FULL_CALIBRATION",
+    "primary_season": "Kharif-I",
+    "kc_mid": 1.1,
+    "supported_stages": [
+      "Germination",
+      "Vegetative",
+      "Rapid Growth",
+      "Pod Formation",
+      "Harvesting / Retting"
+    ],
+    "analytical_support_description": "Full calibration: Pre-monsoon soil moisture, standing waterlogging tolerance, and retting water availability forecasting."
+  },
+  {
+    "crop_id": "potato",
+    "name_en": "Potato",
+    "name_bn": "আলু",
+    "category": "tubers",
+    "category_en": "Tubers & Roots",
+    "category_bn": "কন্দাল ফসল",
+    "scientific_name": "Solanum tuberosum L.",
+    "typical_duration_days": 90,
+    "calibration_status": "FULL_CALIBRATION",
+    "primary_season": "Rabi (Winter)",
+    "kc_mid": 1.15,
+    "supported_stages": [
+      "Sprouting",
+      "Vegetative",
+      "Tuber Initiation",
+      "Tuber Bulking",
+      "Maturity"
+    ],
+    "analytical_support_description": "Full calibration: Shallow root moisture accounting (0.5m), Late Blight agro-climatic favorable condition indexing (RH > 85%, temp 15-22°C), and irrigation cut-off."
+  },
+  {
+    "crop_id": "sweet_potato",
+    "name_en": "Sweet Potato",
+    "name_bn": "মিষ্টি আলু",
+    "category": "tubers",
+    "category_en": "Tubers & Roots",
+    "category_bn": "কন্দাল ফসল",
+    "scientific_name": "Ipomoea batatas",
+    "typical_duration_days": 130,
+    "calibration_status": "REGIONAL_SUPPORT",
+    "primary_season": "Rabi",
+    "kc_mid": 1.0,
+    "supported_stages": [
+      "Planting",
+      "Vine Growth",
+      "Tuber Formation",
+      "Harvesting"
+    ],
+    "analytical_support_description": "Regional support: Char and coastal silt-loam water balance, drought tolerance indicator, and weather forecast integration."
+  },
+  {
+    "crop_id": "lentil",
+    "name_en": "Lentil (Masur)",
+    "name_bn": "মসুর ডাল",
+    "category": "pulses",
+    "category_en": "Pulses & Legumes",
+    "category_bn": "ডাল ফসল",
+    "scientific_name": "Lens culinaris",
+    "typical_duration_days": 105,
+    "calibration_status": "FULL_CALIBRATION",
+    "primary_season": "Rabi (Winter)",
+    "kc_mid": 1.05,
+    "supported_stages": [
+      "Seedling",
+      "Vegetative",
+      "Flowering",
+      "Pod Development",
+      "Maturity"
+    ],
+    "analytical_support_description": "Full calibration: Soil water deficit tracking, extreme sensitivity to sudden winter showers/waterlogging, and Stemphylium blight weather warnings."
+  },
+  {
+    "crop_id": "mungbean",
+    "name_en": "Mungbean (Moog)",
+    "name_bn": "মুগ ডাল",
+    "category": "pulses",
+    "category_en": "Pulses & Legumes",
+    "category_bn": "ডাল ফসল",
+    "scientific_name": "Vigna radiata",
+    "typical_duration_days": 65,
+    "calibration_status": "FULL_CALIBRATION",
+    "primary_season": "Late Rabi / Kharif-I",
+    "kc_mid": 1.0,
+    "supported_stages": [
+      "Vegetative",
+      "Flowering",
+      "Podding",
+      "Maturity"
+    ],
+    "analytical_support_description": "Full calibration: Short-duration water balance, pre-monsoon storm rain damage risk, and pod-filling moisture advisory."
+  },
+  {
+    "crop_id": "chickpea",
+    "name_en": "Chickpea (Chhola)",
+    "name_bn": "ছোলা",
+    "category": "pulses",
+    "category_en": "Pulses & Legumes",
+    "category_bn": "ডাল ফসল",
+    "scientific_name": "Cicer arietinum",
+    "typical_duration_days": 120,
+    "calibration_status": "REGIONAL_SUPPORT",
+    "primary_season": "Rabi",
+    "kc_mid": 0.95,
+    "supported_stages": [
+      "Vegetative",
+      "Flowering",
+      "Podding",
+      "Maturity"
+    ],
+    "analytical_support_description": "Regional support: High Barind residual moisture assessment, Botrytis gray mold weather indices, and pod borer temperature tracking."
+  },
+  {
+    "crop_id": "blackgram",
+    "name_en": "Blackgram (Mashkalai)",
+    "name_bn": "মাষকলাই",
+    "category": "pulses",
+    "category_en": "Pulses & Legumes",
+    "category_bn": "ডাল ফসল",
+    "scientific_name": "Vigna mungo",
+    "typical_duration_days": 75,
+    "calibration_status": "REGIONAL_SUPPORT",
+    "primary_season": "Late Kharif-II",
+    "kc_mid": 1.0,
+    "supported_stages": [
+      "Vegetative",
+      "Flowering",
+      "Podding",
+      "Maturity"
+    ],
+    "analytical_support_description": "Regional support: Post-monsoon residual moisture evaluation, char land agro-meteorology, and pod maturity advisory."
+  },
+  {
+    "crop_id": "mustard",
+    "name_en": "Mustard (Sarisha)",
+    "name_bn": "সরিষা",
+    "category": "oilseeds",
+    "category_en": "Oilseeds",
+    "category_bn": "তৈলবীজ",
+    "scientific_name": "Brassica napus / rapa",
+    "typical_duration_days": 80,
+    "calibration_status": "FULL_CALIBRATION",
+    "primary_season": "Rabi (Winter)",
+    "kc_mid": 1.1,
+    "supported_stages": [
+      "Vegetative",
+      "Flowering",
+      "Siliqua Development",
+      "Maturity"
+    ],
+    "analytical_support_description": "Full calibration: Evapotranspiration modeling, aphid infestation temperature thresholds (cloudy/warm spells), and single life-saving irrigation scheduling."
+  },
+  {
+    "crop_id": "groundnut",
+    "name_en": "Groundnut (Chinabadam)",
+    "name_bn": "চিনাবাদাম",
+    "category": "oilseeds",
+    "category_en": "Oilseeds",
+    "category_bn": "তৈলবীজ",
+    "scientific_name": "Arachis hypogaea",
+    "typical_duration_days": 140,
+    "calibration_status": "REGIONAL_SUPPORT",
+    "primary_season": "Rabi / Kharif",
+    "kc_mid": 1.05,
+    "supported_stages": [
+      "Vegetative",
+      "Flowering",
+      "Pegging",
+      "Pod Formation",
+      "Maturity"
+    ],
+    "analytical_support_description": "Regional support: Riverine char sandy-loam moisture estimation, pegging stage water requirements, and pre-harvest rain alerts."
+  },
+  {
+    "crop_id": "sesame",
+    "name_en": "Sesame (Til)",
+    "name_bn": "তিল",
+    "category": "oilseeds",
+    "category_en": "Oilseeds",
+    "category_bn": "তৈলবীজ",
+    "scientific_name": "Sesamum indicum",
+    "typical_duration_days": 90,
+    "calibration_status": "REGIONAL_SUPPORT",
+    "primary_season": "Kharif-I",
+    "kc_mid": 1.0,
+    "supported_stages": [
+      "Vegetative",
+      "Flowering",
+      "Capsule Development",
+      "Maturity"
+    ],
+    "analytical_support_description": "Regional support: Pre-monsoon rainfall monitoring, severe waterlogging sensitivity alerts, and capsule maturity scheduling."
+  },
+  {
+    "crop_id": "sunflower",
+    "name_en": "Sunflower (Surjamukhi)",
+    "name_bn": "সূর্যমুখী",
+    "category": "oilseeds",
+    "category_en": "Oilseeds",
+    "category_bn": "তৈলবীজ",
+    "scientific_name": "Helianthus annuus",
+    "typical_duration_days": 105,
+    "calibration_status": "REGIONAL_SUPPORT",
+    "primary_season": "Rabi (Coastal & Barind)",
+    "kc_mid": 1.1,
+    "supported_stages": [
+      "Vegetative",
+      "Budding",
+      "Flowering",
+      "Seed Development",
+      "Maturity"
+    ],
+    "analytical_support_description": "Regional support: Salinity-prone coastal soils moisture management, ray floret stage irrigation advisory, and lodging wind risk."
+  },
+  {
+    "crop_id": "tomato",
+    "name_en": "Tomato",
+    "name_bn": "টমেটো",
+    "category": "vegetables",
+    "category_en": "Vegetables & Spices",
+    "category_bn": "শাকসবজি ও মসলা",
+    "scientific_name": "Solanum lycopersicum",
+    "typical_duration_days": 105,
+    "calibration_status": "FULL_CALIBRATION",
+    "primary_season": "Rabi (Winter)",
+    "kc_mid": 1.15,
+    "supported_stages": [
+      "Vegetative",
+      "Flowering",
+      "Fruit Setting",
+      "Harvesting"
+    ],
+    "analytical_support_description": "Full calibration: Frequent light irrigation scheduling, blossom end rot moisture deficit prevention, and cold injury temperature bounds."
+  },
+  {
+    "crop_id": "onion",
+    "name_en": "Onion",
+    "name_bn": "পেঁয়াজ",
+    "category": "vegetables",
+    "category_en": "Vegetables & Spices",
+    "category_bn": "শাকসবজি ও মসলা",
+    "scientific_name": "Allium cepa",
+    "typical_duration_days": 100,
+    "calibration_status": "FULL_CALIBRATION",
+    "primary_season": "Rabi (Winter)",
+    "kc_mid": 1.05,
+    "supported_stages": [
+      "Vegetative",
+      "Bulb Initiation",
+      "Bulb Development",
+      "Maturity / Curing"
+    ],
+    "analytical_support_description": "Full calibration: Shallow root moisture management (0.3m), purple blotch humidity indexing, and pre-harvest irrigation cut-off for storage curing."
+  },
+  {
+    "crop_id": "brinjal",
+    "name_en": "Brinjal (Eggplant)",
+    "name_bn": "বেগুন",
+    "category": "vegetables",
+    "category_en": "Vegetables & Spices",
+    "category_bn": "শাকসবজি ও মসলা",
+    "scientific_name": "Solanum melongena",
+    "typical_duration_days": 140,
+    "calibration_status": "REGIONAL_SUPPORT",
+    "primary_season": "Year-round",
+    "kc_mid": 1.1,
+    "supported_stages": [
+      "Vegetative",
+      "Flowering",
+      "Fruit Development",
+      "Harvesting"
+    ],
+    "analytical_support_description": "Regional support: Regular supplemental irrigation tracking, fruit and shoot borer temperature windows, and moisture stress alleviation."
+  },
+  {
+    "crop_id": "chili",
+    "name_en": "Chili",
+    "name_bn": "মরিচ",
+    "category": "vegetables",
+    "category_en": "Vegetables & Spices",
+    "category_bn": "শাকসবজি ও মসলা",
+    "scientific_name": "Capsicum annuum",
+    "typical_duration_days": 150,
+    "calibration_status": "REGIONAL_SUPPORT",
+    "primary_season": "Rabi / Kharif",
+    "kc_mid": 1.05,
+    "supported_stages": [
+      "Vegetative",
+      "Flowering",
+      "Fruiting",
+      "Harvesting"
+    ],
+    "analytical_support_description": "Regional support: Silt-loam char land water balance, anthracnose rain splashing risk, and drainage advisory."
+  },
+  {
+    "crop_id": "cabbage",
+    "name_en": "Cabbage & Cauliflower",
+    "name_bn": "বাঁধাকপি ও ফুলকপি",
+    "category": "vegetables",
+    "category_en": "Vegetables & Spices",
+    "category_bn": "শাকসবজি ও মসলা",
+    "scientific_name": "Brassica oleracea",
+    "typical_duration_days": 85,
+    "calibration_status": "REGIONAL_SUPPORT",
+    "primary_season": "Rabi (Winter)",
+    "kc_mid": 1.05,
+    "supported_stages": [
+      "Seedling",
+      "Vegetative",
+      "Head Formation",
+      "Maturity"
+    ],
+    "analytical_support_description": "Regional support: Uniform moisture maintenance to prevent head cracking, buttoning prevention under temperature swings, and winter dew tracking."
+  },
+  {
+    "crop_id": "mango",
+    "name_en": "Mango",
+    "name_bn": "আম",
+    "category": "fruits",
+    "category_en": "Orchards & Fruits",
+    "category_bn": "ফলমূল",
+    "scientific_name": "Mangifera indica",
+    "typical_duration_days": 180,
+    "calibration_status": "REGIONAL_SUPPORT",
+    "primary_season": "Summer / Rabi-Kharif",
+    "kc_mid": 0.85,
+    "supported_stages": [
+      "Dormancy",
+      "Flowering (Mukul)",
+      "Fruit Setting (Pea Size)",
+      "Fruit Bulking",
+      "Harvesting"
+    ],
+    "analytical_support_description": "Regional support: Chapainawabganj and Rajshahi Barind orchard water management, hopper insect temperature windows, and Kalbaishakhi hailstorm wind hazard warning."
+  },
+  {
+    "crop_id": "banana",
+    "name_en": "Banana",
+    "name_bn": "কলা",
+    "category": "fruits",
+    "category_en": "Orchards & Fruits",
+    "category_bn": "ফলমূল",
+    "scientific_name": "Musa acuminata",
+    "typical_duration_days": 330,
+    "calibration_status": "REGIONAL_SUPPORT",
+    "primary_season": "Perennial / Year-round",
+    "kc_mid": 1.15,
+    "supported_stages": [
+      "Vegetative",
+      "Shooting",
+      "Bunch Development",
+      "Harvesting"
+    ],
+    "analytical_support_description": "Regional support: Continuous high water requirement monitoring, windthrow hazard advisory during squalls, and Sigatoka leaf spot humidity alerts."
+  },
+  {
+    "crop_id": "watermelon",
+    "name_en": "Watermelon",
+    "name_bn": "তরমুজ",
+    "category": "fruits",
+    "category_en": "Orchards & Fruits",
+    "category_bn": "ফলমূল",
+    "scientific_name": "Citrullus lanatus",
+    "typical_duration_days": 85,
+    "calibration_status": "REGIONAL_SUPPORT",
+    "primary_season": "Late Rabi (Coastal Chars)",
+    "kc_mid": 0.95,
+    "supported_stages": [
+      "Vine Growth",
+      "Flowering",
+      "Fruit Development",
+      "Harvesting"
+    ],
+    "analytical_support_description": "Regional support: Coastal char land residual moisture & salinity dynamics (Barishal/Patuakhali), fruit cracking moisture spikes warning, and heatwave forecasting."
+  }
+]

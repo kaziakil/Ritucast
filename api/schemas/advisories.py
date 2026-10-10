@@ -65,6 +65,7 @@ class AdvisoryResponse(BaseModel):
 
     all_cards: List[Dict[str, Any]] = Field(default_factory=list, description="All evaluated Phase 9 cards")
     provenance: Dict[str, Any] = Field(default_factory=dict, description="Traceability provenance")
+    analysis_period: Optional[Dict[str, Any]] = Field(default=None, description="Custom or default 7-day analysis period")
 
 
 class AdvisoryEvaluateRequest(BaseModel):
@@ -74,6 +75,8 @@ class AdvisoryEvaluateRequest(BaseModel):
     upazila_id: str = Field(..., max_length=50, description="Target Upazila ID (e.g. BD-50-20-30)")
     crop_name: str = Field(default="Boro Rice", max_length=100, description="Crop name")
     growth_stage: str = Field(..., max_length=100, description="Active phenological stage")
+    start_date: Optional[str] = Field(default=None, max_length=20, description="Start date (YYYY-MM-DD)")
+    end_date: Optional[str] = Field(default=None, max_length=20, description="End date (YYYY-MM-DD)")
     inputs: Optional[Dict[str, Any]] = Field(default=None, description="Optional custom environmental parameters")
     data_timestamp_utc: Optional[str] = Field(
         default=None, max_length=50, description="Optional source observation timestamp"
