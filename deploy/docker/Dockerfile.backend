@@ -1,0 +1,65 @@
+# ==============================================================================
+# Ritucast Backend Production Dockerfile (Multi-Stage Build)
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Stage 1: Dependency Builder
+# ------------------------------------------------------------------------------
+FROM python:3.10-slim-bookworm AS builder
+
+WORKDIR /build
+
+# Install minimal build tools for compiling wheels if necessary
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends gcc g++ libffi-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+
+# Install dependencies into isolated prefix
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir --prefix=/install -r requirements.txt
+
+# ------------------------------------------------------------------------------
+# Stage 2: Final Minimal Runtime
+# ------------------------------------------------------------------------------
+FROM python:3.10-slim-bookworm AS runtime
+
+LABEL maintainer="Ritucast Platform Engineering Team <engineering@ritucast.app>"
+LABEL description="Ritucast Agricultural Intelligence Backend API"
+
+WORKDIR /app
+
+# Create non-root system user and group (DEC-09 security posture)
+RUN groupadd -g 10001 ritucast && \
+    useradd -u 10001 -g ritucast -s /bin/bash -m ritucast
+
+# Copy installed python packages from builder
+COPY --from=builder /install /usr/local
+
+# Copy application modules and feature store artifacts
+COPY --chown=ritucast:ritucast api/ /app/api/
+COPY --chown=ritucast:ritucast analytics/ /app/analytics/
+COPY --chown=ritucast:ritucast pipelines/ /app/pipelines/
+COPY --chown=ritucast:ritucast data/processed/ /app/data/processed/
+COPY --chown=ritucast:ritucast data/sample/ /app/data/sample/
+
+# Set safe environment defaults
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app \
+    PORT=8000 \
+    ENVIRONMENT=production
+
+# Switch to unprivileged non-root user
+USER ritucast
+
+# Document port exposure (Cloud Run injects PORT at runtime)
+EXPOSE 8000
+
+# Container liveness health check
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD python3 -c "import urllib.request, os; port = os.environ.get('PORT', '8000'); urllib.request.urlopen(f'http://127.0.0.1:{port}/health')" || exit 1
+
+# Start Uvicorn ASGI server with shell variable expansion for $PORT
+CMD ["sh", "-c", "exec uvicorn api.main:app --host 0.0.0.0 --port ${PORT:-8000} --workers 2 --access-log"]
