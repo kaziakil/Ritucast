@@ -624,6 +624,235 @@ button {
   display: none;
 }
 
+/* Context Command & Location Selection Bar */
+.context-section {
+  background-color: var(--color-bg-surface);
+  border-bottom: 1px solid var(--color-border-default);
+  padding: var(--spacing-md) 0 var(--spacing-lg);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.03);
+  margin-bottom: var(--spacing-lg);
+}
+
+.context-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px dashed var(--color-border-subtle);
+}
+
+.context-search-container {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  flex: 1 1 320px;
+  max-width: 480px;
+}
+
+.context-search-input-box {
+  position: relative;
+  width: 100%;
+}
+
+.context-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+.context-search-input {
+  width: 100%;
+  height: 38px;
+  padding-left: 36px;
+  padding-right: 32px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-default);
+  background-color: var(--color-bg-subtle);
+  font-size: var(--font-size-body-sm);
+  color: var(--color-text-primary);
+  transition: all var(--duration-fast) var(--ease-standard);
+}
+
+.context-search-input:focus {
+  outline: none;
+  border-color: var(--color-brand-primary);
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+  background-color: var(--color-bg-surface);
+}
+
+.context-search-clear {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.context-search-clear:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-surface);
+}
+
+.context-meta-group {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.context-breadcrumb-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-bg-subtle);
+  border: 1px solid var(--color-border-default);
+  font-size: var(--font-size-caption);
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.context-breadcrumb-pill strong {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+.context-badge-scope {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background-color: rgba(34, 197, 94, 0.1);
+  color: var(--primitive-green-900);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-caption);
+  font-weight: 600;
+}
+
+.context-badge-pilot {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background-color: rgba(99, 102, 241, 0.1);
+  color: var(--primitive-indigo-900);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-caption);
+  font-weight: 600;
+}
+
+/* Primary Geographic & Agronomic Form Controls Grid */
+.context-controls-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) auto;
+  gap: var(--spacing-md);
+  align-items: flex-end;
+}
+
+@media (max-width: 1180px) {
+  .context-controls-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .context-refresh-action {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .context-controls-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .context-refresh-action {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 520px) {
+  .context-controls-grid {
+    grid-template-columns: 1fr;
+  }
+  .context-refresh-action {
+    grid-column: 1;
+  }
+}
+
+.context-refresh-btn {
+  height: 42px;
+  min-width: 160px;
+  width: 100%;
+}
+
+/* Date Range and Temporal Window Box */
+.context-temporal-card {
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-md);
+  background-color: var(--color-bg-subtle);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.context-temporal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.4fr 1fr;
+  gap: var(--spacing-md);
+  align-items: flex-end;
+}
+
+@media (max-width: 1024px) {
+  .context-temporal-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .context-temporal-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.context-preset-group {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.context-preset-chip {
+  padding: 4px 10px;
+  font-size: var(--font-size-caption);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  font-weight: 500;
+  transition: all var(--duration-fast) var(--ease-standard);
+}
+
+.context-preset-chip:hover {
+  background-color: var(--color-brand-primary);
+  color: var(--primitive-white);
+  border-color: var(--color-brand-primary);
+}
 
 /* Cards & Panels */
 .card {
@@ -1146,6 +1375,55 @@ body, .app-header, .card, .metric-pill, .app-footer, .form-select, .form-input, 
 [data-theme="dark"] .form-input:focus {
   box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
 }
+
+[data-theme="dark"] .context-section {
+  background-color: var(--color-bg-surface);
+  border-bottom-color: var(--color-border-default);
+}
+
+[data-theme="dark"] .context-search-input {
+  background-color: var(--color-bg-subtle);
+  border-color: var(--color-border-default);
+}
+
+[data-theme="dark"] .context-search-input:focus {
+  background-color: #1e293b;
+  border-color: #4ade80;
+}
+
+[data-theme="dark"] .context-breadcrumb-pill {
+  background-color: rgba(30, 41, 59, 0.7);
+  border-color: var(--color-border-default);
+}
+
+[data-theme="dark"] .context-badge-scope {
+  background-color: rgba(34, 197, 94, 0.15);
+  color: #86efac;
+  border-color: rgba(74, 222, 128, 0.3);
+}
+
+[data-theme="dark"] .context-badge-pilot {
+  background-color: rgba(99, 102, 241, 0.18);
+  color: #a5b4fc;
+  border-color: rgba(129, 140, 248, 0.35);
+}
+
+[data-theme="dark"] .context-temporal-card {
+  background-color: rgba(15, 23, 42, 0.6);
+  border-color: var(--color-border-default);
+}
+
+[data-theme="dark"] .context-preset-chip {
+  background-color: #1e293b;
+  border-color: #334155;
+  color: var(--color-text-secondary);
+}
+
+[data-theme="dark"] .context-preset-chip:hover {
+  background-color: var(--color-brand-primary);
+  color: #0f172a;
+}
+
 
 /* Progressive Tablet & Mobile Navigation Breakpoint (<= 1023px) */
 @media (max-width: 1023px) {

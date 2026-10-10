@@ -275,58 +275,24 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
   const stagesMap = STAGE_TRANSLATIONS[language] || STAGE_TRANSLATIONS.bn
 
   return (
-    <section
-      aria-label={t('context_section_label')}
-      style={{
-        backgroundColor: 'var(--color-bg-surface)',
-        borderBottom: '1px solid var(--color-border-default)',
-        padding: 'var(--spacing-lg) 0',
-        boxShadow: 'var(--shadow-sm)',
-        marginBottom: 'var(--spacing-xl)',
-      }}
-    >
+    <section aria-label={t('context_section_label')} className="context-section">
       <div className="app-container">
-        {/* TOP ROW: Quick Search & Coverage Badge */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-            gap: 'var(--spacing-md)',
-            marginBottom: 'var(--spacing-md)',
-            paddingBottom: 'var(--spacing-sm)',
-            borderBottom: '1px dashed var(--color-border-subtle)',
-          }}
-        >
+        {/* TOP ROW: Quick Search & Active Context Meta Group */}
+        <div className="context-top-bar">
           {/* Quick Search across all 64 districts & 495 upazilas */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)', flex: '1 1 320px', maxWidth: '480px' }}>
-            <div style={{ position: 'relative', width: '100%' }}>
-              <Search
-                size={16}
-                style={{
-                  position: 'absolute',
-                  left: '10px',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  color: 'var(--color-text-muted)',
-                }}
-              />
+          <div className="context-search-container">
+            <div className="context-search-input-box">
+              <Search size={16} className="context-search-icon" aria-hidden="true" />
               <input
                 type="text"
-                className="form-input"
+                className="context-search-input"
                 placeholder={t('search_placeholder')}
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value)
                   setIsSearchActive(e.target.value.trim().length > 0)
                 }}
-                style={{
-                  paddingLeft: '34px',
-                  paddingRight: searchQuery ? '32px' : '12px',
-                  height: '36px',
-                  fontSize: 'var(--font-size-body-sm)',
-                }}
+                aria-label={language === 'en' ? 'Search locations' : 'অবস্থান অনুসন্ধান'}
               />
               {searchQuery && (
                 <button
@@ -335,17 +301,7 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
                     setSearchQuery('')
                     setIsSearchActive(false)
                   }}
-                  style={{
-                    position: 'absolute',
-                    right: '8px',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
-                    color: 'var(--color-text-muted)',
-                    padding: '2px',
-                  }}
+                  className="context-search-clear"
                   aria-label={t('clear_search')}
                 >
                   <X size={14} />
@@ -354,34 +310,15 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
             </div>
           </div>
 
-          {/* National Scope Pill */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)', fontSize: 'var(--font-size-caption)' }}>
-            <span
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 4,
-                backgroundColor: 'var(--primitive-emerald-100)',
-                color: 'var(--primitive-emerald-900)',
-                padding: '2px 8px',
-                borderRadius: 'var(--radius-full)',
-                fontWeight: 600,
-              }}
-            >
+          {/* Active Context Meta & Coverage Badges */}
+          <div className="context-meta-group">
+            <span className="context-badge-scope">
               <CheckCircle2 size={12} />
               {t('national_badge')} (64 {t('district_label').replace(':', '')} / 495 {t('upazila_count_suffix')})
             </span>
 
             {currentUpazila?.is_pilot && (
-              <span
-                style={{
-                  backgroundColor: 'var(--primitive-indigo-100)',
-                  color: 'var(--primitive-indigo-900)',
-                  padding: '2px 8px',
-                  borderRadius: 'var(--radius-full)',
-                  fontWeight: 600,
-                }}
-              >
+              <span className="context-badge-pilot">
                 ★ {t('pilot_badge')}
               </span>
             )}
@@ -389,14 +326,7 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
         </div>
 
         {/* PRIMARY CONTROLS GRID */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr)) auto',
-            gap: 'var(--spacing-md)',
-            alignItems: 'flex-start',
-          }}
-        >
+        <div className="context-controls-grid">
           {/* 1. DIVISION SELECTOR */}
           <div className="form-group" style={{ marginBottom: 0 }}>
             <label className="form-label" htmlFor="division-select">
@@ -534,13 +464,12 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
           </div>
 
           {/* REFRESH / ANALYZE BUTTON */}
-          <div style={{ marginBottom: 0, alignSelf: 'flex-end' }}>
+          <div className="context-refresh-action" style={{ marginBottom: 0 }}>
             <button
-              className="btn btn-primary"
+              className="btn btn-primary context-refresh-btn"
               onClick={onRefresh}
               disabled={loading || !!dateValidationError}
               aria-busy={loading}
-              style={{ width: '100%', minWidth: '160px', height: '42px' }}
               aria-label={t('refresh_aria_label')}
             >
               <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
@@ -550,99 +479,86 @@ export const ContextSelector: React.FC<ContextSelectorProps> = ({
         </div>
 
         {/* SECOND ROW: CUSTOM DATE RANGE CONTROLS & PLANTING DATE */}
-        <div
-          style={{
-            marginTop: 'var(--spacing-md)',
-            padding: 'var(--spacing-md)',
-            backgroundColor: 'var(--color-bg-subtle)',
-            borderRadius: 'var(--radius-md)',
-            border: '1px solid var(--color-border-subtle)',
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-            gap: 'var(--spacing-md)',
-            alignItems: 'center',
-          }}
-        >
-          {/* Start Date */}
-          <div className="form-group" style={{ marginBottom: 0 }}>
-            <label className="form-label" htmlFor="start-date-input" style={{ fontSize: 'var(--font-size-caption)' }}>
-              <Clock size={12} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} />
-              {t('start_date_label')}
-            </label>
-            <input
-              id="start-date-input"
-              type="date"
-              className="form-input"
-              value={activeStartDate}
-              onChange={(e) => handleStartDateChange(e.target.value)}
-              style={{ height: '36px', fontSize: 'var(--font-size-body-sm)' }}
-            />
-          </div>
-
-          {/* End Date */}
-          <div className="form-group" style={{ marginBottom: 0 }}>
-            <label className="form-label" htmlFor="end-date-input" style={{ fontSize: 'var(--font-size-caption)' }}>
-              <Clock size={12} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} />
-              {t('end_date_label')}
-            </label>
-            <input
-              id="end-date-input"
-              type="date"
-              className="form-input"
-              value={activeEndDate}
-              onChange={(e) => handleEndDateChange(e.target.value)}
-              style={{ height: '36px', fontSize: 'var(--font-size-body-sm)' }}
-            />
-          </div>
-
-          {/* Date Presets Buttons */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-            <span style={{ fontSize: 'var(--font-size-caption)', color: 'var(--color-text-secondary)', fontWeight: 500 }}>
-              {t('date_range_label')}
-            </span>
-            <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
-              <button
-                type="button"
-                className="btn btn-secondary"
-                style={{ padding: '4px 8px', fontSize: '11px', height: '28px' }}
-                onClick={() => applyDatePreset(7)}
-              >
-                {t('date_preset_7d')}
-              </button>
-              <button
-                type="button"
-                className="btn btn-secondary"
-                style={{ padding: '4px 8px', fontSize: '11px', height: '28px' }}
-                onClick={() => applyDatePreset(14)}
-              >
-                {t('date_preset_14d')}
-              </button>
-              <button
-                type="button"
-                className="btn btn-secondary"
-                style={{ padding: '4px 8px', fontSize: '11px', height: '28px' }}
-                onClick={() => applyDatePreset(30)}
-              >
-                {t('date_preset_30d')}
-              </button>
+        <div className="context-temporal-card">
+          <div className="context-temporal-grid">
+            {/* Start Date */}
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label className="form-label" htmlFor="start-date-input" style={{ fontSize: 'var(--font-size-caption)' }}>
+                <Clock size={12} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} />
+                {t('start_date_label')}
+              </label>
+              <input
+                id="start-date-input"
+                type="date"
+                className="form-input"
+                value={activeStartDate}
+                onChange={(e) => handleStartDateChange(e.target.value)}
+                style={{ height: '36px', fontSize: 'var(--font-size-body-sm)' }}
+              />
             </div>
-          </div>
 
-          {/* Optional Planting Date */}
-          <div className="form-group" style={{ marginBottom: 0 }}>
-            <label className="form-label" htmlFor="planting-date-input" style={{ fontSize: 'var(--font-size-caption)' }}>
-              <Sparkles size={12} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} />
-              {t('planting_date_label')}
-            </label>
-            <input
-              id="planting-date-input"
-              type="date"
-              className="form-input"
-              value={activePlantingDate}
-              onChange={(e) => handlePlantingDateChange(e.target.value)}
-              style={{ height: '36px', fontSize: 'var(--font-size-body-sm)' }}
-              placeholder={t('planting_date_hint')}
-            />
+            {/* End Date */}
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label className="form-label" htmlFor="end-date-input" style={{ fontSize: 'var(--font-size-caption)' }}>
+                <Clock size={12} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} />
+                {t('end_date_label')}
+              </label>
+              <input
+                id="end-date-input"
+                type="date"
+                className="form-input"
+                value={activeEndDate}
+                onChange={(e) => handleEndDateChange(e.target.value)}
+                style={{ height: '36px', fontSize: 'var(--font-size-body-sm)' }}
+              />
+            </div>
+
+            {/* Date Presets Buttons */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <span style={{ fontSize: 'var(--font-size-caption)', color: 'var(--color-text-secondary)', fontWeight: 500 }}>
+                {t('date_range_label')}
+              </span>
+              <div className="context-preset-group">
+                <button
+                  type="button"
+                  className="context-preset-chip"
+                  onClick={() => applyDatePreset(7)}
+                >
+                  {t('date_preset_7d')}
+                </button>
+                <button
+                  type="button"
+                  className="context-preset-chip"
+                  onClick={() => applyDatePreset(14)}
+                >
+                  {t('date_preset_14d')}
+                </button>
+                <button
+                  type="button"
+                  className="context-preset-chip"
+                  onClick={() => applyDatePreset(30)}
+                >
+                  {t('date_preset_30d')}
+                </button>
+              </div>
+            </div>
+
+            {/* Optional Planting Date */}
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label className="form-label" htmlFor="planting-date-input" style={{ fontSize: 'var(--font-size-caption)' }}>
+                <Sparkles size={12} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} />
+                {t('planting_date_label')}
+              </label>
+              <input
+                id="planting-date-input"
+                type="date"
+                className="form-input"
+                value={activePlantingDate}
+                onChange={(e) => handlePlantingDateChange(e.target.value)}
+                style={{ height: '36px', fontSize: 'var(--font-size-body-sm)' }}
+                placeholder={t('planting_date_hint')}
+              />
+            </div>
           </div>
         </div>
 
