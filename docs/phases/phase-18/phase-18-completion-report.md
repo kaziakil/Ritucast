@@ -224,8 +224,8 @@ cd frontend && npm run dev
 - **Working Tree**: Completely clean on branch `main`.
 - **Preceding Phase 17 Commits**:
   - `f057602`: `feat(phase-17): deep health probe, structured logging, pipeline drift monitor, and scientific validation engine`
-  - `9dfaa67`: `docs(phase-17): finalize operational runbooks, scientific validation report, completion report, and handoff to phase 18`
-- **Phase 18 Final Commit**: Recorded in Section 15.
+- **Phase 18 Final Commit**: `b1b39fb` (`docs(phase-18): finalize comprehensive project audit, requirements traceability matrix, sustainability roadmap, and completion report`).
+- **Repository Closeout Commit**: Current revision on branch `main`.
 
 ---
 
