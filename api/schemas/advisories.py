@@ -71,10 +71,16 @@ class AdvisoryEvaluateRequest(BaseModel):
     """Direct advisory evaluation request payload."""
     model_config = ConfigDict(protected_namespaces=())
 
-    upazila_id: str = Field(..., description="Target Upazila ID (e.g. BD-50-20-30)")
-    crop_name: str = Field(default="Boro Rice", description="Crop name")
-    growth_stage: str = Field(..., description="Active phenological stage")
+    upazila_id: str = Field(..., max_length=50, description="Target Upazila ID (e.g. BD-50-20-30)")
+    crop_name: str = Field(default="Boro Rice", max_length=100, description="Crop name")
+    growth_stage: str = Field(..., max_length=100, description="Active phenological stage")
     inputs: Optional[Dict[str, Any]] = Field(default=None, description="Optional custom environmental parameters")
-    data_timestamp_utc: Optional[str] = Field(default=None, description="Optional source observation timestamp")
-    ensemble_spread_pct: Optional[float] = Field(default=None, description="Optional ensemble spread percentage")
-    rain_prob_pct: Optional[float] = Field(default=None, description="Optional rain probability percentage")
+    data_timestamp_utc: Optional[str] = Field(
+        default=None, max_length=50, description="Optional source observation timestamp"
+    )
+    ensemble_spread_pct: Optional[float] = Field(
+        default=None, ge=0.0, le=100.0, description="Optional ensemble spread percentage"
+    )
+    rain_prob_pct: Optional[float] = Field(
+        default=None, ge=0.0, le=100.0, description="Optional rain probability percentage"
+    )

@@ -190,12 +190,20 @@ class AgriculturalDataRepository:
         ]
 
     def load_parquet_table(self, filename: str) -> pd.DataFrame:
-        """Safely load a processed Parquet table with in-memory caching."""
+        """Safely load a processed Parquet table with in-memory caching and path traversal guard."""
+        if not filename or ".." in filename or "/" in filename or "\\" in filename:
+            raise ValueError(f"Path traversal or invalid filename rejected: {filename}")
+        if not filename.endswith(".parquet"):
+            raise ValueError(f"Unauthorized non-parquet file access: {filename}")
+
         cache_key = f"parquet_{filename}"
         if cache_key in self._cache:
             return self._cache[cache_key]
 
-        filepath = self.processed_dir / filename
+        filepath = (self.processed_dir / filename).resolve()
+        if not str(filepath).startswith(str(self.processed_dir.resolve())):
+            raise ValueError(f"Path traversal violation outside processed directory: {filename}")
+
         if not filepath.exists():
             return pd.DataFrame()
 
@@ -560,7 +568,7 @@ class AgriculturalDataRepository:
                     "color_hex": "#2e7d32",
                 },
                 "is_suppressed": is_supp,
-                "suppression_reason": "DATA_AGE_EXCEEDED" if is_supp else None,
+                "suppression_reason": primary_card.suppression_reason if is_supp else None,
             }
         else:
             tier4_rec = {

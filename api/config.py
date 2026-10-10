@@ -49,6 +49,8 @@ class Settings(BaseSettings):
     MAX_WEATHER_AGE_HOURS: float = 36.0
     CACHE_TTL_SECONDS: int = 3600
     RATE_LIMIT_PER_MINUTE: int = 60
+    ENABLE_RATE_LIMIT: bool = True
+    MAX_REQUEST_SIZE_BYTES: int = 1048576  # 1 MB max payload
 
 
 @lru_cache()

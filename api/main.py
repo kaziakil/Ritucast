@@ -6,7 +6,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.config import get_settings
-from api.middleware.error_handlers import register_error_handlers
+from api.middleware import (
+    register_error_handlers,
+    SecurityHeadersMiddleware,
+    RequestSizeLimitMiddleware,
+    RateLimitMiddleware,
+)
 from api.routers import (
     health_router,
     geo_router,
@@ -45,6 +50,22 @@ def create_app() -> FastAPI:
         allow_credentials=settings.CORS_ALLOW_CREDENTIALS,
         allow_methods=settings.CORS_ALLOW_METHODS,
         allow_headers=settings.CORS_ALLOW_HEADERS,
+    )
+
+    # Security Headers Middleware (OWASP defensive headers)
+    app.add_middleware(SecurityHeadersMiddleware)
+
+    # Request Size Limit Middleware (DoS / memory exhaustion prevention)
+    app.add_middleware(
+        RequestSizeLimitMiddleware,
+        max_bytes=settings.MAX_REQUEST_SIZE_BYTES,
+    )
+
+    # Rate Limiting Middleware (Sliding window client rate control)
+    app.add_middleware(
+        RateLimitMiddleware,
+        requests_per_minute=settings.RATE_LIMIT_PER_MINUTE,
+        enabled=settings.ENABLE_RATE_LIMIT,
     )
 
     # Register centralized exception handlers

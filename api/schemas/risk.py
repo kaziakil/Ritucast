@@ -8,9 +8,11 @@ class RiskEvaluationRequest(BaseModel):
     """Agricultural hazard assessment query payload."""
     model_config = ConfigDict(protected_namespaces=())
 
-    upazila_id: str = Field(..., description="Target Upazila code (e.g. BD-50-20-30)")
-    crop_id: str = Field(default="boro_rice", description="Crop identifier")
-    growth_stage: str = Field(..., description="Active phenological growth stage (e.g. Tillering, Flowering)")
+    upazila_id: str = Field(..., max_length=50, description="Target Upazila code (e.g. BD-50-20-30)")
+    crop_id: str = Field(default="boro_rice", max_length=100, description="Crop identifier")
+    growth_stage: str = Field(
+        ..., max_length=100, description="Active phenological growth stage (e.g. Tillering, Flowering)"
+    )
     hazard_types: Optional[List[str]] = Field(
         default_factory=lambda: ["moisture_deficit", "flash_flood", "thermal_stress"],
         description="Hazard domains to evaluate",
@@ -40,7 +42,10 @@ class RiskEvaluationResponse(BaseModel):
     overall_hazard_tier_bn: str = Field(..., description="Composite hazard level in Bengali")
     hazard_assessments: List[PhysicalHazardAssessment] = Field(..., description="Detailed assessments per hazard")
     scientific_disclaimer_bn: str = Field(
-        default="এই মূল্যায়ন শুধুমাত্র প্রাকৃতিক পরিবেশগত ঝুঁকির নির্দেশক; এটি আর্থিক ক্ষতি বা চূড়ান্ত ফলন হ্রাসের নিশ্চয়তা দেয় না।",
+        default=(
+            "এই মূল্যায়ন শুধুমাত্র প্রাকৃতিক পরিবেশগত ঝুঁকির নির্দেশক; "
+            "এটি আর্থিক ক্ষতি বা চূড়ান্ত ফলন হ্রাসের নিশ্চয়তা দেয় না।"
+        ),
         description="Mandatory scientific safeguard disclaimer (DEC-06)",
     )
     provenance: Dict[str, str] = Field(default_factory=dict, description="Model and data source versions")

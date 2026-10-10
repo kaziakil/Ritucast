@@ -59,6 +59,7 @@ def register_error_handlers(app: FastAPI) -> None:
         code_map = {
             400: "BAD_REQUEST_PARAMETER",
             404: "RESOURCE_NOT_FOUND",
+            413: "PAYLOAD_TOO_LARGE",
             422: "UNPROCESSABLE_ENTITY",
             429: "RATE_LIMIT_EXCEEDED",
             500: "INTERNAL_SERVER_ERROR",
