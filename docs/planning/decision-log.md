@@ -92,3 +92,50 @@ This document records architectural, strategic, and product decisions made throu
   4. *No commercial brand advertising or input endorsements.*
 - **Rationale**: Protects scientific credibility, prevents legal/agronomic liabilities, and maintains laser focus on core decision-support value.
 - **Downstream Impact**: Keeps Phase 2 feature prioritization focused and achievable.
+
+---
+
+## 3. Phase 2 Requirements & Product Strategy Decisions
+
+---
+
+### DEC-07: Minimum Complete Product (MCP) Definition
+- **Date**: 2026-10-10 (Phase 2)
+- **Status**: **Approved**
+- **Context**: Need to define what constitutes the smallest meaningful initial release that delivers real farmer value without feature creep.
+- **Alternatives Considered**:
+  - *Option A*: Basic weather and NDVI dashboard (fast, but lacks decision utility).
+  - *Option B*: Full national platform across 30 AEZs with yield models and SMS push (unrealistic initial scope).
+  - *Option C (Selected)*: **Minimum Complete Product (MCP)**: End-to-end irrigation scheduling and Haor flash-flood emergency harvest advisory in Bangla, tested across Barind and Haor pilot zones on Boro rice, delivered as an offline-capable PWA (<1.5MB).
+- **Rationale**: Demonstrates concrete economic savings (avoided pumping fuel) and catastrophe prevention (early harvest) with high agronomic credibility.
+- **Downstream Impact**: Locks the P0 and P1 feature set for Phase 3 and beyond.
+
+---
+
+### DEC-08: Adoption of 4-Tier Information Taxonomy for Scientific Safety
+- **Date**: 2026-10-10 (Phase 2)
+- **Status**: **Approved**
+- **Context**: Blurring the lines between empirical measurements and model forecasts leads to false certainty and destroys trust.
+- **Decision Taken**: Formally classify and visually delineate all platform outputs into: (1) Empirical Observations, (2) Derived Agronomic Indicators, (3) Probabilistic Predictions, and (4) Actionable Recommendations (`NFR-SCI-01`).
+- **Rationale**: Protects farmers from mistaking 48-hour probabilistic forecasts for guaranteed certainties.
+- **Downstream Impact**: Drives Phase 6 Information Architecture, Phase 7 UI badge design, and Phase 9 Advisory Engine.
+
+---
+
+### DEC-09: Enforcement of Strict Hardware and Payload Budgets
+- **Date**: 2026-10-10 (Phase 2)
+- **Status**: **Approved**
+- **Context**: Rural Bangladesh users operate low-cost Android phones (2GB–3GB RAM, 720p screens) on variable 3G cellular networks.
+- **Decision Taken**: Enforce a strict initial client bundle size $\le 1.5\text{MB}$, Time-to-Interactive $\le 3.5\text{s}$ on throttled 3G, and peak client heap memory $\le 45\text{MB}$.
+- **Rationale**: Prevents application crashes and high data-cost barriers for smallholder and extension users.
+- **Downstream Impact**: Constrains Phase 5 technology choices and Phase 11 frontend dependencies (disallows heavy monolithic GIS libraries).
+
+---
+
+### DEC-10: Automated Recommendation Suppression Policy
+- **Date**: 2026-10-10 (Phase 2)
+- **Status**: **Approved**
+- **Context**: Presenting stale or highly uncertain predictions as active agricultural advice risks severe crop damage.
+- **Decision Taken**: Enforce automated suppression of definitive action cards if weather data is $>36\text{ hours}$ old (`NFR-REL-03`) or if weather model ensemble spread exceeds 50%, falling back to a safe advisory to inspect fields and consult local SAAOs.
+- **Rationale**: Prioritizes farmer safety and organizational credibility over false availability.
+- **Downstream Impact**: Informs Phase 8 data freshness tracking and Phase 9 recommendation fallback rules.
