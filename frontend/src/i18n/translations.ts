@@ -20,6 +20,8 @@ export interface TranslationDictionary {
   nav_water_balance: string
   nav_flood: string
   nav_provenance: string
+  nav_menu_open: string
+  nav_menu_close: string
 
   // Status Badge
   status_checking: string
@@ -208,6 +210,8 @@ export const translations: Record<Language, TranslationDictionary> = {
     nav_water_balance: 'মাটির আর্দ্রতা (AWD)',
     nav_flood: 'হাওড় বন্যা ঝুঁকি',
     nav_provenance: 'স্বচ্ছতা ও তথ্যসূত্র',
+    nav_menu_open: 'মেনু খুলুন',
+    nav_menu_close: 'মেনু বন্ধ করুন',
 
     // Status Badge
     status_checking: 'যাচাই হচ্ছে...',
@@ -400,6 +404,8 @@ export const translations: Record<Language, TranslationDictionary> = {
     nav_water_balance: 'Soil Moisture (AWD)',
     nav_flood: 'Haor Flood Hazard',
     nav_provenance: 'Transparency & Data',
+    nav_menu_open: 'Open navigation menu',
+    nav_menu_close: 'Close navigation menu',
 
     // Status Badge
     status_checking: 'Checking...',
