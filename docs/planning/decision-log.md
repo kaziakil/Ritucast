@@ -187,3 +187,48 @@ This document records architectural, strategic, and product decisions made throu
   4. *Reject CROP-CASMA* because it is strictly restricted to the Contiguous United States (CONUS).
 - **Rationale**: Keeps the project strictly focused on achievable smallholder decision support and prevents privacy/bandwidth violations.
 - **Downstream Impact**: Eliminates unnecessary data licensing and infrastructure overhead from Phase 5 and Phase 8.
+
+---
+
+## 5. Phase 4 Agricultural Knowledge & Scientific Validation Decisions
+
+---
+
+### DEC-15: Baseline Priority Mandate: Physical & Mechanistic Models First
+- **Date**: 2026-10-10 (Phase 4)
+- **Status**: **Approved**
+- **Context**: Premature application of machine learning or deep learning to agricultural advisory generation introduces severe hallucination risks, overfitting on sparse labels, and opaque "black-box" decision making.
+- **Decision Taken**: Formally mandate Level 1 physical and mechanistic models (FAO-56 Penman-Monteith $ET_0$, mass-balance soil water deficit $D_t$, and deterministic thermal/flood rules) as the primary operational baseline for the Minimum Complete Product (MCP). Machine learning models may only be considered in Phase 9/15 if they satisfy 6 strict readiness gates and demonstrate statistically significant ($p < 0.01$) outperformance on independent hold-out test sets.
+- **Rationale**: Physical models are physically grounded, explainable to agronomists and farmers, and have zero risk of statistical overfitting.
+- **Downstream Impact**: Guides Phase 5 system architecture, Phase 8 data pipelines, and Phase 9 recommendation engine design.
+
+---
+
+### DEC-16: Formulation of the Multi-Factor Haor Flash-Flood Index ($I_{\text{flood}}$)
+- **Date**: 2026-10-10 (Phase 4)
+- **Status**: **Approved**
+- **Context**: Sentinel-1 SAR has a 6–12 day revisit period, which cannot catch rapid 48-hour flash floods alone; in-situ river gauges give only short localized warning; local rainfall fails to capture transboundary cloudbursts occurring in Meghalaya.
+- **Decision Taken**: Combine four independent proxies into a normalized composite Flash Flood Hazard Index: (1) Meghalaya Catchment 48h GPM IMERG rainfall ($w_1 = 0.35$), (2) BWDB Surma River stage proximity to Danger Level ($w_2 = 0.30$), (3) Surma River 24h rate of rise ($w_3 = 0.20$), and (4) Sentinel-1 SAR surface water area ($w_4 = 0.15$).
+- **Rationale**: Provides 48–72 hours of predictive lead time for early harvest alerts (`RULE-FLD-01`), overcoming the satellite revisit gap while preventing false alarms.
+- **Downstream Impact**: Shapes Phase 5 data model, Phase 8 catchment aggregation, and Phase 9 flood alert logic.
+
+---
+
+### DEC-17: Mandatory Contextual Gating Policy for Advisory Generation
+- **Date**: 2026-10-10 (Phase 4)
+- **Status**: **Approved**
+- **Context**: Agricultural operations are highly non-linear. An action that saves water during vegetative tillering (drying soil under AWD) causes catastrophic spikelet sterility if applied during anthesis (flowering).
+- **Decision Taken**: Strictly prohibit the recommendation engine from executing or emitting any actionable advisory without verified confirmation of three mandatory parameters: (1) Administrative Upazila, (2) Active Crop, and (3) Active Phenological Growth Stage.
+- **Rationale**: Enforces the "Do No Harm" agronomic safety mandate and prevents misleading guidance.
+- **Downstream Impact**: Informs Phase 5 API request validation, Phase 6 user journey design, and Phase 9 advisory engine.
+
+---
+
+### DEC-18: Quantitative Advisory Confidence Scoring and Ensemble Degradation Math
+- **Date**: 2026-10-10 (Phase 4)
+- **Status**: **Approved**
+- **Context**: Need a rigorous mathematical formula to quantify advisory confidence, decay confidence over lead times, and trigger automated suppression during high forecast uncertainty.
+- **Decision Taken**: Adopt the quantitative formulation: $C_{\text{adv}} = C_{\text{base}} \times \exp(-\lambda \cdot t_{\text{lead}}/24) \times f_{\text{ensemble}}(S_{\text{spread}}) \times f_{\text{freshness}}(\Delta t_{\text{data}})$, with $\lambda = 0.12$. Categorize into High ($\ge 0.80$), Moderate ($0.60–0.79$), Low ($0.40–0.59$), and Suppressed ($<0.40$).
+- **Rationale**: Mathematically enforces honest communication of uncertainty, aligns with the 4-tier taxonomy, and guarantees automated suppression when data is stale ($>36\text{h}$) or model disagreement exceeds $50\%$.
+- **Downstream Impact**: Directs Phase 5 data structures, Phase 9 advisory calculation, and Phase 11 UI badge rendering.
+
