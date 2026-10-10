@@ -193,7 +193,7 @@ describe('Phase 12 End-to-End User Journey Integration Tests', () => {
 
     // 1. Initial load verifies readiness and pilot Upazilas
     await waitFor(() => {
-      expect(screen.getAllByText(/ঋতুকেস্ট/).length).toBeGreaterThan(0)
+      expect(screen.getAllByText(/ঋতুকাস্ট/).length).toBeGreaterThan(0)
     })
 
     // 2. Verify Upazila select shows Godagari by default

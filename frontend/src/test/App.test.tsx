@@ -112,7 +112,7 @@ describe('App Integration', () => {
   it('mounts and renders initial advisory interface correctly', async () => {
     render(<App />)
 
-    expect(screen.getAllByText(/ঋতুকেস্ট/).length).toBeGreaterThan(0)
+    expect(screen.getAllByText(/ঋতুকাস্ট/).length).toBeGreaterThan(0)
     expect(screen.getAllByText('Ritucast').length).toBeGreaterThan(0)
 
     await waitFor(() => {

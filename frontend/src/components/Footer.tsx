@@ -9,7 +9,7 @@ export const Footer: React.FC = () => {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontWeight: 700, color: 'var(--color-brand-primary)', marginBottom: 4 }}>
               <Sprout size={18} />
-              <span>ঋতুকেস্ট (Ritucast) • বাংলাদেশ কৃষি আবহাওয়া প্ল্যাটফর্ম</span>
+              <span>ঋতুকাস্ট (Ritucast) • বাংলাদেশ কৃষি আবহাওয়া প্ল্যাটফর্ম</span>
             </div>
             <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>
               উপগ্রহ পর্যবেক্ষণ, সংখ্যাসূচক আবহাওয়া পূর্বাভাস ও মৃত্তিকা আর্দ্রতা মডেলের সমন্বয়।
@@ -41,7 +41,7 @@ export const Footer: React.FC = () => {
         >
           <ShieldAlert size={14} color="var(--primitive-slate-500)" />
           <span>
-            সতর্কতা: ঋতুকেস্ট একটি বৈজ্ঞানিক সিদ্ধান্ত সহায়তা ব্যবস্থা। মাঠে যেকোনো চূড়ান্ত পদক্ষেপ নেওয়ার পূর্বে আইল ও মাটির রস সরাসরি পরীক্ষা করুন।
+            সতর্কতা: ঋতুকাস্ট একটি বৈজ্ঞানিক সিদ্ধান্ত সহায়তা ব্যবস্থা। মাঠে যেকোনো চূড়ান্ত পদক্ষেপ নেওয়ার পূর্বে আইল ও মাটির রস সরাসরি পরীক্ষা করুন।
           </span>
         </div>
       </div>

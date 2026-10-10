@@ -50,7 +50,7 @@ export const ProvenanceView: React.FC<ProvenanceViewProps> = ({
           </span>
         </div>
         <p style={{ color: 'var(--color-text-secondary)' }}>
-          ঋতুকেস্ট প্ল্যাটফর্মের প্রতিটি পর্যবেক্ষণ, হিসাবকৃত সূচক এবং পরামর্শের উৎস সম্পূর্ণ স্বচ্ছ এবং নিরীক্ষণযোগ্য। উপগ্রহ পর্যবেক্ষণ বা আবহাওয়া পূর্বাভাসের কোনো অনুমানের ক্ষেত্রে কৃত্রিম নির্ভুলতা বা ভ্রান্ত নিশ্চয়তা প্রদর্শন করা হয় না।
+          ঋতুকাস্ট প্ল্যাটফর্মের প্রতিটি পর্যবেক্ষণ, হিসাবকৃত সূচক এবং পরামর্শের উৎস সম্পূর্ণ স্বচ্ছ এবং নিরীক্ষণযোগ্য। উপগ্রহ পর্যবেক্ষণ বা আবহাওয়া পূর্বাভাসের কোনো অনুমানের ক্ষেত্রে কৃত্রিম নির্ভুলতা বা ভ্রান্ত নিশ্চয়তা প্রদর্শন করা হয় না।
         </p>
         <div style={{ fontSize: 'var(--font-size-caption)', color: 'var(--color-text-muted)' }}>
           রিপোর্ট প্রস্তুতের সময়: {provenance.generated_at_bst} • পাইলট অঞ্চল: {provenance.pilot_regions.join('; ')}
@@ -159,7 +159,7 @@ export const ProvenanceView: React.FC<ProvenanceViewProps> = ({
           </h3>
         </div>
         <p style={{ fontSize: 'var(--font-size-caption)', color: 'var(--color-text-secondary)', marginBottom: 'var(--spacing-md)' }}>
-          কৃষকদের নিরাপত্তা এবং বৈজ্ঞানিক বস্তুনিষ্ঠতা বজায় রাখতে নিম্নলিখিত কার্যাবলি ঋতুকেস্টের পরিধির বাইরে রাখা হয়েছে:
+          কৃষকদের নিরাপত্তা এবং বৈজ্ঞানিক বস্তুনিষ্ঠতা বজায় রাখতে নিম্নলিখিত কার্যাবলি ঋতুকাস্টের পরিধির বাইরে রাখা হয়েছে:
         </p>
 
         <ul style={{ listStyle: 'none', paddingLeft: 0, fontSize: 'var(--font-size-caption)' }}>

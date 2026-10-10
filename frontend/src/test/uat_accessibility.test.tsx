@@ -280,7 +280,7 @@ describe('Phase 16: User Acceptance, Usability, and Field Readiness Test Suite',
     render(<App />)
 
     // Verify Brand Logo
-    expect(screen.getByText('ঋতুকেস্ট')).toBeInTheDocument()
+    expect(screen.getByText('ঋতুকাস্ট')).toBeInTheDocument()
     expect(screen.getByText('Ritucast')).toBeInTheDocument()
 
     // Verify Readiness indicator shows live state
@@ -456,7 +456,7 @@ describe('Phase 16: User Acceptance, Usability, and Field Readiness Test Suite',
     })
 
     // Now focus and trigger Enter on brand logo
-    const brandLogo = screen.getByLabelText('ঋতুকেস্ট হোমপেইজে যান')
+    const brandLogo = screen.getByLabelText('ঋতুকাস্ট হোমপেইজে যান')
     expect(brandLogo).toBeInTheDocument()
     expect(brandLogo).toHaveAttribute('role', 'button')
     expect(brandLogo).toHaveAttribute('tabIndex', '0')

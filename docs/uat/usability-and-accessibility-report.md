@@ -57,7 +57,7 @@ To accommodate coarse finger taps on rugged farm fields:
    - `nav.nav-bar` with `aria-label="প্রধান নেভিগেশন"` and active tab `aria-current="page"`.
    - `main#main-content` with `tabIndex={-1}` ensuring direct focus handling.
    - Live regions: `aria-live="polite"` on contextual state updates and `role="alert"` + `aria-live="assertive"` on error panels.
-3. **Logo Button Operability**: Custom logo container supports `Tab` focus, `Enter`, and `Space` keydown events triggering home page navigation with explicit `aria-label="ঋতুকেস্ট হোমপেইজে যান"`.
+3. **Logo Button Operability**: Custom logo container supports `Tab` focus, `Enter`, and `Space` keydown events triggering home page navigation with explicit `aria-label="ঋতুকাস্ট হোমপেইজে যান"`.
 
 ### 3.4 Reduced Motion Compliance
 CSS media query `@media (prefers-reduced-motion: reduce)` is implemented in [`frontend/src/index.css`](file:///Users/kazi/Projects/RITUCAST/frontend/src/index.css). When triggered:

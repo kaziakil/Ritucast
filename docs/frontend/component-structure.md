@@ -20,7 +20,7 @@ All UI presentation components are modular, pure React functional components uti
 ### 2.2 `Header.tsx` (Top Navigation & Health Monitor)
 - **Path**: `[Header.tsx](file:///Users/kazi/Projects/RITUCAST/frontend/src/components/Header.tsx)`
 - **Responsibilities**:
-  - Renders official branding: `ঋতুকেস্ট Ritucast` with the brand Sprout icon.
+  - Renders official branding: `ঋতুকাস্ট Ritucast` with the brand Sprout icon.
   - Displays dynamic System Readiness Pill:
     - `যাচাই হচ্ছে...` (Verifying) during initial metadata probe.
     - `সচল (লাইভ)` (Active Green) when backend dependencies report `ready: true`.

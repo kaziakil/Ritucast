@@ -22,7 +22,7 @@ describe('Header Component', () => {
       />
     )
 
-    expect(screen.getByText(/ঋতুকেস্ট/)).toBeInTheDocument()
+    expect(screen.getByText(/ঋতুকাস্ট/)).toBeInTheDocument()
     expect(screen.getByText('Ritucast')).toBeInTheDocument()
     expect(screen.getByText('সচল (লাইভ)')).toBeInTheDocument()
   })

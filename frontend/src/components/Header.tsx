@@ -32,10 +32,10 @@ export const Header: React.FC<HeaderProps> = ({
             }}
             role="button"
             tabIndex={0}
-            aria-label="ঋতুকেস্ট হোমপেইজে যান"
+            aria-label="ঋতুকাস্ট হোমপেইজে যান"
           >
             <Sprout size={28} color="var(--primitive-green-700)" />
-            <span>ঋতুকেস্ট <span style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)', fontWeight: 500 }}>Ritucast</span></span>
+            <span>ঋতুকাস্ট <span style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)', fontWeight: 500 }}>Ritucast</span></span>
           </div>
 
           <nav aria-label="Main Navigation">
